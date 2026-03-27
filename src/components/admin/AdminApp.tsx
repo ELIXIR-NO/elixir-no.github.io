@@ -664,6 +664,7 @@ function EntryEditor({
     isNew,
     allEntries,
     user,
+    branchOverride,
 }: {
     collection: ContentCollection;
     entry: Entry;
@@ -672,6 +673,7 @@ function EntryEditor({
     isNew: boolean;
     allEntries: Entry[];
     user: { login: string } | null;
+    branchOverride?: string;
 }) {
     // Auto-save draft key
     const draftKey = `cms-draft:${collection.name}:${isNew ? '__new__' : entry.path}`;
@@ -807,6 +809,19 @@ function EntryEditor({
 
         files.push({ path: filePath, content: mdxContent });
 
+        if (branchOverride) {
+            setSaving(true);
+            try {
+                await commitToBranch(token, branchOverride, files);
+                clearDraft();
+                setResult({ prUrl: '', branch: branchOverride });
+            } catch (err) {
+                alert(`Save failed: ${err}`);
+            }
+            setSaving(false);
+            return;
+        }
+
         const title = String(cleanData.title || finalSlug);
         const defaultTitle = `[CMS] ${isNew ? 'Add' : 'Update'} ${collection.label}: ${title}`;
         setConfirmDialog({ files, defaultTitle });
@@ -839,21 +854,26 @@ function EntryEditor({
                             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Pull request created</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{branchOverride ? 'Changes pushed' : 'Pull request created'}</h3>
                     <p className="text-sm text-gray-400 mb-6">
-                        Your changes have been saved to branch <code className="text-xs bg-gray-800 px-1.5 py-0.5 rounded">{result.branch}</code> and a PR has been opened for review.
+                        {branchOverride
+                            ? <>Your changes have been pushed to branch <code className="text-xs bg-gray-800 px-1.5 py-0.5 rounded">{result.branch}</code>.</>
+                            : <>Your changes have been saved to branch <code className="text-xs bg-gray-800 px-1.5 py-0.5 rounded">{result.branch}</code> and a PR has been opened for review.</>
+                        }
                     </p>
                     <div className="flex gap-3 justify-center">
-                        <a
-                            href={result.prUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity"
-                        >
-                            View PR on GitHub
-                        </a>
+                        {result.prUrl && (
+                            <a
+                                href={result.prUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity"
+                            >
+                                View PR on GitHub
+                            </a>
+                        )}
                         <button onClick={onBack} className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                            Back to list
+                            {branchOverride ? 'Back to Pull Requests' : 'Back to list'}
                         </button>
                     </div>
                 </div>
@@ -921,7 +941,7 @@ function EntryEditor({
                         disabled={saving}
                         className="px-6 py-2.5 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity disabled:opacity-50"
                     >
-                        {saving ? 'Saving...' : 'Save as Pull Request'}
+                        {saving ? 'Saving...' : branchOverride ? 'Push to PR' : 'Save as Pull Request'}
                     </button>
                     <button
                         onClick={() => { clearDraft(); onBack(); }}

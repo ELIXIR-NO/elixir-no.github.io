@@ -238,6 +238,40 @@ interface Entry {
 
 const BASE = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
 
+function BranchPill({ branch }: { branch: string }) {
+    return (
+        <span className="inline-flex items-center gap-1 text-xs text-gray-500 font-mono bg-white/[0.05] px-2 py-0.5 rounded-full">
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+            </svg>
+            {branch}
+        </span>
+    );
+}
+
+const PAGE_SIZE = 5;
+
+async function loadBatch(
+    token: string,
+    collection: ContentCollection,
+    files: GitHubFile[],
+    offset: number,
+): Promise<Entry[]> {
+    const batch = files.slice(offset, offset + PAGE_SIZE);
+    const entries: Entry[] = [];
+    for (const f of batch) {
+        try {
+            const content = await readFile(token, f.path);
+            const { data, body } = parseFrontmatter(content);
+            const slug = f.path
+                .replace(collection.folder + '/', '')
+                .replace('/index.mdx', '');
+            entries.push({ path: f.path, slug, data, body });
+        } catch { /* skip unreadable files */ }
+    }
+    return entries;
+}
+
 function LoginScreen({ onLogin }: { onLogin: () => void }) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-dark-background">
@@ -356,45 +390,41 @@ function CollectionView({
     onEntriesLoaded: (entries: Entry[]) => void;
 }) {
     const [entries, setEntries] = useState<Entry[]>([]);
+    const [allFiles, setAllFiles] = useState<GitHubFile[]>([]);
     const [loading, setLoading] = useState(true);
-    const [progress, setProgress] = useState({ loaded: 0, total: 0 });
+    const [loadingMore, setLoadingMore] = useState(false);
 
     useEffect(() => {
         setLoading(true);
-        setProgress({ loaded: 0, total: 0 });
+        setEntries([]);
+        setAllFiles([]);
         (async () => {
             const files = await listFiles(token, collection.folder + '/');
             const indexFiles = files.filter((f) => f.path.endsWith('/index.mdx'));
-            setProgress({ loaded: 0, total: indexFiles.length });
+            indexFiles.sort((a, b) => b.path.localeCompare(a.path));
+            setAllFiles(indexFiles);
 
-            const loaded: Entry[] = [];
-            for (const f of indexFiles) {
-                try {
-                    const content = await readFile(token, f.path);
-                    const { data, body } = parseFrontmatter(content);
-                    const slug = f.path
-                        .replace(collection.folder + '/', '')
-                        .replace('/index.mdx', '');
-                    loaded.push({ path: f.path, slug, data, body });
-                } catch { /* skip unreadable files */ }
-                setProgress(p => ({ ...p, loaded: loaded.length }));
-            }
-
-            loaded.sort((a, b) => {
-                const da = String(a.data.date || a.data.title || '');
-                const db = String(b.data.date || b.data.title || '');
-                return db.localeCompare(da);
-            });
-
-            setEntries(loaded);
-            onEntriesLoaded(loaded);
+            const firstBatch = await loadBatch(token, collection, indexFiles, 0);
+            setEntries(firstBatch);
+            onEntriesLoaded(firstBatch);
             setLoading(false);
         })();
     }, [collection.name, token]);
 
+    const handleLoadMore = async () => {
+        setLoadingMore(true);
+        const next = await loadBatch(token, collection, allFiles, entries.length);
+        const updated = [...entries, ...next];
+        setEntries(updated);
+        onEntriesLoaded(updated);
+        setLoadingMore(false);
+    };
+
+    const remaining = allFiles.length - entries.length;
+
     return (
         <div className="flex-1 p-6 sm:p-8 overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-bold text-white">{collection.label}</h2>
                 {collection.canCreate && (
                     <button
@@ -408,6 +438,12 @@ function CollectionView({
                     </button>
                 )}
             </div>
+            <div className="flex items-center gap-2 mb-6">
+                <BranchPill branch="main" />
+                {!loading && (
+                    <span className="text-xs text-gray-500">{allFiles.length} {allFiles.length === 1 ? 'entry' : 'entries'}</span>
+                )}
+            </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
                 <div>
@@ -417,19 +453,7 @@ function CollectionView({
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                             </svg>
-                            <span className="text-xs text-gray-500 mt-3">
-                                {progress.total > 0
-                                    ? `Loading ${progress.loaded} of ${progress.total} entries...`
-                                    : 'Fetching file list...'}
-                            </span>
-                            {progress.total > 0 && (
-                                <div className="w-48 h-1 rounded-full bg-gray-700 mt-2 overflow-hidden">
-                                    <div
-                                        className="h-full bg-accent rounded-full transition-all duration-200"
-                                        style={{ width: `${(progress.loaded / progress.total) * 100}%` }}
-                                    />
-                                </div>
-                            )}
+                            <span className="text-xs text-gray-500 mt-3">Fetching entries...</span>
                         </div>
                     ) : entries.length === 0 ? (
                         <p className="text-sm text-gray-400">No entries found.</p>
@@ -450,6 +474,25 @@ function CollectionView({
                                     </div>
                                 </button>
                             ))}
+                            {remaining > 0 && (
+                                <button
+                                    onClick={handleLoadMore}
+                                    disabled={loadingMore}
+                                    className="w-full mt-3 px-4 py-3 rounded-lg border border-dashed border-gray-700/40 text-sm text-gray-400 hover:text-accent hover:border-accent/30 transition-colors disabled:opacity-50"
+                                >
+                                    {loadingMore ? (
+                                        <span className="inline-flex items-center gap-2">
+                                            <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                            </svg>
+                                            Loading...
+                                        </span>
+                                    ) : (
+                                        `Show more (${remaining} remaining)`
+                                    )}
+                                </button>
+                            )}
                         </div>
                     )}
                 </div>
@@ -459,11 +502,6 @@ function CollectionView({
                     <div className="sticky top-8 rounded-xl border border-gray-700/30 bg-white/[0.02] p-5">
                         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">About this collection</h3>
                         <p className="text-sm text-gray-400 leading-relaxed">{collection.description}</p>
-                        {!loading && (
-                            <p className="text-xs text-gray-500 mt-4">
-                                {entries.length} {entries.length === 1 ? 'entry' : 'entries'}
-                            </p>
-                        )}
                     </div>
                 </div>
             </div>

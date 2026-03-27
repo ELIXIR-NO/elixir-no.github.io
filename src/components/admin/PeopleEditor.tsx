@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { readJsonFile, saveAsPR, type SaveResult } from './github';
+import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import { ELIXIR_GROUPS, ORG_KEYS, type PeopleData, type Person, type ElixirGroup } from './schema';
 import PRConfirmDialog from './PRConfirmDialog';
 
@@ -152,7 +152,7 @@ function PersonForm({
     );
 }
 
-export default function PeopleEditor({ token, username }: { token: string; username: string }) {
+export default function PeopleEditor({ token, username, branchOverride, onBack }: { token: string; username: string; branchOverride?: string; onBack?: () => void }) {
     const [data, setData] = useState<PeopleData | null>(null);
     const [loading, setLoading] = useState(true);
     const [editing, setEditing] = useState<{ orgKey: string; index: number } | 'new' | null>(null);
@@ -163,11 +163,17 @@ export default function PeopleEditor({ token, username }: { token: string; usern
 
     useEffect(() => {
         (async () => {
-            const d = await readJsonFile<PeopleData>(token, 'src/data/people.json');
+            let d: PeopleData;
+            if (branchOverride) {
+                const raw = await readFileFromRef(token, 'src/data/people.json', branchOverride);
+                d = JSON.parse(raw);
+            } else {
+                d = await readJsonFile<PeopleData>(token, 'src/data/people.json');
+            }
             setData(d);
             setLoading(false);
         })();
-    }, [token]);
+    }, [token, branchOverride]);
 
     const totalPeople = data ? Object.values(data.orgs).reduce((s, o) => s + o.people.length, 0) : 0;
 
@@ -226,20 +232,36 @@ export default function PeopleEditor({ token, username }: { token: string; usern
         setDeleteConfirm(null);
         setSaving(true);
         try {
-            const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: deleteConfirm.files });
-            setResult(res);
+            if (branchOverride) {
+                await commitToBranch(token, branchOverride, deleteConfirm.files);
+                setResult({ prUrl: '', branch: branchOverride });
+            } else {
+                const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: deleteConfirm.files });
+                setResult(res);
+            }
         } catch (err) {
             alert(`Save failed: ${err}`);
         }
         setSaving(false);
     };
 
-    const preparePublish = () => {
+    const preparePublish = async () => {
         if (!data) return;
         const files: Array<{ path: string; content: string; encoding?: 'utf-8' | 'base64' }> = [];
         files.push({ path: 'src/data/people.json', content: JSON.stringify(data, null, 2) + '\n' });
         for (const img of pendingImages) {
             if (img.base64) files.push({ path: img.path, content: img.base64, encoding: 'base64' });
+        }
+        if (branchOverride) {
+            setSaving(true);
+            try {
+                await commitToBranch(token, branchOverride, files);
+                setResult({ prUrl: '', branch: branchOverride });
+            } catch (err) {
+                alert(`Save failed: ${err}`);
+            }
+            setSaving(false);
+            return;
         }
         setConfirmDialog({ files });
     };
@@ -249,8 +271,13 @@ export default function PeopleEditor({ token, username }: { token: string; usern
         setConfirmDialog(null);
         setSaving(true);
         try {
-            const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: confirmDialog.files });
-            setResult(res);
+            if (branchOverride) {
+                await commitToBranch(token, branchOverride, confirmDialog.files);
+                setResult({ prUrl: '', branch: branchOverride });
+            } else {
+                const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: confirmDialog.files });
+                setResult(res);
+            }
         } catch (err) {
             alert(`Save failed: ${err}`);
         }
@@ -264,12 +291,21 @@ export default function PeopleEditor({ token, username }: { token: string; usern
                     <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-green-900/20 flex items-center justify-center">
                         <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Pull request created</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{branchOverride ? 'Changes pushed' : 'Pull request created'}</h3>
                     <p className="text-sm text-gray-400 mb-6">People directory updated.</p>
-                    <a href={result.prUrl} target="_blank" rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity">
-                        View PR on GitHub
-                    </a>
+                    <div className="flex items-center justify-center gap-3">
+                        {result.prUrl && (
+                            <a href={result.prUrl} target="_blank" rel="noopener noreferrer"
+                                className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity">
+                                View PR on GitHub
+                            </a>
+                        )}
+                        {onBack && (
+                            <button onClick={onBack} className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-600 text-gray-300 hover:bg-white/5 transition-colors">
+                                Back to Pull Requests
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         );
@@ -322,6 +358,12 @@ export default function PeopleEditor({ token, username }: { token: string; usern
 
     return (
         <div className="flex-1 p-6 sm:p-8 overflow-y-auto">
+            {onBack && (
+                <button onClick={onBack} className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white mb-6 transition-colors">
+                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                    Back to Pull Requests
+                </button>
+            )}
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h2 className="text-xl font-bold text-white">People</h2>
@@ -336,7 +378,7 @@ export default function PeopleEditor({ token, username }: { token: string; usern
                     {pendingImages.length > 0 && (
                         <button onClick={preparePublish} disabled={saving}
                             className="px-4 py-2 text-sm font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors">
-                            {saving ? 'Saving...' : `Publish Changes (${pendingImages.length} new)`}
+                            {saving ? 'Saving...' : branchOverride ? 'Push to PR' : `Publish Changes (${pendingImages.length} new)`}
                         </button>
                     )}
                 </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import PRConfirmDialog from './PRConfirmDialog';
+import BranchPill from './BranchPill';
 
 interface BannerData {
     visible: boolean;
@@ -142,6 +143,9 @@ export default function BannerEditor({ token, username, branchOverride, onBack }
                     <div>
                         <h2 className="text-xl font-bold text-white">Site Banner</h2>
                         <p className="text-sm text-gray-400 mt-1">Announcement shown at the top of every page.</p>
+                        <div className="mt-2">
+                            <BranchPill branch={branchOverride || 'main'} />
+                        </div>
                     </div>
                     {dirty && (
                         <button onClick={preparePublish} disabled={saving}

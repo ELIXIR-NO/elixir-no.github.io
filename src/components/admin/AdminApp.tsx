@@ -5,6 +5,7 @@ import SlidesEditor from './SlidesEditor';
 import BannerEditor from './BannerEditor';
 import MarkdownEditor from './MarkdownEditor';
 import PRConfirmDialog from './PRConfirmDialog';
+import BranchPill from './BranchPill';
 
 /** Sanitize a string to kebab-case for slugs and filenames */
 function toKebab(str: string): string {
@@ -237,17 +238,6 @@ interface Entry {
 // ─── Components ──────────────────────────────────────────
 
 const BASE = import.meta.env.BASE_URL?.replace(/\/$/, '') || '';
-
-function BranchPill({ branch }: { branch: string }) {
-    return (
-        <span className="inline-flex items-center gap-1 text-xs text-gray-500 font-mono bg-white/[0.05] px-2 py-0.5 rounded-full">
-            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-            </svg>
-            {branch}
-        </span>
-    );
-}
 
 const PAGE_SIZE = 5;
 
@@ -927,9 +917,12 @@ function EntryEditor({
                     Back to {collection.label}
                 </button>
 
-                <h2 className="text-xl font-bold text-white mb-6">
+                <h2 className="text-xl font-bold text-white mb-1">
                     {isNew ? `New ${collection.label}` : String(data.title || entry.slug)}
                 </h2>
+                <div className="mb-6">
+                    <BranchPill branch={branchOverride || 'main'} />
+                </div>
 
                 {isNew && (
                     <div className="mb-5">

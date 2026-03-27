@@ -146,6 +146,85 @@ export async function getUser(token: string): Promise<{ login: string; avatar_ur
     return user;
 }
 
+export interface PullRequest {
+    number: number;
+    title: string;
+    created_at: string;
+    head: { ref: string; sha: string };
+    html_url: string;
+}
+
+/** List open PRs created by the logged-in user on cms/ branches */
+export async function listUserPRs(token: string, username: string): Promise<PullRequest[]> {
+    const cached = cacheGet<PullRequest[]>(`prs:${username}`);
+    if (cached) return cached;
+
+    const res = await fetch(
+        `${API}/repos/${REPO_OWNER}/${REPO_NAME}/pulls?state=open&per_page=100`,
+        { headers: headers(token) },
+    );
+    const prs: PullRequest[] = await res.json();
+    const filtered = prs.filter(
+        pr => pr.head.ref.startsWith(`cms/${username}/`),
+    );
+    cacheSet(`prs:${username}`, filtered);
+    return filtered;
+}
+
+export interface PRFile {
+    filename: string;
+    status: string;
+}
+
+/** Get the list of changed files in a PR */
+export async function getPRFiles(token: string, prNumber: number): Promise<PRFile[]> {
+    const res = await fetch(
+        `${API}/repos/${REPO_OWNER}/${REPO_NAME}/pulls/${prNumber}/files`,
+        { headers: headers(token) },
+    );
+    return res.json();
+}
+
+/** Read a file from a specific branch/ref (not cached — always fresh) */
+export async function readFileFromRef(token: string, path: string, ref: string): Promise<string> {
+    const res = await fetch(
+        `${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${ref}`,
+        { headers: headers(token) },
+    );
+    const data = await res.json();
+    return b64Decode(data.content);
+}
+
+/** Commit files to an existing branch (updates an open PR) */
+export async function commitToBranch(
+    token: string,
+    branch: string,
+    files: Array<{ path: string; content: string; encoding?: 'utf-8' | 'base64' }>,
+): Promise<void> {
+    for (const file of files) {
+        const shaRes = await fetch(
+            `${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}?ref=${branch}`,
+            { headers: headers(token) },
+        );
+        const existingSha = shaRes.ok ? (await shaRes.json()).sha : null;
+
+        const body: Record<string, unknown> = {
+            message: `content: update ${file.path}`,
+            content: file.encoding === 'base64' ? file.content : b64Encode(file.content),
+            branch,
+        };
+        if (existingSha) body.sha = existingSha;
+
+        await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`, {
+            method: 'PUT',
+            headers: headers(token),
+            body: JSON.stringify(body),
+        });
+    }
+
+    cacheClear();
+}
+
 /** Check if user has write access to the repo (cached) */
 export async function hasWriteAccess(token: string): Promise<boolean> {
     const cached = cacheGet<boolean>('access');

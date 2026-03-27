@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { readJsonFile, saveAsPR, type SaveResult } from './github';
+import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import PRConfirmDialog from './PRConfirmDialog';
 
 interface BannerData {
@@ -33,7 +33,7 @@ function renderPreview(md: string): React.ReactNode {
     return parts;
 }
 
-export default function BannerEditor({ token, username }: { token: string; username: string }) {
+export default function BannerEditor({ token, username, branchOverride, onBack }: { token: string; username: string; branchOverride?: string; onBack?: () => void }) {
     const [data, setData] = useState<BannerData | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -43,20 +43,37 @@ export default function BannerEditor({ token, username }: { token: string; usern
 
     useEffect(() => {
         (async () => {
-            const d = await readJsonFile<BannerData>(token, 'src/data/banner.json');
+            let d: BannerData;
+            if (branchOverride) {
+                const raw = await readFileFromRef(token, 'src/data/banner.json', branchOverride);
+                d = JSON.parse(raw);
+            } else {
+                d = await readJsonFile<BannerData>(token, 'src/data/banner.json');
+            }
             setData(d);
             setLoading(false);
         })();
-    }, [token]);
+    }, [token, branchOverride]);
 
     const update = (patch: Partial<BannerData>) => {
         setData(prev => prev ? { ...prev, ...patch } : prev);
         setDirty(true);
     };
 
-    const preparePublish = () => {
+    const preparePublish = async () => {
         if (!data) return;
         const files = [{ path: 'src/data/banner.json', content: JSON.stringify(data, null, 4) + '\n' }];
+        if (branchOverride) {
+            setSaving(true);
+            try {
+                await commitToBranch(token, branchOverride, files);
+                setResult({ prUrl: '', branch: branchOverride });
+            } catch (err) {
+                alert(`Save failed: ${err}`);
+            }
+            setSaving(false);
+            return;
+        }
         setConfirmDialog({ files });
     };
 
@@ -80,12 +97,21 @@ export default function BannerEditor({ token, username }: { token: string; usern
                     <div className="h-12 w-12 mx-auto mb-4 rounded-full bg-green-900/20 flex items-center justify-center">
                         <svg className="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">Pull request created</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{branchOverride ? 'Changes pushed' : 'Pull request created'}</h3>
                     <p className="text-sm text-gray-400 mb-6">Banner updated.</p>
-                    <a href={result.prUrl} target="_blank" rel="noopener noreferrer"
-                        className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity">
-                        View PR on GitHub
-                    </a>
+                    <div className="flex items-center justify-center gap-3">
+                        {result.prUrl && (
+                            <a href={result.prUrl} target="_blank" rel="noopener noreferrer"
+                                className="px-4 py-2 text-sm font-semibold rounded-lg bg-accent text-white hover:opacity-90 transition-opacity">
+                                View PR on GitHub
+                            </a>
+                        )}
+                        {onBack && (
+                            <button onClick={onBack} className="px-4 py-2 text-sm font-semibold rounded-lg border border-gray-600 text-gray-300 hover:bg-white/5 transition-colors">
+                                Back to Pull Requests
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         );
@@ -106,6 +132,12 @@ export default function BannerEditor({ token, username }: { token: string; usern
     return (
         <div className="flex-1 p-6 sm:p-8 overflow-y-auto">
             <div className="max-w-2xl">
+                {onBack && (
+                    <button onClick={onBack} className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white mb-6 transition-colors">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" /></svg>
+                        Back to Pull Requests
+                    </button>
+                )}
                 <div className="flex items-center justify-between mb-8">
                     <div>
                         <h2 className="text-xl font-bold text-white">Site Banner</h2>
@@ -114,7 +146,7 @@ export default function BannerEditor({ token, username }: { token: string; usern
                     {dirty && (
                         <button onClick={preparePublish} disabled={saving}
                             className="px-4 py-2 text-sm font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors">
-                            {saving ? 'Saving...' : 'Publish Changes'}
+                            {saving ? 'Saving...' : branchOverride ? 'Push to PR' : 'Publish Changes'}
                         </button>
                     )}
                 </div>

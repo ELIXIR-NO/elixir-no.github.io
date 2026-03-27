@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-import { collections, getCollection, detectCollection, type Collection, type Field, type ContentCollection, type JsonCollection } from './schema';
+import { collections, getCollection, type Collection, type Field, type ContentCollection } from './schema';
 import PeopleEditor from './PeopleEditor';
 import SlidesEditor from './SlidesEditor';
 import BannerEditor from './BannerEditor';

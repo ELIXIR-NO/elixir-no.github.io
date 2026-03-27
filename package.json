@@ -37,6 +37,7 @@
     "gray-matter": "^4.0.3",
     "leaflet": "^1.9.4",
     "lodash": "^4.17.23",
+    "marked": "^17.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",

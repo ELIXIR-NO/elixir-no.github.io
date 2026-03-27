@@ -45,7 +45,7 @@ export const collections: Collection[] = [
         folder: 'src/content/news',
         canCreate: true,
         depth: 2,
-        layoutPath: '../../../layouts/page.astro',
+        layoutPath: '../../../../layouts/page.astro',
         description: 'News articles published on elixir.no/news. Each article has a title, date, summary, optional cover image, tags for filtering, and author usernames that link to the people directory. Articles are organized by year.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },
@@ -63,7 +63,7 @@ export const collections: Collection[] = [
         folder: 'src/content/events',
         canCreate: true,
         depth: 2,
-        layoutPath: '../../../layouts/page.astro',
+        layoutPath: '../../../../layouts/page.astro',
         description: 'Events listed on elixir.no/events. Upcoming events appear first, past events below. Each event needs a title, date, summary, and optional cover image. Events are organized by year.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },

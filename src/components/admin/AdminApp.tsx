@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
-import { collections, getCollection, type Collection, type Field, type ContentCollection } from './schema';
+import { collections, getCollection, detectCollection, type Collection, type Field, type ContentCollection, type JsonCollection } from './schema';
 import PeopleEditor from './PeopleEditor';
 import SlidesEditor from './SlidesEditor';
 import BannerEditor from './BannerEditor';
@@ -15,9 +15,11 @@ function toKebab(str: string): string {
         .replace(/(^-|-$)/g, '');
 }
 import {
-    listFiles, readFile, readJsonFile, saveAsPR, getUser, hasWriteAccess, cacheClear,
-    type GitHubFile, type SaveResult,
+    listFiles, readFile, readJsonFile, saveAsPR, commitToBranch, readFileFromRef,
+    getUser, hasWriteAccess, cacheClear,
+    type GitHubFile, type SaveResult, type PullRequest, type PRFile,
 } from './github';
+import OpenPRsView from './OpenPRsView';
 
 // ─── Auth ────────────────────────────────────────────────
 
@@ -267,6 +269,7 @@ function Sidebar({
     onLogout,
     mobileOpen,
     onMobileClose,
+    prCount,
 }: {
     activeCollection: string;
     onSelect: (name: string) => void;
@@ -274,6 +277,7 @@ function Sidebar({
     onLogout: () => void;
     mobileOpen: boolean;
     onMobileClose: () => void;
+    prCount: number | null;
 }) {
     return (
         <>
@@ -289,6 +293,27 @@ function Sidebar({
                 </button>
             </div>
             <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-y-auto">
+                <button
+                    onClick={() => { onSelect('pull-requests'); onMobileClose(); }}
+                    className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors flex items-center justify-between ${
+                        activeCollection === 'pull-requests'
+                            ? 'bg-accent/10 text-accent font-semibold'
+                            : 'text-gray-400 hover:bg-white/5 hover:text-gray-200'
+                    }`}
+                >
+                    <span className="flex items-center gap-2">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                        </svg>
+                        Pull Requests
+                    </span>
+                    {prCount !== null && prCount > 0 && (
+                        <span className="rounded-full bg-accent/20 text-accent px-1.5 py-0.5 text-xs font-semibold min-w-[1.25rem] text-center">
+                            {prCount}
+                        </span>
+                    )}
+                </button>
+                <div className="my-1 border-t border-gray-700/20" />
                 {collections.map((c) => (
                     <button
                         key={c.name}
@@ -953,11 +978,13 @@ function GlobalLoader() {
 
 export default function AdminApp() {
     const { token, user, authorized, login, logout } = useAuth();
-    const [activeCollection, setActiveCollection] = useState(collections[0].name);
+    const [activeCollection, setActiveCollection] = useState('pull-requests');
     const [editingEntry, setEditingEntry] = useState<Entry | null>(null);
     const [isNew, setIsNew] = useState(false);
     const [loadedEntries, setLoadedEntries] = useState<Entry[]>([]);
     const [mobileNav, setMobileNav] = useState(false);
+    const [prCount, setPrCount] = useState<number | null>(null);
+    const [editingPR, setEditingPR] = useState<{ branch: string; prNumber: number } | null>(null);
 
     if (!token) {
         return <LoginScreen onLogin={login} />;
@@ -980,8 +1007,6 @@ export default function AdminApp() {
         );
     }
 
-    const collection = getCollection(activeCollection)!;
-
     const handleCreate = () => {
         setIsNew(true);
         setEditingEntry({ path: '', slug: '', data: {}, body: '' });
@@ -992,26 +1017,77 @@ export default function AdminApp() {
         setIsNew(false);
     };
 
-    function renderContent() {
-        // JSON data editors
+    const handleEditPR = async (pr: PullRequest, collection: Collection, files: PRFile[]) => {
+        setEditingPR({ branch: pr.head.ref, prNumber: pr.number });
+
         if (collection.kind === 'json') {
-            if (collection.name === 'people') return <PeopleEditor token={token} username={user?.login || 'cms'} />;
-            if (collection.name === 'slides') return <SlidesEditor token={token} username={user?.login || 'cms'} />;
-            if (collection.name === 'banner') return <BannerEditor token={token} username={user?.login || 'cms'} />;
+            setActiveCollection(collection.name);
+            return;
+        }
+
+        const contentCollection = collection as ContentCollection;
+        const mdxFile = files.find(f => f.filename.endsWith('/index.mdx'));
+        if (!mdxFile) {
+            alert('Could not find content file in this PR.');
+            setEditingPR(null);
+            return;
+        }
+
+        try {
+            const content = await readFileFromRef(token!, mdxFile.filename, pr.head.ref);
+            const { data, body } = parseFrontmatter(content);
+            const slug = mdxFile.filename
+                .replace(contentCollection.folder + '/', '')
+                .replace('/index.mdx', '');
+            setActiveCollection(collection.name);
+            setEditingEntry({ path: mdxFile.filename, slug, data, body });
+            setIsNew(false);
+        } catch (err) {
+            alert(`Failed to load PR content: ${err}`);
+            setEditingPR(null);
+        }
+    };
+
+    const handleBackFromPR = () => {
+        setEditingEntry(null);
+        setIsNew(false);
+        setEditingPR(null);
+        setActiveCollection('pull-requests');
+    };
+
+    function renderContent() {
+        if (activeCollection === 'pull-requests' && !editingEntry) {
+            return (
+                <OpenPRsView
+                    token={token!}
+                    username={user?.login || ''}
+                    onEditPR={handleEditPR}
+                    onCountLoaded={setPrCount}
+                />
+            );
+        }
+
+        const collection = getCollection(activeCollection);
+        if (!collection) return null;
+
+        if (collection.kind === 'json') {
+            if (collection.name === 'people') return <PeopleEditor token={token} username={user?.login || 'cms'} branchOverride={editingPR?.branch} onBack={editingPR ? handleBackFromPR : undefined} />;
+            if (collection.name === 'slides') return <SlidesEditor token={token} username={user?.login || 'cms'} branchOverride={editingPR?.branch} onBack={editingPR ? handleBackFromPR : undefined} />;
+            if (collection.name === 'banner') return <BannerEditor token={token} username={user?.login || 'cms'} branchOverride={editingPR?.branch} onBack={editingPR ? handleBackFromPR : undefined} />;
             return null;
         }
 
-        // MDX content editors
         if (editingEntry) {
             return (
                 <EntryEditor
                     collection={collection}
                     entry={editingEntry}
                     token={token}
-                    onBack={handleBack}
+                    onBack={editingPR ? handleBackFromPR : handleBack}
                     isNew={isNew}
                     allEntries={loadedEntries}
                     user={user}
+                    branchOverride={editingPR?.branch}
                 />
             );
         }
@@ -1031,11 +1107,12 @@ export default function AdminApp() {
         <div className="flex h-screen bg-dark-background">
             <Sidebar
                 activeCollection={activeCollection}
-                onSelect={(name) => { setActiveCollection(name); setEditingEntry(null); setIsNew(false); }}
+                onSelect={(name) => { setActiveCollection(name); setEditingEntry(null); setIsNew(false); setEditingPR(null); }}
                 user={user}
                 onLogout={logout}
                 mobileOpen={mobileNav}
                 onMobileClose={() => setMobileNav(false)}
+                prCount={prCount}
             />
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Mobile header */}
@@ -1043,7 +1120,9 @@ export default function AdminApp() {
                     <button onClick={() => setMobileNav(true)} className="p-1.5 text-gray-400 hover:text-white">
                         <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
                     </button>
-                    <span className="text-sm font-semibold text-white">{getCollection(activeCollection)?.label}</span>
+                    <span className="text-sm font-semibold text-white">
+                        {activeCollection === 'pull-requests' ? 'Pull Requests' : getCollection(activeCollection)?.label}
+                    </span>
                 </div>
                 {renderContent()}
             </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import type { Slide } from './schema';
 import PRConfirmDialog from './PRConfirmDialog';
+import BranchPill from './BranchPill';
 
 interface PendingImage { file: File; base64?: string; path: string }
 
@@ -179,6 +180,9 @@ export default function SlidesEditor({ token, username, branchOverride, onBack }
                 <div>
                     <h2 className="text-xl font-bold text-white">Slides</h2>
                     <p className="text-sm text-gray-400">{slides.length} slides in the highlights carousel</p>
+                    <div className="mt-2">
+                        <BranchPill branch={branchOverride || 'main'} />
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={() => setEditing('new')}

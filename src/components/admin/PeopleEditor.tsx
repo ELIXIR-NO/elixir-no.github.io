@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import { ELIXIR_GROUPS, ORG_KEYS, type PeopleData, type Person, type ElixirGroup } from './schema';
 import PRConfirmDialog from './PRConfirmDialog';
+import BranchPill from './BranchPill';
 
 const ORG_LABELS: Record<string, string> = {
     uib: 'University of Bergen', uio: 'University of Oslo',
@@ -363,6 +364,9 @@ export default function PeopleEditor({ token, username, branchOverride, onBack }
                 <div>
                     <h2 className="text-xl font-bold text-white">People</h2>
                     <p className="text-sm text-gray-400">{totalPeople} members across {Object.keys(data!.orgs).length} organizations</p>
+                    <div className="mt-2">
+                        <BranchPill branch={branchOverride || 'main'} />
+                    </div>
                 </div>
                 <div className="flex gap-2">
                     <button onClick={() => setEditing('new')}

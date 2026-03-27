@@ -271,13 +271,8 @@ export default function PeopleEditor({ token, username, branchOverride, onBack }
         setConfirmDialog(null);
         setSaving(true);
         try {
-            if (branchOverride) {
-                await commitToBranch(token, branchOverride, confirmDialog.files);
-                setResult({ prUrl: '', branch: branchOverride });
-            } else {
-                const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: confirmDialog.files });
-                setResult(res);
-            }
+            const res = await saveAsPR(token, { title: prTitle, description: prDescription, username, files: confirmDialog.files });
+            setResult(res);
         } catch (err) {
             alert(`Save failed: ${err}`);
         }

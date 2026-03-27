@@ -163,6 +163,7 @@ export async function listUserPRs(token: string, username: string): Promise<Pull
         `${API}/repos/${REPO_OWNER}/${REPO_NAME}/pulls?state=open&per_page=100`,
         { headers: headers(token) },
     );
+    if (!res.ok) throw new Error(`Failed to fetch pull requests: ${res.status}`);
     const prs: PullRequest[] = await res.json();
     const filtered = prs.filter(
         pr => pr.head.ref.startsWith(`cms/${username}/`),
@@ -182,6 +183,7 @@ export async function getPRFiles(token: string, prNumber: number): Promise<PRFil
         `${API}/repos/${REPO_OWNER}/${REPO_NAME}/pulls/${prNumber}/files`,
         { headers: headers(token) },
     );
+    if (!res.ok) throw new Error(`Failed to fetch PR files: ${res.status}`);
     return res.json();
 }
 
@@ -191,6 +193,7 @@ export async function readFileFromRef(token: string, path: string, ref: string):
         `${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${ref}`,
         { headers: headers(token) },
     );
+    if (!res.ok) throw new Error(`Failed to read ${path} from ${ref}: ${res.status}`);
     const data = await res.json();
     return b64Decode(data.content);
 }
@@ -215,11 +218,15 @@ export async function commitToBranch(
         };
         if (existingSha) body.sha = existingSha;
 
-        await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`, {
+        const putRes = await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/contents/${file.path}`, {
             method: 'PUT',
             headers: headers(token),
             body: JSON.stringify(body),
         });
+        if (!putRes.ok) {
+            const err = await putRes.json().catch(() => ({}));
+            throw new Error(`Failed to commit ${file.path}: ${putRes.status} ${err.message || ''}`);
+        }
     }
 
     cacheClear();

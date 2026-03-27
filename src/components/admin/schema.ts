@@ -135,6 +135,18 @@ export function getCollection(name: string): Collection | undefined {
     return collections.find(c => c.name === name);
 }
 
+/** Detect which collection a set of file paths belongs to */
+export function detectCollection(filePaths: string[]): Collection | null {
+    for (const c of collections) {
+        if (c.kind === 'content') {
+            if (filePaths.some(p => p.startsWith(c.folder + '/'))) return c;
+        } else {
+            if (filePaths.some(p => p === c.file)) return c;
+        }
+    }
+    return null;
+}
+
 // ─── People data types ───────────────────────────────────
 
 export interface ElixirGroup {

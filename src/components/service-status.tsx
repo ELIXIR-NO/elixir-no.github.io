@@ -18,84 +18,57 @@ type ServiceState = {
 };
 
 const REFRESH_INTERVAL = 60_000;
+const STATUS_PROXY = 'https://elixir-cms-oauth.vercel.app/status';
 
-/**
- * Two-phase probe:
- * 1. Try a normal cors fetch (HEAD then GET) to read real HTTP status codes.
- * 2. If CORS blocks us (TypeError), fall back to no-cors to distinguish
- *    "server reachable but CORS-blocked" from "server actually down".
- */
-async function probe(url: string): Promise<{
+type ProbeResult = {
     status: Status;
     httpStatus: number | null;
     latency: number;
     detail: string;
-}> {
-    const start = performance.now();
-    const elapsed = () => Math.round(performance.now() - start);
+};
 
-    // Phase 1: try cors fetch to get real status code
-    try {
-        const res = await fetch(url, {
-            method: 'HEAD',
-            mode: 'cors',
-            cache: 'no-store',
-            signal: AbortSignal.timeout(10_000),
-        });
-        const code = res.status;
-        return {
-            status: code >= 200 && code < 400 ? 'ok' : code >= 500 ? 'error' : 'degraded',
-            httpStatus: code,
-            latency: elapsed(),
-            detail: `HTTP ${code}`,
-        };
-    } catch {
-        // CORS blocked or network error — continue to phase 2
-    }
+function classifyHttpCode(code: number): { status: Status; detail: string } {
+    if (code >= 200 && code < 300) return { status: 'ok', detail: `HTTP ${code}` };
+    if (code >= 300 && code < 400) return { status: 'ok', detail: `HTTP ${code} (redirect)` };
+    if (code >= 400 && code < 500) return { status: 'degraded', detail: `HTTP ${code}` };
+    return { status: 'error', detail: `HTTP ${code}` };
+}
 
-    // Phase 1b: retry with GET in case HEAD is blocked by CORS preflight
+async function probe(url: string): Promise<ProbeResult> {
+    // Route through server-side proxy to bypass CORS and get real status codes
+    const proxyUrl = `${STATUS_PROXY}?url=${encodeURIComponent(url)}&origin=${encodeURIComponent(window.location.origin)}`;
     try {
-        const res = await fetch(url, {
-            method: 'GET',
-            mode: 'cors',
+        const res = await fetch(proxyUrl, {
             cache: 'no-store',
-            signal: AbortSignal.timeout(10_000),
+            signal: AbortSignal.timeout(15_000),
         });
-        const code = res.status;
-        return {
-            status: code >= 200 && code < 400 ? 'ok' : code >= 500 ? 'error' : 'degraded',
-            httpStatus: code,
-            latency: elapsed(),
-            detail: `HTTP ${code}`,
-        };
-    } catch {
-        // Continue to phase 2
-    }
+        const data = await res.json();
 
-    // Phase 2: no-cors probe — can't read status, but can detect reachability
-    try {
-        await fetch(url, {
-            mode: 'no-cors',
-            cache: 'no-store',
-            signal: AbortSignal.timeout(10_000),
-        });
-        // Opaque response = server responded, but we can't read the status code
-        return {
-            status: 'reachable',
-            httpStatus: null,
-            latency: elapsed(),
-            detail: 'Server responded — status unknown (CORS restricted)',
-        };
-    } catch {
-        // All fetches failed. For HTTPS URLs this often means expired/invalid
-        // certificate since browsers refuse the TLS handshake entirely.
-        const isHttps = url.startsWith('https://');
+        if (data.status !== null) {
+            const { status, detail } = classifyHttpCode(data.status);
+            return { status, httpStatus: data.status, latency: data.latency, detail };
+        }
+        // Server-side fetch failed (connection refused, DNS, expired cert, etc.)
         return {
             status: 'down',
             httpStatus: null,
-            latency: elapsed(),
-            detail: isHttps ? 'Connection failed (possible SSL/TLS error)' : 'Connection failed',
+            latency: data.latency,
+            detail: data.error || 'Connection failed',
         };
+    } catch {
+        // Proxy itself is unreachable — fall back to client-side no-cors probe
+        return probeClientFallback(url);
+    }
+}
+
+async function probeClientFallback(url: string): Promise<ProbeResult> {
+    const start = performance.now();
+    const elapsed = () => Math.round(performance.now() - start);
+    try {
+        await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(10_000) });
+        return { status: 'reachable', httpStatus: null, latency: elapsed(), detail: 'Proxy unavailable — reachability only' };
+    } catch {
+        return { status: 'down', httpStatus: null, latency: elapsed(), detail: 'Connection failed' };
     }
 }
 

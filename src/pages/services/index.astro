@@ -32,9 +32,21 @@ const tags = [...tagCounts.entries()]
         </p>
     </div>
 
-    <!-- Filter -->
-    <div class="mt-12">
-        <TagsFilter client:load tags={tags} />
+    <!-- Status link + Filter -->
+    <div class="mt-10 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex-1 min-w-0">
+            <TagsFilter client:load tags={tags} />
+        </div>
+        <a
+            href={`${BASE}/services/status`}
+            class="inline-flex items-center gap-1.5 rounded-lg border border-gray-200/60 dark:border-gray-700/30 px-3.5 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:border-accent/40 hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shrink-0"
+        >
+            <span class="relative flex h-2 w-2">
+                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            Service status
+        </a>
     </div>
 
     <!-- Service grid -->

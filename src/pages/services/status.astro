@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import Page from "../../layouts/page.astro";
+import ServiceStatus from "../../components/service-status";
+import { idToSlug, resolveContentAsset } from "../../lib/utils";
+
+const services = (await getCollection("services"))
+    .filter(s => s.data.website)
+    .sort((a, b) => a.data.title.localeCompare(b.data.title))
+    .map(s => ({
+        title: s.data.title,
+        website: s.data.website!,
+        logo: s.data.logo ? resolveContentAsset(`${s.collection}/${s.id}`, s.data.logo) : null,
+        slug: idToSlug(s.id),
+    }));
+---
+
+<Page variant="wide" seo={{
+    title: "Service status",
+    description: "Live reachability status for ELIXIR Norway bioinformatics services.",
+}}>
+    <div class="max-w-3xl">
+        <p class="text-sm font-semibold text-accent tracking-wide uppercase">Services</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-primary dark:text-white leading-[1.15]">
+            Service status
+        </h1>
+        <p class="mt-6 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 max-w-2xl">
+            Live reachability checks for ELIXIR Norway services, run directly from your browser.
+        </p>
+    </div>
+
+    <div class="mt-12">
+        <ServiceStatus client:load services={services} />
+    </div>
+</Page>

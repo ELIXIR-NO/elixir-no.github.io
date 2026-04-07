@@ -60,6 +60,7 @@ const category: string | undefined = frontmatter?.category;
 const period: string | undefined = frontmatter?.period;
 const funder: { name?: string | null; link?: string | null } | undefined = frontmatter?.funder;
 const externalLink: string | undefined = frontmatter?.external_link;
+const serviceUrl: string | undefined = frontmatter?.website;
 const keywords: string[] = frontmatter?.keywords ?? [];
 
 // Resolve authors for news articles
@@ -88,6 +89,7 @@ const pathname = Astro.url.pathname;
 const contentType = pathname.startsWith('/news/') ? 'news'
     : pathname.startsWith('/events/') ? 'events'
     : pathname.startsWith('/funding-and-projects/') ? 'projects'
+    : pathname.startsWith('/services/') ? 'services'
     : null;
 
 // Resolve relative asset paths (./file.png) to their public URL using the page pathname
@@ -238,7 +240,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                                 </svg>
-                                {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : 'All projects'}
+                                {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
                             </a>
                         )}
 
@@ -367,6 +369,21 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                             <p class="mt-5 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 text-balance">
                                 {summary}
                             </p>
+                        )}
+
+                        {/* Service external link */}
+                        {contentType === 'services' && serviceUrl && (
+                            <a
+                                href={serviceUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
+                            >
+                                Visit service
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                </svg>
+                            </a>
                         )}
 
                         {/* Project keywords */}

@@ -109,6 +109,7 @@ const services = defineCollection({
         logo: z.string().optional(),
         summary: z.string(),
         tags: z.array(z.string()).optional(),
+        website: z.string().url().optional(),
     }),
 });
 

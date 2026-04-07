@@ -87,11 +87,14 @@ async function probe(url: string): Promise<{
             detail: 'Reachable (CORS restricted)',
         };
     } catch {
+        // All fetches failed. For HTTPS URLs this often means expired/invalid
+        // certificate since browsers refuse the TLS handshake entirely.
+        const isHttps = url.startsWith('https://');
         return {
             status: 'down',
             httpStatus: null,
             latency: elapsed(),
-            detail: 'Connection failed',
+            detail: isHttps ? 'Connection failed (possible SSL/TLS error)' : 'Connection failed',
         };
     }
 }

@@ -7,7 +7,7 @@ type ServiceInfo = {
     slug: string;
 };
 
-type Status = 'checking' | 'ok' | 'degraded' | 'error' | 'down';
+type Status = 'checking' | 'ok' | 'reachable' | 'degraded' | 'error' | 'down';
 
 type ServiceState = {
     status: Status;
@@ -79,12 +79,12 @@ async function probe(url: string): Promise<{
             cache: 'no-store',
             signal: AbortSignal.timeout(10_000),
         });
-        // Opaque response = server is reachable, CORS just blocks reading
+        // Opaque response = server responded, but we can't read the status code
         return {
-            status: 'ok',
+            status: 'reachable',
             httpStatus: null,
             latency: elapsed(),
-            detail: 'Reachable (CORS restricted)',
+            detail: 'Server responded — status unknown (CORS restricted)',
         };
     } catch {
         // All fetches failed. For HTTPS URLs this often means expired/invalid
@@ -122,6 +122,14 @@ const statusConfig: Record<Status, {
         labelClass: 'text-emerald-600 dark:text-emerald-400',
         cardBorder: 'border-emerald-200/60 dark:border-emerald-800/30',
         cardBg: 'bg-emerald-50/30 dark:bg-emerald-950/10',
+    },
+    reachable: {
+        dot: 'bg-sky-500',
+        ping: null,
+        label: 'Reachable',
+        labelClass: 'text-sky-600 dark:text-sky-400',
+        cardBorder: 'border-sky-200/60 dark:border-sky-800/30',
+        cardBg: 'bg-sky-50/30 dark:bg-sky-950/10',
     },
     degraded: {
         dot: 'bg-amber-500',
@@ -162,9 +170,10 @@ function StatusDot({ status }: { status: Status }) {
 }
 
 function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
-    let ok = 0, degraded = 0, errored = 0, down = 0, checking = 0;
+    let ok = 0, reachable = 0, degraded = 0, errored = 0, down = 0, checking = 0;
     states.forEach(s => {
         if (s.status === 'ok') ok++;
+        else if (s.status === 'reachable') reachable++;
         else if (s.status === 'degraded') degraded++;
         else if (s.status === 'error') errored++;
         else if (s.status === 'down') down++;
@@ -173,6 +182,7 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
     const total = states.size;
     const allChecked = checking === 0;
     const allOk = ok === total;
+    const confirmed = ok + reachable;
     const problems = degraded + errored + down;
 
     return (
@@ -191,10 +201,16 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
                     </div>
-                ) : (
+                ) : problems > 0 ? (
                     <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center shrink-0">
                         <svg className="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                        </svg>
+                    </div>
+                ) : (
+                    <div className="h-10 w-10 rounded-full bg-sky-100 dark:bg-sky-900/20 flex items-center justify-center shrink-0">
+                        <svg className="h-5 w-5 text-sky-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                         </svg>
                     </div>
                 )}
@@ -204,13 +220,16 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                             ? 'Checking services...'
                             : allOk
                             ? 'All systems operational'
-                            : `${problems} service${problems !== 1 ? 's' : ''} with issues`
+                            : problems > 0
+                            ? `${problems} service${problems !== 1 ? 's' : ''} with issues`
+                            : `${ok} confirmed operational`
                         }
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         {allChecked
                             ? [
-                                `${ok} operational`,
+                                ok > 0 ? `${ok} operational` : null,
+                                reachable > 0 ? `${reachable} reachable (unverified)` : null,
                                 degraded > 0 ? `${degraded} degraded` : null,
                                 errored > 0 ? `${errored} errored` : null,
                                 down > 0 ? `${down} unreachable` : null,

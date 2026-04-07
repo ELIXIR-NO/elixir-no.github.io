@@ -7,86 +7,189 @@ type ServiceInfo = {
     slug: string;
 };
 
-type Status = 'checking' | 'up' | 'down' | 'unknown';
+type Status = 'checking' | 'ok' | 'degraded' | 'error' | 'down';
 
 type ServiceState = {
     status: Status;
+    httpStatus: number | null;
     latency: number | null;
     checkedAt: Date | null;
+    detail: string;
 };
 
 const REFRESH_INTERVAL = 60_000;
 
-async function probe(url: string): Promise<{ up: boolean; latency: number }> {
+/**
+ * Two-phase probe:
+ * 1. Try a normal cors fetch (HEAD then GET) to read real HTTP status codes.
+ * 2. If CORS blocks us (TypeError), fall back to no-cors to distinguish
+ *    "server reachable but CORS-blocked" from "server actually down".
+ */
+async function probe(url: string): Promise<{
+    status: Status;
+    httpStatus: number | null;
+    latency: number;
+    detail: string;
+}> {
     const start = performance.now();
+    const elapsed = () => Math.round(performance.now() - start);
+
+    // Phase 1: try cors fetch to get real status code
     try {
-        await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(10_000) });
-        return { up: true, latency: Math.round(performance.now() - start) };
+        const res = await fetch(url, {
+            method: 'HEAD',
+            mode: 'cors',
+            cache: 'no-store',
+            signal: AbortSignal.timeout(10_000),
+        });
+        const code = res.status;
+        return {
+            status: code >= 200 && code < 400 ? 'ok' : code >= 500 ? 'error' : 'degraded',
+            httpStatus: code,
+            latency: elapsed(),
+            detail: `HTTP ${code}`,
+        };
     } catch {
-        return { up: false, latency: Math.round(performance.now() - start) };
+        // CORS blocked or network error — continue to phase 2
+    }
+
+    // Phase 1b: retry with GET in case HEAD is blocked by CORS preflight
+    try {
+        const res = await fetch(url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-store',
+            signal: AbortSignal.timeout(10_000),
+        });
+        const code = res.status;
+        return {
+            status: code >= 200 && code < 400 ? 'ok' : code >= 500 ? 'error' : 'degraded',
+            httpStatus: code,
+            latency: elapsed(),
+            detail: `HTTP ${code}`,
+        };
+    } catch {
+        // Continue to phase 2
+    }
+
+    // Phase 2: no-cors probe — can't read status, but can detect reachability
+    try {
+        await fetch(url, {
+            mode: 'no-cors',
+            cache: 'no-store',
+            signal: AbortSignal.timeout(10_000),
+        });
+        // Opaque response = server is reachable, CORS just blocks reading
+        return {
+            status: 'ok',
+            httpStatus: null,
+            latency: elapsed(),
+            detail: 'Reachable (CORS restricted)',
+        };
+    } catch {
+        return {
+            status: 'down',
+            httpStatus: null,
+            latency: elapsed(),
+            detail: 'Connection failed',
+        };
     }
 }
 
+const statusConfig: Record<Status, {
+    dot: string;
+    ping: string | null;
+    label: string;
+    labelClass: string;
+    cardBorder: string;
+    cardBg: string;
+}> = {
+    checking: {
+        dot: 'bg-yellow-400',
+        ping: 'bg-yellow-400',
+        label: 'Checking',
+        labelClass: 'text-yellow-600 dark:text-yellow-400',
+        cardBorder: 'border-gray-200/60 dark:border-gray-700/30',
+        cardBg: 'bg-white dark:bg-white/[0.02]',
+    },
+    ok: {
+        dot: 'bg-emerald-500',
+        ping: 'bg-emerald-400',
+        label: 'Operational',
+        labelClass: 'text-emerald-600 dark:text-emerald-400',
+        cardBorder: 'border-emerald-200/60 dark:border-emerald-800/30',
+        cardBg: 'bg-emerald-50/30 dark:bg-emerald-950/10',
+    },
+    degraded: {
+        dot: 'bg-amber-500',
+        ping: null,
+        label: 'Degraded',
+        labelClass: 'text-amber-600 dark:text-amber-400',
+        cardBorder: 'border-amber-200/60 dark:border-amber-800/30',
+        cardBg: 'bg-amber-50/30 dark:bg-amber-950/10',
+    },
+    error: {
+        dot: 'bg-red-500',
+        ping: null,
+        label: 'Error',
+        labelClass: 'text-red-600 dark:text-red-400',
+        cardBorder: 'border-red-200/60 dark:border-red-800/30',
+        cardBg: 'bg-red-50/30 dark:bg-red-950/10',
+    },
+    down: {
+        dot: 'bg-red-500',
+        ping: null,
+        label: 'Unreachable',
+        labelClass: 'text-red-600 dark:text-red-400',
+        cardBorder: 'border-red-200/60 dark:border-red-800/30',
+        cardBg: 'bg-red-50/30 dark:bg-red-950/10',
+    },
+};
+
 function StatusDot({ status }: { status: Status }) {
-    const colors: Record<Status, string> = {
-        checking: 'bg-yellow-400',
-        up: 'bg-emerald-500',
-        down: 'bg-red-500',
-        unknown: 'bg-gray-400',
-    };
+    const cfg = statusConfig[status];
     return (
         <span className="relative flex h-2.5 w-2.5">
-            {status === 'checking' && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-yellow-400 opacity-75" />
+            {cfg.ping && (
+                <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${cfg.ping} opacity-50`} />
             )}
-            {status === 'up' && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-40" />
-            )}
-            <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${colors[status]}`} />
+            <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${cfg.dot}`} />
         </span>
     );
 }
 
-function StatusLabel({ status }: { status: Status }) {
-    const labels: Record<Status, { text: string; className: string }> = {
-        checking: { text: 'Checking', className: 'text-yellow-600 dark:text-yellow-400' },
-        up: { text: 'Operational', className: 'text-emerald-600 dark:text-emerald-400' },
-        down: { text: 'Unreachable', className: 'text-red-600 dark:text-red-400' },
-        unknown: { text: 'Unknown', className: 'text-gray-500 dark:text-gray-400' },
-    };
-    const { text, className } = labels[status];
-    return <span className={`text-xs font-semibold ${className}`}>{text}</span>;
-}
-
 function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
-    let up = 0, down = 0, checking = 0;
+    let ok = 0, degraded = 0, errored = 0, down = 0, checking = 0;
     states.forEach(s => {
-        if (s.status === 'up') up++;
+        if (s.status === 'ok') ok++;
+        else if (s.status === 'degraded') degraded++;
+        else if (s.status === 'error') errored++;
         else if (s.status === 'down') down++;
-        else if (s.status === 'checking') checking++;
+        else checking++;
     });
     const total = states.size;
-    const allUp = up === total;
     const allChecked = checking === 0;
+    const allOk = ok === total;
+    const problems = degraded + errored + down;
 
     return (
         <div className="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.02] p-6">
             <div className="flex items-center gap-3">
                 {!allChecked ? (
-                    <div className="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center shrink-0">
                         <svg className="h-5 w-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
                     </div>
-                ) : allUp ? (
-                    <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center">
+                ) : allOk ? (
+                    <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
                         <svg className="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
                     </div>
                 ) : (
-                    <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center shrink-0">
                         <svg className="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                         </svg>
@@ -94,12 +197,22 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                 )}
                 <div>
                     <p className="text-lg font-semibold text-brand-primary dark:text-white">
-                        {!allChecked ? 'Checking services...' : allUp ? 'All systems operational' : `${down} service${down !== 1 ? 's' : ''} unreachable`}
+                        {!allChecked
+                            ? 'Checking services...'
+                            : allOk
+                            ? 'All systems operational'
+                            : `${problems} service${problems !== 1 ? 's' : ''} with issues`
+                        }
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                         {allChecked
-                            ? `${up} of ${total} services responding`
-                            : `${checking} remaining`
+                            ? [
+                                `${ok} operational`,
+                                degraded > 0 ? `${degraded} degraded` : null,
+                                errored > 0 ? `${errored} errored` : null,
+                                down > 0 ? `${down} unreachable` : null,
+                            ].filter(Boolean).join(' · ')
+                            : `${total - checking} of ${total} checked`
                         }
                     </p>
                 </div>
@@ -111,7 +224,9 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
 export default function ServiceStatus({ services }: { services: ServiceInfo[] }) {
     const [states, setStates] = useState<Map<string, ServiceState>>(() => {
         const m = new Map<string, ServiceState>();
-        services.forEach(s => m.set(s.slug, { status: 'checking', latency: null, checkedAt: null }));
+        services.forEach(s => m.set(s.slug, {
+            status: 'checking', httpStatus: null, latency: null, checkedAt: null, detail: '',
+        }));
         return m;
     });
     const intervalRef = useRef<ReturnType<typeof setInterval>>();
@@ -120,26 +235,25 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
         setStates(prev => {
             const next = new Map(prev);
             services.forEach(s => {
-                const existing = next.get(s.slug);
-                next.set(s.slug, { ...existing!, status: 'checking' });
+                next.set(s.slug, { ...next.get(s.slug)!, status: 'checking', detail: '' });
             });
             return next;
         });
 
-        // Stagger probes slightly to avoid a burst
         for (const service of services) {
             probe(service.website).then(result => {
                 setStates(prev => {
                     const next = new Map(prev);
                     next.set(service.slug, {
-                        status: result.up ? 'up' : 'down',
+                        status: result.status,
+                        httpStatus: result.httpStatus,
                         latency: result.latency,
                         checkedAt: new Date(),
+                        detail: result.detail,
                     });
                     return next;
                 });
             });
-            // 100ms stagger between probes
             await new Promise(r => setTimeout(r, 100));
         }
     }, [services]);
@@ -159,16 +273,11 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {servicesWithWebsite.map(service => {
                     const state = states.get(service.slug)!;
+                    const cfg = statusConfig[state.status];
                     return (
                         <div
                             key={service.slug}
-                            className={`group rounded-xl border p-4 transition-colors duration-200 ${
-                                state.status === 'up'
-                                    ? 'border-emerald-200/60 dark:border-emerald-800/30 bg-emerald-50/30 dark:bg-emerald-950/10'
-                                    : state.status === 'down'
-                                    ? 'border-red-200/60 dark:border-red-800/30 bg-red-50/30 dark:bg-red-950/10'
-                                    : 'border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.02]'
-                            }`}
+                            className={`rounded-xl border p-4 transition-colors duration-200 ${cfg.cardBorder} ${cfg.cardBg}`}
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-center gap-3 min-w-0">
@@ -201,27 +310,50 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                         </a>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-2 shrink-0 pt-0.5">
+                                <div className="shrink-0 pt-0.5">
                                     <StatusDot status={state.status} />
                                 </div>
                             </div>
 
-                            <div className="mt-3 flex items-center justify-between">
-                                <StatusLabel status={state.status} />
+                            <div className="mt-3 flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-2 min-w-0">
+                                    <span className={`text-xs font-semibold ${cfg.labelClass}`}>
+                                        {cfg.label}
+                                    </span>
+                                    {state.httpStatus !== null && (
+                                        <span className={`text-xs font-mono px-1.5 py-0.5 rounded ${
+                                            state.httpStatus >= 200 && state.httpStatus < 300
+                                                ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                                                : state.httpStatus >= 300 && state.httpStatus < 400
+                                                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                                                : state.httpStatus >= 400 && state.httpStatus < 500
+                                                ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
+                                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                                        }`}>
+                                            {state.httpStatus}
+                                        </span>
+                                    )}
+                                </div>
                                 {state.latency !== null && state.status !== 'checking' && (
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
                                         {state.latency}ms
                                     </span>
                                 )}
                             </div>
+
+                            {state.detail && state.status !== 'checking' && (
+                                <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    {state.detail}
+                                </p>
+                            )}
                         </div>
                     );
                 })}
             </div>
 
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                Status checks run from your browser using no-cors probes. Results reflect reachability from your network.
-                Refreshes automatically every 60 seconds.
+                Checks HTTP status codes when CORS allows, falls back to reachability probes otherwise.
+                Results reflect your network. Refreshes every 60 seconds.
             </p>
         </div>
     );

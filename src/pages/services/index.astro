@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Page from "../../layouts/page.astro";
-import TagsFilter from "../../components/tags-filter";
+import ListingFilters from "../../components/listing-filters";
 import { slugToTitleCase, idToSlug, resolveContentAsset } from "../../lib/utils";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -44,7 +44,7 @@ const tags = [...tagCounts.entries()]
 
     <!-- Filter -->
     <div class="mt-10">
-        <TagsFilter client:load tags={tags} />
+        <ListingFilters client:load groups={[{ key: 'tags', label: 'Tags', options: tags, mode: 'multi' }]} event="tags-changed" />
     </div>
 
     <!-- Service grid -->
@@ -131,28 +131,17 @@ const tags = [...tagCounts.entries()]
 
     <!-- Filtering script -->
     <script is:inline>
-        function filterCards(selectedTags) {
-            const cards = document.querySelectorAll('.service-card');
-            const noTags = !selectedTags || selectedTags.length === 0;
-            cards.forEach(card => {
-                if (noTags) {
-                    card.style.display = '';
-                    return;
-                }
-                const cardTags = new Set((card.getAttribute('data-tags') || '').split(','));
-                const match = selectedTags.some(t => cardTags.has(t));
+        window.addEventListener('tags-changed', function(e) {
+            var detail = e.detail || {};
+            var tagsSet = detail['tags'];
+            var noTags = !tagsSet || tagsSet.size === 0;
+            document.querySelectorAll('.service-card').forEach(function(card) {
+                if (noTags) { card.style.display = ''; return; }
+                var cardTags = (card.getAttribute('data-tags') || '').split(',');
+                var match = false;
+                tagsSet.forEach(function(t) { if (cardTags.indexOf(t) !== -1) match = true; });
                 card.style.display = match ? '' : 'none';
             });
-        }
-
-        // Listen for React tag filter changes
-        window.addEventListener('tags-changed', (e) => filterCards(e.detail));
-
-        // Handle initial load with URL params
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const tags = params.getAll('tags');
-            if (tags.length) filterCards(tags);
         });
     </script>
 

@@ -123,19 +123,34 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             </button>
                         </div>
 
-                        {/* Mobile menu button */}
+                        {/* Mobile menu button — animated bars morph to X */}
                         <div className="flex lg:hidden items-center gap-x-1">
                             <ThemeToggle />
                             <button
                                 type="button"
-                                onClick={() => setMobileMenuOpen(true)}
-                                className="p-2 rounded-lg text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                                aria-label="Open menu"
+                                onClick={() => setMobileMenuOpen(prev => !prev)}
+                                className="relative h-9 w-9 flex items-center justify-center rounded-xl text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={mobileMenuOpen}
                             >
-                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                                </svg>
+                                <div className="w-[18px] h-3.5 relative flex flex-col justify-between" aria-hidden="true">
+                                    <motion.span
+                                        className="block h-[2px] w-full bg-current rounded-full origin-center"
+                                        animate={mobileMenuOpen
+                                            ? { rotate: 45, y: 5 }
+                                            : { rotate: 0, y: 0 }
+                                        }
+                                        transition={{ duration: 0.25 }}
+                                    />
+                                    <motion.span
+                                        className="block h-[2px] w-full bg-current rounded-full origin-center"
+                                        animate={mobileMenuOpen
+                                            ? { rotate: -45, y: -5 }
+                                            : { rotate: 0, y: 0 }
+                                        }
+                                        transition={{ duration: 0.25 }}
+                                    />
+                                </div>
                             </button>
                         </div>
                     </nav>
@@ -145,100 +160,65 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
             {/* Spacer for fixed header */}
             <div className="h-[84px]" aria-hidden="true" />
 
-            {/* Mobile menu overlay */}
+            {/* Mobile menu — full-screen overlay */}
             <AnimatePresence>
                 {mobileMenuOpen && (
-                    <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                            className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm lg:hidden"
-                            onClick={closeMobile}
-                            aria-hidden="true"
-                        />
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                        className="fixed inset-0 z-40 bg-white/95 dark:bg-dark-background/95 backdrop-blur-xl lg:hidden flex flex-col"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Mobile navigation"
+                    >
+                        {/* Links — centered with landscape-safe scrolling */}
+                        <nav aria-label="Mobile navigation" className="flex-1 flex flex-col justify-center overflow-y-auto overscroll-contain px-8 sm:px-12 pt-24 pb-4">
+                            <ul className="space-y-1">
+                                {navigation.map((item, i) => {
+                                    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                                    return (
+                                        <motion.li
+                                            key={item.name}
+                                            initial={shouldReduceMotion ? {} : { opacity: 0, y: 12 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.04 * i, duration: 0.3 }}
+                                        >
+                                            <a
+                                                href={item.href}
+                                                onClick={closeMobile}
+                                                className={`block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${
+                                                    isActive
+                                                        ? 'text-accent'
+                                                        : 'text-brand-primary dark:text-white hover:text-accent'
+                                                }`}
+                                                aria-current={isActive ? 'page' : undefined}
+                                            >
+                                                {item.name}
+                                            </a>
+                                        </motion.li>
+                                    );
+                                })}
+                            </ul>
+                        </nav>
 
+                        {/* Bottom bar — search */}
                         <motion.div
-                            initial={{ x: '100%' }}
-                            animate={{ x: 0 }}
-                            exit={{ x: '100%' }}
-                            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed inset-y-0 right-0 z-50 w-full sm:max-w-sm bg-white dark:bg-dark-background shadow-2xl lg:hidden"
-                            role="dialog"
-                            aria-modal="true"
-                            aria-label="Mobile navigation"
+                            className="px-8 sm:px-12 pb-8 pt-4 border-t border-gray-200/60 dark:border-gray-700/30"
+                            initial={shouldReduceMotion ? {} : { opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.25 }}
                         >
-                            <div className="flex items-center justify-between px-6 py-4">
-                                <a href={`${BASE}/`} className="p-1" onClick={closeMobile}>
-                                    <span className="sr-only">ELIXIR Norway</span>
-                                    <img
-                                        alt="ELIXIR Norway logo"
-                                        src={`${BASE}/assets/logos/elixir-no-light.svg`}
-                                        className="hidden dark:block h-10 w-auto"
-                                        width="100"
-                                        height="40"
-                                    />
-                                    <img
-                                        alt="ELIXIR Norway logo"
-                                        src={`${BASE}/assets/logos/elixir-no-dark.svg`}
-                                        className="block dark:hidden h-10 w-auto"
-                                        width="100"
-                                        height="40"
-                                    />
-                                </a>
-                                <button
-                                    type="button"
-                                    onClick={closeMobile}
-                                    className="p-2 rounded-lg text-brand-grey dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                                    aria-label="Close menu"
-                                >
-                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <div className="px-6 py-4">
-                                <nav aria-label="Mobile navigation">
-                                    <ul className="space-y-1">
-                                        {navigation.map((item, i) => {
-                                            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                                            return (
-                                                <motion.li
-                                                    key={item.name}
-                                                    initial={{ opacity: 0, x: 20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: 0.05 * i }}
-                                                >
-                                                    <a
-                                                        href={item.href}
-                                                        onClick={closeMobile}
-                                                        className={`block rounded-lg px-4 py-3 text-base font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                                                            isActive
-                                                                ? 'text-accent bg-accent/10'
-                                                                : 'text-brand-grey dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5'
-                                                        }`}
-                                                        aria-current={isActive ? 'page' : undefined}
-                                                    >
-                                                        {item.name}
-                                                    </a>
-                                                </motion.li>
-                                            );
-                                        })}
-                                    </ul>
-                                </nav>
-                                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                                    <button
-                                        onClick={() => { closeMobile(); setSearchOpen(true); }}
-                                        className="flex items-center gap-3 w-full rounded-lg px-4 py-3 text-base font-semibold text-brand-grey dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                                    >
-                                        <SearchIcon className="h-5 w-5" />
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
+                            <button
+                                onClick={() => { closeMobile(); setSearchOpen(true); }}
+                                className="flex items-center gap-3 text-base font-semibold text-gray-500 dark:text-gray-400 hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                            >
+                                <SearchIcon className="h-5 w-5" />
+                                Search
+                            </button>
                         </motion.div>
-                    </>
+                    </motion.div>
                 )}
             </AnimatePresence>
         </Fragment>

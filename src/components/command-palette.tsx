@@ -159,7 +159,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                     onChange={onInputChange}
                                     onKeyDown={onKeyDown}
                                     placeholder="Search pages, services, people..."
-                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-brand-primary dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none sm:text-sm"
+                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-brand-primary dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none border-0 ring-0 focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none sm:text-sm"
                                     aria-label="Search"
                                     aria-autocomplete="list"
                                     aria-controls="search-results"

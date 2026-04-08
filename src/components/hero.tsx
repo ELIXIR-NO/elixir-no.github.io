@@ -55,7 +55,7 @@ function TypingWord({ shouldReduceMotion }: { shouldReduceMotion: boolean | null
         <span className="text-accent">
             {displayed}
             <motion.span
-                className="inline-block w-[3px] h-[0.85em] bg-accent align-baseline ml-0.5 rounded-full"
+                className="inline-block w-[0.6em] h-[3px] bg-accent ml-0.5 rounded-full translate-y-[0.1em]"
                 animate={{ opacity: [1, 0] }}
                 transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
                 aria-hidden="true"

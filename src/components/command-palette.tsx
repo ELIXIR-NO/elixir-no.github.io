@@ -140,7 +140,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                         onClick={(e) => { if (e.target === e.currentTarget) close(); }}
                     >
                         <motion.div
-                            className="mx-auto max-w-xl rounded-2xl border border-gray-200/60 dark:border-gray-700/50 bg-white dark:bg-dark-surface shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden divide-y divide-gray-100 dark:divide-gray-700/40"
+                            className="mx-auto max-w-xl rounded-2xl bg-white dark:bg-dark-surface shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden ring-1 ring-black/5 dark:ring-white/10"
                             initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.96, y: -8 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.96, y: -8 }}

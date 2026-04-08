@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Page from "../../layouts/page.astro";
+import ListingFilters from "../../components/listing-filters";
 import { idToSlug, resolveContentAsset, slugToTitleCase } from "../../lib/utils";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -61,40 +62,17 @@ const INITIAL_COUNT = 18;
         </p>
     </div>
 
-    <!-- Year filter -->
-    <div class="mt-12 flex flex-wrap items-center gap-2" id="year-filter" role="group" aria-label="Filter by year">
-        <button
-            class="year-btn active rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent bg-accent text-white"
-            data-year="all"
-        >
-            All
-            <span class="ml-1.5 text-xs text-white/70">{news.length}</span>
-        </button>
-        {years.map(([year, count]) => (
-            <button
-                class="year-btn rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600"
-                data-year={year}
-            >
-                {year}
-                <span class="ml-1.5 text-xs text-gray-500 dark:text-gray-400">{count}</span>
-            </button>
-        ))}
+    <!-- Filters -->
+    <div class="mt-12">
+        <ListingFilters
+            client:load
+            groups={[
+                { key: 'year', label: 'Year', options: years.map(([y, c]) => ({ id: y, label: y, count: c })), mode: 'single' },
+                { key: 'tags', label: 'Topic', options: tags.map(([t, c]) => ({ id: t, label: slugToTitleCase(t), count: c })), mode: 'multi' },
+            ]}
+            event="news-filters-changed"
+        />
     </div>
-
-    <!-- Tag filter -->
-    {tags.length > 0 && (
-        <div class="mt-4 flex flex-wrap items-center gap-2" id="tag-filter" role="group" aria-label="Filter by topic">
-            {tags.map(([tag, count]) => (
-                <button
-                    class="tag-btn rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600"
-                    data-tag={tag}
-                >
-                    {slugToTitleCase(tag)}
-                    <span class="ml-1 text-xs text-gray-600 dark:text-gray-400">{count}</span>
-                </button>
-            ))}
-        </div>
-    )}
 
     <!-- News grid -->
     <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="news-grid" aria-live="polite">
@@ -182,40 +160,29 @@ const INITIAL_COUNT = 18;
             var btn = document.getElementById('load-more-btn');
             var loadMoreContainer = document.getElementById('load-more-container');
             var countEl = document.getElementById('remaining-count');
-            var yearBtns = document.querySelectorAll('.year-btn');
-            var tagBtns = document.querySelectorAll('.tag-btn');
-            var activeYear = 'all';
+            var activeYear = null;
             var activeTags = new Set();
             var shown = INITIAL_COUNT;
 
-            var yearActiveCls = 'bg-accent text-white';
-            var yearInactiveCls = 'border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600';
-            var tagActiveCls = 'bg-accent text-white';
-            var tagInactiveCls = 'border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600';
-
-            var hasConstraints = function() { return activeYear !== 'all' || activeTags.size > 0; };
+            function hasConstraints() { return activeYear || activeTags.size > 0; }
 
             function updateView() {
                 var filtered = [];
                 for (var i = 0; i < cards.length; i++) {
                     var c = cards[i];
-                    var yearMatch = activeYear === 'all' || c.getAttribute('data-year') === activeYear;
+                    var yearMatch = !activeYear || c.getAttribute('data-year') === activeYear;
                     var tagMatch = true;
                     if (activeTags.size > 0) {
                         var cardTags = (c.getAttribute('data-tags') || '').split(',');
                         tagMatch = false;
-                        var iter = activeTags.values();
-                        var val = iter.next();
-                        while (!val.done) {
-                            if (cardTags.indexOf(val.value) !== -1) { tagMatch = true; break; }
-                            val = iter.next();
-                        }
+                        activeTags.forEach(function(t) {
+                            if (cardTags.indexOf(t) !== -1) tagMatch = true;
+                        });
                     }
                     if (yearMatch && tagMatch) filtered.push(c);
                 }
 
                 var limit = hasConstraints() ? filtered.length : shown;
-
                 cards.forEach(function(c) { c.classList.add('hidden'); });
                 for (var j = 0; j < Math.min(limit, filtered.length); j++) {
                     filtered[j].classList.remove('hidden');
@@ -227,48 +194,17 @@ const INITIAL_COUNT = 18;
                     } else {
                         var remaining = cards.length - shown;
                         loadMoreContainer.style.display = remaining > 0 ? '' : 'none';
-                        if (countEl && remaining > 0) {
-                            countEl.textContent = '(' + remaining + ' more)';
-                        }
+                        if (countEl && remaining > 0) countEl.textContent = '(' + remaining + ' more)';
                     }
                 }
             }
 
-            function styleYearBtns() {
-                yearBtns.forEach(function(b) {
-                    var isActive = b.getAttribute('data-year') === activeYear;
-                    b.className = 'year-btn rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ' + (isActive ? yearActiveCls : yearInactiveCls);
-                    var span = b.querySelector('span');
-                    if (span) span.className = 'ml-1.5 text-xs ' + (isActive ? 'text-white/70' : 'text-gray-500 dark:text-gray-400');
-                });
-            }
-
-            function styleTagBtns() {
-                tagBtns.forEach(function(b) {
-                    var tag = b.getAttribute('data-tag');
-                    var isActive = activeTags.has(tag);
-                    b.className = 'tag-btn rounded-full px-3 py-1 text-xs font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ' + (isActive ? tagActiveCls : tagInactiveCls);
-                    var span = b.querySelector('span');
-                    if (span) span.className = 'ml-1 text-xs ' + (isActive ? 'text-white/70' : 'text-gray-600 dark:text-gray-400');
-                });
-            }
-
-            yearBtns.forEach(function(b) {
-                b.addEventListener('click', function() {
-                    activeYear = b.getAttribute('data-year');
-                    styleYearBtns();
-                    updateView();
-                });
-            });
-
-            tagBtns.forEach(function(b) {
-                b.addEventListener('click', function() {
-                    var tag = b.getAttribute('data-tag');
-                    if (activeTags.has(tag)) activeTags.delete(tag);
-                    else activeTags.add(tag);
-                    styleTagBtns();
-                    updateView();
-                });
+            window.addEventListener('news-filters-changed', function(e) {
+                var detail = e.detail || {};
+                var yearSet = detail['year'];
+                activeYear = yearSet && yearSet.size > 0 ? Array.from(yearSet)[0] : null;
+                activeTags = detail['tags'] || new Set();
+                updateView();
             });
 
             if (btn) {

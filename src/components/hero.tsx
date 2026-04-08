@@ -1,46 +1,65 @@
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import React, { Suspense, lazy, useState, useEffect, useCallback } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 
 const ParticleField = lazy(() => import('./particle-field'));
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const ROTATING_WORDS = ['life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics'];
-const ROTATE_INTERVAL = 3000;
+const WORDS = ['life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics'];
+const TYPE_SPEED = 70;
+const DELETE_SPEED = 40;
+const PAUSE_AFTER_TYPE = 2000;
+const PAUSE_AFTER_DELETE = 400;
 
-function RotatingWord({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) {
-    const [index, setIndex] = useState(0);
-
-    const next = useCallback(() => {
-        setIndex(i => (i + 1) % ROTATING_WORDS.length);
-    }, []);
+function TypingWord({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) {
+    const [wordIndex, setWordIndex] = useState(0);
+    const [displayed, setDisplayed] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
-        if (shouldReduceMotion) return;
-        const id = setInterval(next, ROTATE_INTERVAL);
-        return () => clearInterval(id);
-    }, [shouldReduceMotion, next]);
+        if (shouldReduceMotion) {
+            setDisplayed(WORDS[0]);
+            return;
+        }
 
-    const word = ROTATING_WORDS[index];
+        const word = WORDS[wordIndex];
+
+        if (!isDeleting && displayed === word) {
+            const id = setTimeout(() => setIsDeleting(true), PAUSE_AFTER_TYPE);
+            return () => clearTimeout(id);
+        }
+
+        if (isDeleting && displayed === '') {
+            const id = setTimeout(() => {
+                setWordIndex(i => (i + 1) % WORDS.length);
+                setIsDeleting(false);
+            }, PAUSE_AFTER_DELETE);
+            return () => clearTimeout(id);
+        }
+
+        const speed = isDeleting ? DELETE_SPEED : TYPE_SPEED;
+        const id = setTimeout(() => {
+            setDisplayed(isDeleting
+                ? word.slice(0, displayed.length - 1)
+                : word.slice(0, displayed.length + 1)
+            );
+        }, speed);
+        return () => clearTimeout(id);
+    }, [displayed, isDeleting, wordIndex, shouldReduceMotion]);
 
     if (shouldReduceMotion) {
-        return <span className="text-accent">{word}</span>;
+        return <span className="text-accent">{WORDS[0]}</span>;
     }
 
     return (
-        <span className="inline-block relative overflow-clip leading-[inherit]" style={{ height: 'calc(1lh + 0.15em)' }}>
-            <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                    key={word}
-                    className="inline-block text-accent"
-                    initial={{ y: '100%', opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: '-100%', opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-                >
-                    {word}
-                </motion.span>
-            </AnimatePresence>
+        <span className="text-accent">
+            {displayed}
+            <motion.span
+                className="inline-block w-[3px] h-[0.85em] bg-accent align-baseline ml-0.5 rounded-full"
+                animate={{ opacity: [1, 0] }}
+                transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
+                aria-hidden="true"
+            />
         </span>
     );
 }
@@ -108,8 +127,8 @@ export function Hero() {
             )}
 
             <div className="relative min-h-screen flex items-center pt-[84px] pb-12 sm:pb-16 lg:pb-16 z-10">
-                <div className="w-full px-6 sm:px-8 lg:max-w-7xl lg:mx-auto lg:px-12">
-                    <div className="max-w-xl text-balance">
+                <div className="w-full px-6 sm:px-8 mx-auto text-center">
+                    <div className="max-w-3xl mx-auto">
                         <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
                             <a
                                 href="https://elixir-europe.org"
@@ -129,29 +148,28 @@ export function Hero() {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="mt-3 sm:mt-4 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-bold tracking-tight text-brand-primary dark:text-white leading-[1.1]"
                         >
-                            Research infrastructure for{' '}
-                            <RotatingWord shouldReduceMotion={shouldReduceMotion} />
+                            Research infrastructure<br />
+                            <span className="whitespace-nowrap">for <TypingWord shouldReduceMotion={shouldReduceMotion} /></span>
                         </motion.h1>
 
                         <motion.p
                             {...fadeUp}
                             transition={{ duration: 0.6, delay: 0.3 }}
-                            className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300"
+                            className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 max-w-2xl mx-auto"
                         >
-                            ELIXIR Norway supports Norwegian life science researchers with
-                            bioinformatics services, data management tools, and secure
-                            e-infrastructure — connecting Norway to Europe's leading
-                            bioinformatics network.
+                            ELIXIR Norway supports life science researchers with bioinformatics
+                            services, data management tools, and secure e-infrastructure.
+                            Part of Europe's leading bioinformatics network.
                         </motion.p>
 
                         <motion.div
                             {...fadeUp}
                             transition={{ duration: 0.6, delay: 0.4 }}
-                            className="mt-8 sm:mt-10 flex flex-wrap gap-3 sm:gap-4"
+                            className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4"
                         >
                             <a
                                 href={`${BASE}/services`}
-                                className="group inline-flex items-center px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                                className="group inline-flex items-center justify-center px-5 py-2.5 sm:py-3 rounded-lg bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                             >
                                 Explore services
                                 <svg className="ml-2 h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
@@ -160,7 +178,7 @@ export function Hero() {
                             </a>
                             <a
                                 href={`${BASE}/research-support`}
-                                className="inline-flex items-center px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-brand-grey dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                                className="inline-flex items-center justify-center px-5 py-2.5 sm:py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-brand-grey dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                             >
                                 Get support
                             </a>

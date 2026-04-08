@@ -48,11 +48,11 @@ function TypingWord({ shouldReduceMotion }: { shouldReduceMotion: boolean | null
     }, [displayed, isDeleting, wordIndex, shouldReduceMotion]);
 
     if (shouldReduceMotion) {
-        return <span className="text-accent">{WORDS[0]}</span>;
+        return <span>{WORDS[0]}</span>;
     }
 
     return (
-        <span className="text-accent">
+        <span>
             {displayed}
             <motion.span
                 className="inline-block w-[0.6em] h-[3px] bg-accent ml-0.5 rounded-full translate-y-[0.1em]"

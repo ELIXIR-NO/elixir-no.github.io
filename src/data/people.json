@@ -564,6 +564,20 @@
           "profile-url": "https://www.ntnu.edu/employees/maximilian.wess",
           "elixir-groups": [],
           "affiliations": []
+        },
+        {
+          "username": "anne-heidi-skogholt",
+          "name": "Anne Heidi Skogholt",
+          "title": "Senior Advisor",
+          "photo": "/data/people/anne-heidi-skogholt.png",
+          "profile-url": "https://www.linkedin.com/in/ahskogholt/",
+          "affiliations": [],
+          "elixir-groups": [
+            {
+              "name": "stakeholder-panel",
+              "role": null
+            }
+          ]
         }
       ]
     },

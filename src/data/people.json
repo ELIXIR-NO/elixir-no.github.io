@@ -565,8 +565,6 @@
           "elixir-groups": [],
           "affiliations": []
         }
-          ]
-        }
       ]
     },
     "nmbu": {
@@ -770,24 +768,24 @@
         }
       ]
     },
-      "hdir": {
-            "name": "Helsedirektoratet",
-            "people": [
-                {
-                  "username": "anne-heidi-skogholt",
-                  "name": "Anne Heidi Skogholt",
-                  "title": "Senior Advisor",
-                  "photo": "/data/people/anne-heidi-skogholt.png",
-                  "profile-url": "https://www.linkedin.com/in/ahskogholt/",
-                  "affiliations": [],
-                  "elixir-groups": [
-                    {
-                      "name": "stakeholder-panel",
-                      "role": null
-                    }
-                ]
-              }
-            ]
-          }
+    "hdir": {
+      "name": "Helsedirektoratet",
+      "people": [
+        {
+          "username": "anne-heidi-skogholt",
+          "name": "Anne Heidi Skogholt",
+          "title": "Senior Advisor",
+          "photo": "/data/people/anne-heidi-skogholt.png",
+          "profile-url": "https://www.linkedin.com/in/ahskogholt/",
+          "affiliations": [],
+          "elixir-groups": [
+            {
+              "name": "stakeholder-panel",
+              "role": null
+            }
+          ]
+        }
+      ]
+    }
   }
 }

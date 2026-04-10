@@ -360,20 +360,6 @@
           ]
         },
         {
-          "username": "erin-calhoun",
-          "name": "Erin Calhoun",
-          "title": "Researcher",
-          "photo": "/data/people/erin-calhoun.png",
-          "profile-url": "https://en.uit.no/ansatte/erin.calhoun",
-          "affiliations": [],
-          "elixir-groups": [
-            {
-              "name": "coordinators",
-              "role": "Training Coordinator"
-            }
-          ]
-        },
-        {
           "username": "espen-aberg",
           "name": "Espen Åberg",
           "title": "Researcher",

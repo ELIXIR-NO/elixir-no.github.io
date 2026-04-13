@@ -744,6 +744,25 @@
           ]
         }
       ]
+    },
+    "hdir": {
+      "name": "Helsedirektoratet",
+      "people": [
+        {
+          "username": "anne-heidi-skogholt",
+          "name": "Anne Heidi Skogholt",
+          "title": "Senior Advisor",
+          "photo": "/data/people/anne-heidi-skogholt.png",
+          "profile-url": "https://www.helsedirektoratet.no/",
+          "affiliations": [],
+          "elixir-groups": [
+            {
+              "name": "stakeholder-panel",
+              "role": null
+            }
+          ]
+        }
+      ]
     }
   }
 }

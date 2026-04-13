@@ -35,7 +35,7 @@ pnpm -v
 
 ```bash
 git clone https://github.com/ELIXIR-NO/website.git
-cd website
+cd elixir-no.github.io
 pnpm install
 pnpm start
 ```
@@ -47,7 +47,7 @@ Open [http://localhost:4321](http://localhost:4321) in your browser. Changes to 
 ## Project Structure
 
 ```
-website/
+elixir-no.github.io/
 ├── .github/
 │   └── workflows/
 │       ├── gh-pages.yml        # Deploy to GitHub Pages on push to main

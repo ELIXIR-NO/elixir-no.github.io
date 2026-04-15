@@ -672,6 +672,34 @@ function FieldInput({
             );
         }
 
+        case 'object': {
+            const obj = (typeof value === 'object' && value !== null) ? value as Record<string, unknown> : {};
+            const subFields = field.fields ?? [];
+            return (
+                <div className="rounded-lg border border-gray-700/50 bg-dark-background/40 p-3 space-y-3">
+                    {subFields.map((sub) => (
+                        <div key={sub.name}>
+                            <label className="block text-xs font-medium text-gray-400 mb-1">
+                                {sub.label}
+                                {sub.required && <span className="text-red-400 ml-0.5">*</span>}
+                            </label>
+                            <FieldInput
+                                field={sub}
+                                value={obj[sub.name]}
+                                onChange={(v) => {
+                                    const next = { ...obj };
+                                    if (v === '' || v === null || v === undefined) delete next[sub.name];
+                                    else next[sub.name] = v;
+                                    onChange(Object.keys(next).length ? next : null);
+                                }}
+                            />
+                            {sub.hint && <p className="text-xs text-gray-500 mt-1">{sub.hint}</p>}
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+
         default:
             return (
                 <input

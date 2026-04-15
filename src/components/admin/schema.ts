@@ -80,12 +80,13 @@ export const collections: Collection[] = [
         canCreate: true,
         depth: 1,
         layoutPath: '../../layouts/page.astro',
-        description: 'Bioinformatics services offered by ELIXIR Norway, shown at elixir.no/services. Each service has a title, summary, optional logo, and tags for categorization (e.g., e-infrastructure, analysis, data-management).',
+        description: 'Bioinformatics services offered by ELIXIR Norway, shown at elixir.no/services. Each service has a title, summary, optional logo, tags for categorization, and an external website URL shown as a "Visit service" button.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },
             { name: 'summary', label: 'Summary', type: 'text', required: true },
             { name: 'logo', label: 'Logo', type: 'image' },
             { name: 'tags', label: 'Tags', type: 'list', hint: 'e.g., e-infrastructure, analysis' },
+            { name: 'website', label: 'Website URL', type: 'string', hint: 'External link to the service (e.g., https://usegalaxy.no)' },
         ],
     },
     {
@@ -102,6 +103,18 @@ export const collections: Collection[] = [
             { name: 'summary', label: 'Summary', type: 'text' },
             { name: 'status', label: 'Status', type: 'select', options: ['ongoing', 'completed', 'unknown'] },
             { name: 'category', label: 'Category', type: 'select', options: ['european', 'elixir', 'norwegian', 'global', 'unknown'] },
+            {
+                name: 'funder', label: 'Funder', type: 'object', fields: [
+                    { name: 'name', label: 'Name', type: 'string', hint: 'e.g., European Commission, ELIXIR, Norwegian Research Council' },
+                    { name: 'link', label: 'Link', type: 'string', hint: 'URL or ROR identifier' },
+                ],
+            },
+            {
+                name: 'project_number', label: 'Project Number', type: 'object', fields: [
+                    { name: 'grant_agreement_id', label: 'Grant Agreement ID', type: 'string', hint: 'e.g., 951724 or 2021-3DBioinfo' },
+                    { name: 'link', label: 'Link', type: 'string', hint: 'URL to grant agreement or DOI' },
+                ],
+            },
             { name: 'period', label: 'Period', type: 'string', hint: 'Format: YYYY-MM YYYY-MM' },
             { name: 'external_link', label: 'External Link', type: 'string' },
             { name: 'keywords', label: 'Keywords', type: 'list' },

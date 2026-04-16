@@ -65,7 +65,7 @@ elixir-no.github.io/
 │   │   ├── news/               # News articles, organised by year (news/YYYY/slug/)
 │   │   ├── research-support/   # Research support page
 │   │   ├── accessibility/      # Accessibility statement
-│   │   └── config.ts           # Content collection schemas
+│   │   └── content.config.ts           # Content collection schemas
 │   ├── lib/                    # Shared hooks and utilities
 │   ├── pages/                  # Astro page routes
 │   ├── plugins/                # Custom Astro/Vite/rehype plugins

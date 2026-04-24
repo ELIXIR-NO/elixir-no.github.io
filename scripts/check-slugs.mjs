@@ -69,10 +69,10 @@ function check(name, fullPath, kind) {
 
 // Walk src/content/ recursively.
 // Checks all directory names and all co-located asset files.
-// Skips config.ts — it's source code, not a content slug.
+// Skips content.config.ts — it's source code, not a content slug.
 function walkContent(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === 'config.ts') continue;
+    if (entry.name === 'content.config.ts') continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       check(entry.name, fullPath, 'dir');

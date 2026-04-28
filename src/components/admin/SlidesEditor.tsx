@@ -258,7 +258,7 @@ function SlideForm({
         if (!file) return;
         const slug = form.alt.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'slide';
         const ext = (file.name.split('.').pop() || 'png').toLowerCase();
-        const path = `public/data/slides/${slug}.${ext}`;
+        const path = `src/data/slides/${slug}.${ext}`;
         setPendingImage({ file, path });
         setForm(f => ({ ...f, src: `/data/slides/${slug}.${ext}` }));
     };

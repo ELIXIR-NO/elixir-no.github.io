@@ -16,7 +16,7 @@ export default function Pricing({ tiers }) {
                         </h3>
                         {tier.mostPopular && (
                             <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-semibold text-accent">
-                                Popular
+                                Most frequently selected 
                             </span>
                         )}
                     </div>

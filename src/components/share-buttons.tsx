@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
     url: string;
@@ -8,23 +8,39 @@ interface Props {
 
 export default function ShareButtons({ url, title, summary = '' }: Props) {
     const [copied, setCopied] = useState(false);
+    const resetTimer = useRef<number | null>(null);
+
+    const flagCopied = () => {
+        setCopied(true);
+        if (resetTimer.current !== null) window.clearTimeout(resetTimer.current);
+        resetTimer.current = window.setTimeout(() => {
+            setCopied(false);
+            resetTimer.current = null;
+        }, 2000);
+    };
+
+    useEffect(() => () => {
+        if (resetTimer.current !== null) window.clearTimeout(resetTimer.current);
+    }, []);
 
     const handleCopy = async () => {
         try {
             await navigator.clipboard.writeText(url);
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 2000);
-        } catch {
-            const ta = document.createElement('textarea');
-            ta.value = url;
-            ta.setAttribute('readonly', '');
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.select();
-            try { document.execCommand('copy'); setCopied(true); window.setTimeout(() => setCopied(false), 2000); } catch { /* no-op */ }
-            document.body.removeChild(ta);
-        }
+            flagCopied();
+            return;
+        } catch { /* fall through to legacy copy */ }
+
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            if (document.execCommand('copy')) flagCopied();
+        } catch { /* no-op */ }
+        document.body.removeChild(ta);
     };
 
     const enc = encodeURIComponent;

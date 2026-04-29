@@ -79,7 +79,7 @@ export const collections: Collection[] = [
         folder: 'src/content/services',
         canCreate: true,
         depth: 1,
-        layoutPath: '../../layouts/page.astro',
+        layoutPath: '../../../layouts/page.astro',
         description: 'Bioinformatics services offered by ELIXIR Norway, shown at elixir.no/services. Each service has a title, summary, optional logo, tags for categorization, and an external website URL shown as a "Visit service" button.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },
@@ -96,7 +96,7 @@ export const collections: Collection[] = [
         folder: 'src/content/funding-and-projects',
         canCreate: true,
         depth: 1,
-        layoutPath: '../../layouts/page.astro',
+        layoutPath: '../../../layouts/page.astro',
         description: 'Research grants and EU projects at elixir.no/funding-and-projects. Includes metadata like status (ongoing/completed), category (european/norwegian/elixir), funder info, period, external links, and keywords for filtering.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },

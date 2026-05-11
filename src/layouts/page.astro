@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
+import ShareButtons from "../components/share-buttons.tsx";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -91,6 +92,9 @@ const contentType = pathname.startsWith('/news/') ? 'news'
     : pathname.startsWith('/funding-and-projects/') ? 'projects'
     : pathname.startsWith('/services/') ? 'services'
     : null;
+
+const isShareable = contentType === 'news' || contentType === 'events';
+const canonicalUrl = Astro.site ? new URL(pathname, Astro.site).toString() : pathname;
 
 // Resolve relative asset paths (./file.png) to their public URL using the page pathname
 function resolvePageAsset(src: string): string {
@@ -437,11 +441,27 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         <main id="main-content" class={`min-w-0 ${className}`}>
                             <slot />
+                            {isShareable && finalTitle && (
+                                <ShareButtons
+                                    client:visible
+                                    url={canonicalUrl}
+                                    title={finalTitle}
+                                    summary={summary ?? ''}
+                                />
+                            )}
                         </main>
                     </div>
                 ) : (
                     <main id="main-content" class={className}>
                         <slot />
+                        {isShareable && finalTitle && (
+                            <ShareButtons
+                                client:visible
+                                url={canonicalUrl}
+                                title={finalTitle}
+                                summary={summary ?? ''}
+                            />
+                        )}
                     </main>
                 )
             }

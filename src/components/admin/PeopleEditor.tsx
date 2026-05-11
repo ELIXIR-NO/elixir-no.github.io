@@ -57,7 +57,7 @@ function PersonForm({
         if (!file) return;
         const ext = (file.name.split('.').pop() || 'png').toLowerCase();
         const username = (form.username || 'new-person').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-        const path = `public/data/people/${username}.${ext}`;
+        const path = `src/data/people/${username}.${ext}`;
         setPendingImage({ file, path });
         set('photo', `/data/people/${username}.${ext}`);
     };

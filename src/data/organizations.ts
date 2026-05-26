@@ -58,7 +58,7 @@ export const organizations: Record<string, Organization> = {
         logo: '/assets/logos/orgs/uio.svg',
         color: '#c8102e',
         coverImage: '/content/about/oslo/oslo.png',
-        subtitle: 'ELIXIR@UiO — Health domain bioinformatics & cancer research',
+        subtitle: 'ELIXIR@UiO',
         coordinates: { lat: 59.938300, lng: 10.722622 },
         address: 'Kristine Bonnevies hus, Blindernveien 31, 0373 Oslo',
         contacts: [

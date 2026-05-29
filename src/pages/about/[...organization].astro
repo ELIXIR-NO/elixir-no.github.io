@@ -9,7 +9,12 @@ export const prerender = true;
 export async function getStaticPaths() {
     const allAbout = await getCollection("about");
     return allAbout
-        .filter((entry) => !ORG_SLUGS.has(idToSlug(entry.id)))
+        .filter((entry) => {
+            const slug = idToSlug(entry.id);
+            // Exclude org slugs (handled by [org].astro) and the root
+            // about/index.mdx (canonical /about lives in index.astro).
+            return !ORG_SLUGS.has(slug) && slug !== "index";
+        })
         .map((entry) => ({
             params: { organization: idToSlug(entry.id) },
             props: { entry },

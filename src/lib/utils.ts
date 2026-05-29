@@ -4,21 +4,9 @@ export const slugToTitleCase = (slug: string) => slug
     .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
     .join(' ');
 
-export const sortStringsByLength = (strings: string[]): string[] => {
-    return strings.sort((a, b) => a.length - b.length);
-};
-
 export const classNames = (...classes): string => {
     return classes.filter(Boolean).join(' ')
 }
-
-export const stringToKebabCase = (str: string) => {
-    return str
-        .toLowerCase() // convert to lowercase
-        .replace(/[^a-z0-9\s]/g, '') // remove non-alphanumeric characters except spaces
-        .trim() // remove leading/trailing spaces
-        .replace(/\s+/g, '-'); // replace spaces with hyphens
-};
 
 export const truncateStringToLength = (string: string, length: number) => {
     return (string.length > length)
@@ -56,8 +44,9 @@ export const idToSlug = (id: string): string => {
  */
 export const resolveContentAsset = (entryId: string, assetPath: string): string => {
     if (!assetPath?.startsWith('./')) return assetPath;
+    const cleanPath = assetPath.trim();
     // "news/2025-05-26_ELITMa/index.mdx" → strip filename → "news/2025-05-26_ELITMa"
     const dir = entryId.replace(/\/[^/]+$/, '');
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-    return `${base}/content/${dir}/${assetPath.slice(2)}`;
+    return `${base}/content/${dir}/${cleanPath.slice(2)}`;
 };

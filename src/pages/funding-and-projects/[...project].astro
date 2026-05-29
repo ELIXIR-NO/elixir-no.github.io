@@ -7,14 +7,16 @@ export const prerender = true;
 
 export async function getStaticPaths() {
     const projects = await getCollection("funding-and-projects");
-    return projects.map((entry) => ({
-        params: {
-            project: idToSlug(entry.id),
-        },
-        props: {
-            entry,
-        },
-    }));
+    return projects
+        .filter((entry) => !entry.data.draft)
+        .map((entry) => ({
+            params: {
+                project: idToSlug(entry.id),
+            },
+            props: {
+                entry,
+            },
+        }));
 }
 const { entry } = Astro.props;
 const { Content: MarkdownContent } = await render(entry);

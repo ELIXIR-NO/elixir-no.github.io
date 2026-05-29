@@ -118,9 +118,9 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
                 )}
                 <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${cfg.dot}`} />
             </span>
-            <span aria-live="polite">
+            <span className="text-inherit" aria-live="polite">
                 {label}
-                {countText && <span className="ml-1.5 font-medium opacity-75">· {countText}</span>}
+                {countText && <span className="text-inherit ml-1.5 font-medium opacity-75">· {countText}</span>}
             </span>
             <svg
                 className="h-3.5 w-3.5 shrink-0 opacity-80 transition-transform duration-200 group-hover:translate-x-0.5"

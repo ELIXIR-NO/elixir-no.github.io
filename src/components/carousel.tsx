@@ -136,7 +136,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                 >
                     <div className="relative max-w-screen-xl max-h-screen-90 overflow-hidden">
                         <img
-                            src={images[currentIndex].src}
+                            src={`${BASE}${images[currentIndex].src}`}
                             alt={images[currentIndex].alt}
                             className="max-w-full max-h-full object-contain"
                         />

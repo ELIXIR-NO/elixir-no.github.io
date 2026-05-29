@@ -50,7 +50,10 @@ export default function ParticleField({ playing = true }: { playing?: boolean })
         canvas.style.width = `${w}px`;
         canvas.style.height = `${h}px`;
         const ctx = canvas.getContext('2d');
-        if (ctx) ctx.scale(dpr, dpr);
+        if (ctx) {
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.scale(dpr, dpr);
+        }
         setDimensions({ w, h });
 
         particlesRef.current = createParticles(w, h);

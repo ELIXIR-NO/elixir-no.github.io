@@ -2,10 +2,15 @@
 import { getCollection } from "astro:content";
 import Page from "../../layouts/page.astro";
 import ListingFilters from "../../components/listing-filters";
+import ServiceStatusSummary from "../../components/service-status-summary";
 import { slugToTitleCase, idToSlug, resolveContentAsset } from "../../lib/utils";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 const services = (await getCollection("services")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const statusServices = services
+    .filter(s => s.data.website)
+    .map(s => ({ title: s.data.title, website: s.data.website!, slug: idToSlug(s.id) }));
 
 // Build tag list with counts
 const tagCounts = new Map<string, number>();
@@ -30,16 +35,7 @@ const tags = [...tagCounts.entries()]
             ELIXIR Norway provides software tools, databases, storage and compute infrastructure
             to support life science researchers across Norway and internationally.
         </p>
-        <a
-            href={`${BASE}/services/status`}
-            class="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
-        >
-            <span class="relative flex h-2 w-2 shrink-0">
-                <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-            </span>
-            Check live service status
-        </a>
+        <ServiceStatusSummary client:idle services={statusServices} href={`${BASE}/services/status`} />
     </div>
 
     <!-- Filter -->

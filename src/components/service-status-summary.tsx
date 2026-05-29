@@ -8,7 +8,7 @@ type ServiceInfo = {
     slug: string;
 };
 
-type Overall = 'idle' | 'checking' | 'operational' | 'issues';
+type Overall = 'idle' | 'checking' | 'operational' | 'reachable' | 'issues';
 
 const overallConfig: Record<Overall, { pill: string; dot: string; ping: string | null }> = {
     idle: {
@@ -25,6 +25,15 @@ const overallConfig: Record<Overall, { pill: string; dot: string; ping: string |
         pill: 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400',
         dot: 'bg-emerald-500',
         ping: 'bg-emerald-400',
+    },
+    // Probes that only confirmed reachability (no-cors fallback when the proxy is
+    // unavailable) — reachable but HTTP status unverified. Mirrors the detailed
+    // status page's distinct "reachable" bucket so the pill never claims
+    // "operational" for unverified results.
+    reachable: {
+        pill: 'bg-sky-50/60 dark:bg-sky-950/20 border-sky-300/60 dark:border-sky-800/40 text-sky-700 dark:text-sky-400',
+        dot: 'bg-sky-500',
+        ping: null,
     },
     issues: {
         pill: 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-300/70 dark:border-amber-800/40 text-amber-700 dark:text-amber-400',
@@ -78,13 +87,15 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
         };
     }, [checkAll]);
 
-    let checking = 0, up = 0, problems = 0;
+    let checking = 0, ok = 0, reachable = 0, problems = 0;
     statuses.forEach(s => {
         if (s === 'checking') checking++;
-        else if (s === 'ok' || s === 'reachable') up++;
+        else if (s === 'ok') ok++;
+        else if (s === 'reachable') reachable++;
         else problems++; // degraded | error | down
     });
     const total = services.length;
+    const up = ok + reachable; // confirmed reachable (verified or not)
 
     const overall: Overall = !hydrated
         ? 'idle'
@@ -92,6 +103,8 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
         ? 'checking'
         : problems > 0
         ? 'issues'
+        : reachable > 0
+        ? 'reachable' // no problems, but some only reachable (HTTP status unverified)
         : 'operational';
 
     const cfg = overallConfig[overall];
@@ -100,10 +113,12 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
         overall === 'idle' ? 'View live service status'
         : overall === 'checking' ? 'Checking service status…'
         : overall === 'operational' ? 'All systems operational'
+        : overall === 'reachable' ? 'Services reachable'
         : `${problems} service${problems !== 1 ? 's' : ''} with issues`;
 
     const countText =
         overall === 'operational' ? `${up}/${total}`
+        : overall === 'reachable' ? `${up}/${total} reachable`
         : overall === 'issues' ? `${up}/${total} up`
         : null;
 

@@ -43,8 +43,8 @@ export const idToSlug = (id: string): string => {
  * - ("services/galaxy/index.mdx", "/assets/logos/galaxy.png") → "/assets/logos/galaxy.png"
  */
 export const resolveContentAsset = (entryId: string, assetPath: string): string => {
-    if (!assetPath?.startsWith('./')) return assetPath;
-    const cleanPath = assetPath.trim();
+    const cleanPath = assetPath?.trim();
+    if (!cleanPath?.startsWith('./')) return assetPath;
     // "news/2025-05-26_ELITMa/index.mdx" → strip filename → "news/2025-05-26_ELITMa"
     const dir = entryId.replace(/\/[^/]+$/, '');
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');

@@ -68,6 +68,8 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
     // Magic-pill target: hovered link, else the active link (or hidden if neither).
     const activeIndex = navigation.findIndex((item) => isActivePath(pathname, item.href));
     const targetIndex = hoveredIndex ?? (activeIndex >= 0 ? activeIndex : null);
+    const targetIndexRef = useRef<number | null>(targetIndex);
+    targetIndexRef.current = targetIndex;
 
     const measureGlider = useCallback((index: number | null) => {
         if (index == null) { setGlider(null); return; }
@@ -79,18 +81,18 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
     useIsomorphicLayoutEffect(() => { measureGlider(targetIndex); }, [targetIndex, measureGlider]);
 
     useEffect(() => {
-        const onResize = () => measureGlider(targetIndex);
+        const onResize = () => measureGlider(targetIndexRef.current);
         window.addEventListener('resize', onResize);
         return () => window.removeEventListener('resize', onResize);
-    }, [targetIndex, measureGlider]);
+    }, [measureGlider]);
 
     // Re-measure once the web font (Space Grotesk) has loaded — link widths shift.
     useEffect(() => {
         if (typeof document === 'undefined' || !('fonts' in document)) return;
         let cancelled = false;
-        document.fonts.ready.then(() => { if (!cancelled) measureGlider(targetIndex); });
+        document.fonts.ready.then(() => { if (!cancelled) measureGlider(targetIndexRef.current); });
         return () => { cancelled = true; };
-    }, [targetIndex, measureGlider]);
+    }, [measureGlider]);
 
     useEffect(() => {
         setHoverCapable(window.matchMedia('(hover: hover) and (pointer: fine)').matches);

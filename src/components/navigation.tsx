@@ -1,7 +1,11 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import { Fragment, useEffect, useState, useCallback } from "react";
 import CommandPalette from "./command-palette.tsx";
 import ThemeToggle from "./theme-toggle.tsx";
+import NavAboutMenu from "./nav-about-menu.tsx";
+import NavDropdown from "./nav-dropdown.tsx";
+import NavMobileAccordion from "./nav-mobile-accordion.tsx";
+import { useMagicPill } from "../lib/hooks/use-magic-pill";
 
 const SearchIcon = ({ className }: { className?: string }) => (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
@@ -21,6 +25,14 @@ const navigation = [
     { href: `${BASE}/news`, name: "News" },
 ];
 
+const isActivePath = (pathname: string, href: string) =>
+    pathname === href || pathname.startsWith(href + '/');
+
+const navLinkClass = (active: boolean) =>
+    `relative z-10 px-3 py-2 text-sm 2xl:text-base font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+        active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white'
+    }`;
+
 const useScrolled = (threshold = 20) => {
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
@@ -37,6 +49,9 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
     const [searchOpen, setSearchOpen] = useState(false);
     const scrolled = useScrolled();
     const shouldReduceMotion = useReducedMotion();
+
+    const activeIndex = navigation.findIndex((item) => isActivePath(pathname, item.href));
+    const { glider, setHoveredIndex, registerRef } = useMagicPill(activeIndex);
 
     const closeMobile = useCallback(() => setMobileMenuOpen(false), []);
 
@@ -64,46 +79,61 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             : 'bg-white/40 dark:bg-dark-background/40 backdrop-blur-md border border-white/40 dark:border-white/10'
                     }`}
                 >
-                    <nav
-                        aria-label="Main navigation"
-                        className="flex items-center justify-between px-5 py-3 lg:px-6"
-                    >
+                    <nav aria-label="Main navigation" className="flex items-center justify-between px-5 py-3 lg:px-6">
 
                         {/* Logo */}
                         <div className="flex shrink-0">
                             <a href={`${BASE}/`} className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg">
                                 <span className="sr-only">ELIXIR Norway</span>
-                                <img
-                                    alt="ELIXIR Norway logo"
-                                    src={`${BASE}/assets/logos/elixir-no-light.svg`}
-                                    className="hidden dark:block h-14 w-auto"
-                                    width="120"
-                                    height="48"
-                                />
-                                <img
-                                    alt="ELIXIR Norway logo"
-                                    src={`${BASE}/assets/logos/elixir-no-dark.svg`}
-                                    className="block dark:hidden h-14 w-auto"
-                                    width="120"
-                                    height="48"
-                                />
+                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className="hidden dark:block h-14 w-auto" width="120" height="48" />
+                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className="block dark:hidden h-14 w-auto" width="120" height="48" />
                             </a>
                         </div>
 
-                        {/* Desktop nav links */}
-                        <div className="hidden lg:flex lg:items-center lg:gap-x-1">
-                            {navigation.map((item) => {
-                                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                        {/* Desktop nav links + magic pill */}
+                        <div
+                            className="relative hidden lg:flex lg:items-center lg:gap-x-1"
+                            onMouseLeave={() => setHoveredIndex(null)}
+                        >
+                            {glider && (
+                                <motion.span
+                                    aria-hidden="true"
+                                    className="pointer-events-none absolute rounded-lg bg-accent/10"
+                                    initial={false}
+                                    animate={{ left: glider.left, top: glider.top, width: glider.width, height: glider.height }}
+                                    transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
+                                />
+                            )}
+
+                            {navigation.map((item, i) => {
+                                const active = isActivePath(pathname, item.href);
+
+                                if (item.name === 'About') {
+                                    return (
+                                        <NavDropdown
+                                            key={item.name}
+                                            label={item.name}
+                                            href={item.href}
+                                            active={active}
+                                            panelId="about-menu-panel"
+                                            panelLabel="About ELIXIR Norway"
+                                            panelClassName="w-80"
+                                            rootRef={registerRef(i)}
+                                            onHover={() => setHoveredIndex(i)}
+                                        >
+                                            {(close) => <NavAboutMenu pathname={pathname} variant="panel" onNavigate={close} />}
+                                        </NavDropdown>
+                                    );
+                                }
+
                                 return (
                                     <a
                                         key={item.name}
+                                        ref={registerRef(i)}
                                         href={item.href}
-                                        className={`relative px-3 py-2 text-sm 2xl:text-base font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                                            isActive
-                                                ? 'text-accent bg-accent/10'
-                                                : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
-                                        }`}
-                                        aria-current={isActive ? 'page' : undefined}
+                                        onMouseEnter={() => setHoveredIndex(i)}
+                                        className={navLinkClass(active)}
+                                        aria-current={active ? 'page' : undefined}
                                     >
                                         {item.name}
                                     </a>
@@ -136,19 +166,13 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                 <div className="w-[18px] h-3.5 relative flex flex-col justify-between" aria-hidden="true">
                                     <motion.span
                                         className="block h-[2px] w-full bg-current rounded-full origin-center"
-                                        animate={mobileMenuOpen
-                                            ? { rotate: 45, y: 5 }
-                                            : { rotate: 0, y: 0 }
-                                        }
-                                        transition={{ duration: 0.25 }}
+                                        animate={mobileMenuOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
+                                        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.25 }}
                                     />
                                     <motion.span
                                         className="block h-[2px] w-full bg-current rounded-full origin-center"
-                                        animate={mobileMenuOpen
-                                            ? { rotate: -45, y: -5 }
-                                            : { rotate: 0, y: 0 }
-                                        }
-                                        transition={{ duration: 0.25 }}
+                                        animate={mobileMenuOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
+                                        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.25 }}
                                     />
                                 </div>
                             </button>
@@ -173,11 +197,12 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         aria-modal="true"
                         aria-label="Mobile navigation"
                     >
-                        {/* Links — centered with landscape-safe scrolling */}
                         <nav aria-label="Mobile navigation" className="flex-1 flex flex-col justify-center overflow-y-auto overscroll-contain px-8 sm:px-12 pt-24 pb-4">
                             <ul className="space-y-1">
                                 {navigation.map((item, i) => {
-                                    const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                                    const active = isActivePath(pathname, item.href);
+                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${active ? 'text-accent' : 'text-brand-primary dark:text-white hover:text-accent'}`;
+
                                     return (
                                         <motion.li
                                             key={item.name}
@@ -185,25 +210,28 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: 0.04 * i, duration: 0.3 }}
                                         >
-                                            <a
-                                                href={item.href}
-                                                onClick={closeMobile}
-                                                className={`block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${
-                                                    isActive
-                                                        ? 'text-accent'
-                                                        : 'text-brand-primary dark:text-white hover:text-accent'
-                                                }`}
-                                                aria-current={isActive ? 'page' : undefined}
-                                            >
-                                                {item.name}
-                                            </a>
+                                            {item.name === 'About' ? (
+                                                <NavMobileAccordion
+                                                    label={item.name}
+                                                    href={item.href}
+                                                    active={active}
+                                                    panelId="about-accordion"
+                                                    linkClassName={bigLink}
+                                                    onNavigate={closeMobile}
+                                                >
+                                                    <NavAboutMenu pathname={pathname} variant="accordion" onNavigate={closeMobile} />
+                                                </NavMobileAccordion>
+                                            ) : (
+                                                <a href={item.href} onClick={closeMobile} className={bigLink} aria-current={active ? 'page' : undefined}>
+                                                    {item.name}
+                                                </a>
+                                            )}
                                         </motion.li>
                                     );
                                 })}
                             </ul>
                         </nav>
 
-                        {/* Bottom bar — search */}
                         <motion.div
                             className="px-8 sm:px-12 pb-8 pt-4 border-t border-gray-200/60 dark:border-gray-700/30"
                             initial={shouldReduceMotion ? {} : { opacity: 0 }}

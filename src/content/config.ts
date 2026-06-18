@@ -21,14 +21,6 @@ const accessibility = defineCollection({
     }),
 });
 
-const banner = defineCollection({
-    type: 'content',
-    schema: z.object({
-        title: z.string().optional(),
-        summary: z.string().optional(),
-    }),
-});
-
 const events = defineCollection({
     type: 'content',
     schema: z.object({
@@ -67,14 +59,6 @@ const fundingAndProjects = defineCollection({
     }),
 });
 
-const landing = defineCollection({
-    type: 'content',
-    schema: z.object({
-        layout: z.string().optional(),
-        variant: z.string().optional(),
-    }),
-});
-
 const news = defineCollection({
     type: 'content',
     schema: z.object({
@@ -91,15 +75,6 @@ const news = defineCollection({
     }),
 });
 
-const researchSupport = defineCollection({
-    type: 'content',
-    schema: z.object({
-        title: z.string().optional(),
-        layout: z.string().optional(),
-        variant: z.string().optional(),
-    }),
-});
-
 const services = defineCollection({
     type: 'content',
     schema: z.object({
@@ -113,15 +88,6 @@ const services = defineCollection({
     }),
 });
 
-const training = defineCollection({
-    type: 'content',
-    schema: z.object({
-        layout: z.string().optional(),
-        variant: z.string().optional(),
-        title: z.string().optional(),
-    }),
-});
-
 export const collections = {
     news,
     services,
@@ -129,8 +95,4 @@ export const collections = {
     about,
     'funding-and-projects': fundingAndProjects,
     accessibility,
-    banner,
-    landing,
-    'research-support': researchSupport,
-    training,
 };

@@ -4,16 +4,6 @@ export const slugToTitleCase = (slug: string) => slug
     .map((w) => `${w.charAt(0).toUpperCase()}${w.slice(1)}`)
     .join(' ');
 
-export const classNames = (...classes): string => {
-    return classes.filter(Boolean).join(' ')
-}
-
-export const truncateStringToLength = (string: string, length: number) => {
-    return (string.length > length)
-        ? `${string.substring(0, length).trim()}...`
-        : string
-};
-
 /**
  * Converts Astro v5 content id to a URL-safe slug path.
  * entry.id is relative to the collection directory (no collection prefix).

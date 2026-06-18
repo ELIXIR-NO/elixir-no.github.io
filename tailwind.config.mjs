@@ -15,16 +15,13 @@ export default {
                 brand: {
                     "primary": "#023452",
                     "secondary": "#f47d20",
-                    "secondary-text": "#d97016",
                     "grey": "#4d4848",
-                    "green": "#bebf32",
                 },
                 light: {
                     "background": colors.white,
                     "surface": "#f8f9fa",
                     "on-background": "#4d4848",
                     "on-surface": "#4d4848",
-                    "on-primary": "#f47d20",
                 },
                 dark: {
                     "background": "#121212",
@@ -35,11 +32,7 @@ export default {
                 },
             },
             invert: {
-                25: '.25',
-                50: '.5',
-                75: '.75',
                 85: '.85',
-                95: '.95',
             },
         },
     },

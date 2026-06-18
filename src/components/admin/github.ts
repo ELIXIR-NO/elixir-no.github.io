@@ -124,17 +124,6 @@ export async function getFileSha(token: string, path: string): Promise<string | 
     return data.sha;
 }
 
-/** Upload a binary file (image) — returns the blob SHA */
-export async function uploadBlob(token: string, base64Content: string): Promise<string> {
-    const res = await fetch(`${API}/repos/${REPO_OWNER}/${REPO_NAME}/git/blobs`, {
-        method: 'POST',
-        headers: headers(token),
-        body: JSON.stringify({ content: base64Content, encoding: 'base64' }),
-    });
-    const data = await res.json();
-    return data.sha;
-}
-
 /** Get the authenticated user (cached) */
 export async function getUser(token: string): Promise<{ login: string; avatar_url: string; name: string }> {
     const cached = cacheGet<{ login: string; avatar_url: string; name: string }>('user');
@@ -319,6 +308,3 @@ export async function readJsonFile<T = unknown>(token: string, path: string): Pr
     const content = await readFile(token, path);
     return JSON.parse(content);
 }
-
-/** OAuth configuration */
-export const OAUTH_AUTH_URL = 'https://elixir-cms-oauth.vercel.app/auth';

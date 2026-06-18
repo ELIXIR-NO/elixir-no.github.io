@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
-@import "animate.css";
 
 @tailwind base;
 @tailwind components;
@@ -114,26 +113,6 @@
     }
   }
 
-}
-
-.tess-controls {
-  @apply flex justify-center mb-4;
-}
-
-.tess-search {
-  @apply flex items-center space-x-3 !important;
-}
-
-.tess-search input {
-  @apply px-4 py-2 w-full flex bg-light-surface dark:bg-dark-surface text-light-on-surface dark:text-dark-on-surface border border-gray-300 dark:border-gray-600 rounded-lg !important;
-}
-
-.tess-search-clear {
-  @apply text-light-on-surface dark:text-dark-on-surface hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer !important;
-}
-
-.tess-search button {
-  @apply bg-brand-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-brand-primary focus:ring-2 focus:ring-brand-primary !important;
 }
 
 /* ─── CMS Preview styles ──────────────────────────────── */

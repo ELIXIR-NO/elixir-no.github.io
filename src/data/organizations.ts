@@ -118,7 +118,3 @@ export const organizations: Record<string, Organization> = {
 };
 
 export const ORG_SLUGS = new Set(Object.keys(organizations));
-
-export function getOrganization(slug: string): Organization | undefined {
-    return organizations[slug];
-}

@@ -111,7 +111,12 @@
           "photo": "/data/people/david-dolan.png",
           "profile-url": "https://www4.uib.no/en/find-employees/David.William.Peter.Dolan",
           "affiliations": [],
-          "elixir-groups": []
+          "elixir-groups": [
+	      {
+		  "name": "coordinators",
+		  "role": "Deputy Training Coordinator"
+	      }
+	  ]
         },
         {
           "username": "siri-kallhovd",
@@ -275,7 +280,12 @@
           "photo": "/data/people/federico-bianchini.png",
           "profile-url": "https://www.mn.uio.no/bils/english/people/fredebi/",
           "affiliations": [],
-          "elixir-groups": []
+            "elixir-groups": [
+		{
+		    "name": "coordinators",
+		    "role": "Depuy Training Coordinator"
+		}
+	    ]
         },
         {
           "username": "victor-kalbskopf",

@@ -111,12 +111,7 @@
           "photo": "/data/people/david-dolan.png",
           "profile-url": "https://www4.uib.no/en/find-employees/David.William.Peter.Dolan",
           "affiliations": [],
-          "elixir-groups": [
-	      {
-		  "name": "coordinators",
-		  "role": "Deputy Training Coordinator"
-	      }
-	  ]
+          "elixir-groups": []
         },
         {
           "username": "siri-kallhovd",

@@ -275,12 +275,12 @@
           "photo": "/data/people/federico-bianchini.png",
           "profile-url": "https://www.mn.uio.no/bils/english/people/fredebi/",
           "affiliations": [],
-            "elixir-groups": [
-		{
-		    "name": "coordinators",
-		    "role": "Depuy Training Coordinator"
-		}
-	    ]
+          "elixir-groups": [
+            {
+              "name": "coordinators",
+              "role": "Deputy Training Coordinator"
+            }
+          ]
         },
         {
           "username": "victor-kalbskopf",

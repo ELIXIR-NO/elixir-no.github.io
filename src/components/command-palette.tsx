@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import DomPurify from 'dompurify';
+import { MagnifyingGlassIcon, ExclamationCircleIcon, NewspaperIcon, CalendarIcon, CubeIcon, FolderIcon, AcademicCapIcon, UserGroupIcon, DocumentTextIcon } from '@heroicons/react/24/outline';
 
 const ignoredPaths = /^\/news\/?$/;
 const DEBOUNCE_MS = 200;
@@ -25,14 +26,14 @@ function resultIcon(url: string) {
     return 'page';
 }
 
-const iconPaths: Record<string, string> = {
-    news: 'M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z',
-    event: 'M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5',
-    service: 'M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V15m0 0l-2.25 1.313',
-    project: 'M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z',
-    training: 'M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5',
-    about: 'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z',
-    page: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z',
+const iconMap: Record<string, typeof NewspaperIcon> = {
+    news: NewspaperIcon,
+    event: CalendarIcon,
+    service: CubeIcon,
+    project: FolderIcon,
+    training: AcademicCapIcon,
+    about: UserGroupIcon,
+    page: DocumentTextIcon,
 };
 
 export default function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
@@ -108,6 +109,17 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
         if (e.key === 'Enter' && results[activeIndex]) { navigate(results[activeIndex].url); }
     }, [close, navigate, results, activeIndex]);
 
+    // Close on Escape regardless of focus — clicking the results area moves
+    // focus off the input, so the input's own onKeyDown can't catch Escape.
+    useEffect(() => {
+        if (!open) return;
+        const onEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') { e.preventDefault(); close(); }
+        };
+        document.addEventListener('keydown', onEsc);
+        return () => document.removeEventListener('keydown', onEsc);
+    }, [open, close]);
+
     useEffect(() => {
         const el = listRef.current?.children[activeIndex] as HTMLElement | undefined;
         el?.scrollIntoView({ block: 'nearest' });
@@ -149,9 +161,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                         >
                             {/* Search input */}
                             <div className="grid grid-cols-1">
-                                <svg className="pointer-events-none col-start-1 row-start-1 ml-4 h-5 w-5 self-center text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
+                                <MagnifyingGlassIcon className="pointer-events-none col-start-1 row-start-1 ml-4 h-5 w-5 self-center text-gray-400 dark:text-gray-500" aria-hidden="true" />
                                 <input
                                     ref={inputRef}
                                     type="text"
@@ -177,7 +187,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                 >
                                     {results.map((item, i) => {
                                         const type = resultIcon(item.url);
-                                        const path = iconPaths[type];
+                                        const ResultIcon = iconMap[type];
                                         const sanitized = sanitize(item.excerpt);
                                         return (
                                             <div
@@ -193,9 +203,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                                         : 'hover:bg-gray-50 dark:hover:bg-white/[0.04]'
                                                 }`}
                                             >
-                                                <svg className={`h-5 w-5 shrink-0 mt-0.5 ${i === activeIndex ? 'text-accent' : 'text-gray-400 dark:text-gray-500'}`} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d={path} />
-                                                </svg>
+                                                <ResultIcon className={`h-5 w-5 shrink-0 mt-0.5 ${i === activeIndex ? 'text-accent' : 'text-gray-400 dark:text-gray-500'}`} aria-hidden="true" />
                                                 <div className="min-w-0 flex-1">
                                                     <p className={`text-sm font-medium truncate ${
                                                         i === activeIndex
@@ -223,9 +231,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                             {/* No results */}
                             {hasQuery && results.length === 0 && (
                                 <div className="px-6 py-14 text-center">
-                                    <svg className="mx-auto h-6 w-6 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                                    </svg>
+                                    <ExclamationCircleIcon className="mx-auto h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                                     <p className="mt-4 text-sm font-medium text-brand-primary dark:text-white">No results found</p>
                                     <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Try a different search term</p>
                                 </div>

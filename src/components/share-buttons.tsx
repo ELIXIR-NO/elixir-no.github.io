@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { CheckIcon, EnvelopeIcon, LinkIcon } from '@heroicons/react/24/outline';
 
 interface Props {
     url: string;
@@ -73,13 +74,9 @@ export default function ShareButtons({ url, title, summary = '' }: Props) {
                         className={btn}
                     >
                         {copied ? (
-                            <svg className="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={2.2} stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                            </svg>
+                            <CheckIcon className="h-4 w-4 text-accent" aria-hidden="true" />
                         ) : (
-                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
-                            </svg>
+                            <LinkIcon className="h-4 w-4" aria-hidden="true" />
                         )}
                     </button>
                     <a
@@ -109,9 +106,7 @@ export default function ShareButtons({ url, title, summary = '' }: Props) {
                         aria-label="Share via email"
                         className={btn}
                     >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                        </svg>
+                        <EnvelopeIcon className="h-4 w-4" aria-hidden="true" />
                     </a>
                 </div>
                 <span

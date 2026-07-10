@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { CheckIcon, ExclamationTriangleIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { probe, type Status } from '../lib/service-probe';
 
 type ServiceInfo = {
@@ -116,21 +117,15 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                     </div>
                 ) : allOk ? (
                     <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
-                        <svg className="h-5 w-5 text-emerald-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                        </svg>
+                        <CheckIcon className="h-5 w-5 text-emerald-500" aria-hidden="true" />
                     </div>
                 ) : problems > 0 ? (
                     <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center shrink-0">
-                        <svg className="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
-                        </svg>
+                        <ExclamationTriangleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                 ) : (
                     <div className="h-10 w-10 rounded-full bg-sky-100 dark:bg-sky-900/20 flex items-center justify-center shrink-0">
-                        <svg className="h-5 w-5 text-sky-500" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                        </svg>
+                        <InformationCircleIcon className="h-5 w-5 text-sky-500" aria-hidden="true" />
                     </div>
                 )}
                 <div>

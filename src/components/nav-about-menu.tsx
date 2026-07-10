@@ -1,12 +1,11 @@
 import { aboutNodes, aboutOverviewHref } from '../data/nav-menu';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const isActive = (pathname: string, href: string) =>
     pathname === href || pathname.startsWith(href + '/');
 
 const ArrowIcon = () => (
-    <svg className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-    </svg>
+    <ArrowRightIcon className="h-3.5 w-3.5 shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden="true" />
 );
 
 type Props = {

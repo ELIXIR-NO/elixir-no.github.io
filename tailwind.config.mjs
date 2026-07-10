@@ -8,7 +8,8 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Space Grotesk', ...defaultTheme.fontFamily.sans],
+                sans: ['var(--font-body, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
+                display: ['var(--font-display, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 accent: 'rgb(var(--color-accent) / <alpha-value>)',

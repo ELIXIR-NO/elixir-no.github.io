@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export type FilterOption = {
     id: string;
@@ -140,9 +141,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                     onClick={clearAll}
                     className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
                 >
-                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
+                    <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     Clear filters ({activeCount})
                 </button>
             )}
@@ -157,9 +156,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                 className="sm:hidden flex items-center gap-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-brand-primary dark:text-white transition-colors hover:border-accent/30 w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-expanded={mobileOpen}
             >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                </svg>
+                <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
                 Filters
                 {hasFilters && (
                     <span className="rounded-full bg-accent text-white text-xs px-1.5 py-0.5 leading-none">

@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const ChevronIcon = ({ className }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
-    </svg>
+    <ChevronDownIcon className={className} aria-hidden="true" />
 );
 
 const linkColor = (active: boolean) =>
@@ -89,7 +88,7 @@ export default function NavDropdown({
         >
             <a
                 href={href}
-                className={`rounded-lg py-2 pl-3 pr-1.5 text-sm 2xl:text-base font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
+                className={`rounded-lg py-2 pl-3.5 pr-1.5 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
                 aria-current={active ? 'page' : undefined}
             >
                 {label}

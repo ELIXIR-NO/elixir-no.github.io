@@ -2,6 +2,7 @@
 import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
+import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -241,9 +242,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 href={`${BASE}/${contentType === 'projects' ? 'funding-and-projects' : contentType}`}
                                 class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors mb-6"
                             >
-                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                                </svg>
+                                <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                                 {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
                             </a>
                         )}
@@ -324,9 +323,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {/* Date row for non-news */}
                         {contentType !== 'news' && dateObj && (
                             <div class="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                                </svg>
+                                <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                 <time datetime={dateObj.toISOString()}>
                                     {formattedDate}
                                 </time>
@@ -340,17 +337,13 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                             <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
                                 {period && (
                                     <span class="inline-flex items-center gap-1.5" title={period}>
-                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                        </svg>
+                                        <ClockIcon className="h-4 w-4" aria-hidden="true" />
                                         {periodToRelative(period)}
                                     </span>
                                 )}
                                 {funder?.name && (
                                     <span class="inline-flex items-center gap-1.5">
-                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21" />
-                                        </svg>
+                                        <BuildingLibraryIcon className="h-4 w-4" aria-hidden="true" />
                                         {funder.link
                                             ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-brand-primary dark:hover:text-white transition-colors">{funder.name}</a>
                                             : funder.name
@@ -359,9 +352,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 )}
                                 {externalLink && (
                                     <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-brand-primary dark:hover:text-white transition-colors">
-                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                        </svg>
+                                        <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                                         Project website
                                     </a>
                                 )}
@@ -384,9 +375,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 class="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
                             >
                                 Visit service
-                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                </svg>
+                                <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                             </a>
                         )}
 

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,7 +46,7 @@
   html.dark { scrollbar-color: rgba(255,255,255,0.2) transparent; }
 
   h1, h2, h3, h4, h5, h6, dt {
-    @apply tracking-tight text-pretty text-slate-950 dark:text-slate-50;
+    @apply font-display tracking-tight text-pretty text-slate-950 dark:text-slate-50;
 
     #main-content &:first-child {
       @apply mt-0;

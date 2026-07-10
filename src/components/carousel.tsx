@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Transition } from '@headlessui/react';
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -94,14 +94,14 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                     className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-black bg-opacity-50 group-hover:bg-opacity-75 rounded-full p-2"
                     aria-label="Previous slide"
                 >
-                    <IoIosArrowBack className="h-6 w-6" aria-hidden="true"/>
+                    <ChevronLeftIcon className="h-6 w-6" aria-hidden="true"/>
                 </button>
                 <button
                     onClick={nextSlide}
                     className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-black bg-opacity-50 group-hover:bg-opacity-75 rounded-full p-2"
                     aria-label="Next slide"
                 >
-                    <IoIosArrowForward className="h-6 w-6" aria-hidden="true"/>
+                    <ChevronRightIcon className="h-6 w-6" aria-hidden="true"/>
                 </button>
             </div>
 
@@ -145,11 +145,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                             className="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none"
                             aria-label="Close fullscreen view"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24"
-                                 stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                      d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
+                            <XMarkIcon className="h-8 w-8" aria-hidden="true" />
                         </button>
                     </div>
                 </div>

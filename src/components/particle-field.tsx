@@ -9,8 +9,9 @@ interface Particle {
     opacity: number;
 }
 
-const CONNECTION_DISTANCE = 140;
-const CONNECTION_OPACITY = 0.1;
+const CONNECTION_DISTANCE = 165;
+const CONNECTION_OPACITY = 0.22;
+const CONNECTION_WIDTH = 0.9;
 const SPEED = 0.2;
 
 function particleCount(w: number): number {
@@ -116,20 +117,16 @@ export default function ParticleField({ playing = true }: { playing?: boolean })
                         ctx!.moveTo(particles[i].x, particles[i].y);
                         ctx!.lineTo(particles[j].x, particles[j].y);
                         ctx!.strokeStyle = `rgba(${accentRgb} / ${alpha})`;
-                        ctx!.lineWidth = 0.5;
+                        ctx!.lineWidth = CONNECTION_WIDTH;
                         ctx!.stroke();
                     }
                 }
             }
 
-            // Draw particles (triangles)
+            // Draw particles
             for (const p of particles) {
-                const r = p.radius;
                 ctx!.beginPath();
-                ctx!.moveTo(p.x, p.y - r);
-                ctx!.lineTo(p.x - r * 0.866, p.y + r * 0.5);
-                ctx!.lineTo(p.x + r * 0.866, p.y + r * 0.5);
-                ctx!.closePath();
+                ctx!.arc(p.x, p.y, p.radius * 0.7, 0, Math.PI * 2);
                 ctx!.fillStyle = `rgba(${accentRgb} / ${p.opacity})`;
                 ctx!.fill();
             }

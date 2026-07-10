@@ -1,7 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { ArrowRightIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
 
 const ParticleField = lazy(() => import('./particle-field'));
+const MotionChevronDown = motion.create(ChevronDownIcon);
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -89,19 +91,12 @@ function ScrollCue({ shouldReduceMotion }: { shouldReduceMotion: boolean | null 
             transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 1 }}
             className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 p-2 text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-full"
         >
-            <motion.svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
+            <MotionChevronDown
                 className="h-6 w-6"
                 aria-hidden="true"
                 animate={shouldReduceMotion ? {} : { y: [0, 6, 0] }}
                 transition={shouldReduceMotion ? {} : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </motion.svg>
+            />
         </motion.button>
     );
 }
@@ -137,9 +132,7 @@ export function Hero() {
                                 className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
                             >
                                 Part of the European ELIXIR infrastructure
-                                <svg className="ml-1.5 h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                </svg>
+                                <ArrowTopRightOnSquareIcon className="ml-1.5 h-3 w-3 opacity-60" aria-hidden="true" />
                             </a>
                         </motion.div>
 
@@ -169,17 +162,16 @@ export function Hero() {
                         >
                             <a
                                 href={`${BASE}/services`}
-                                className="group inline-flex items-center justify-center px-5 py-2.5 sm:py-3 rounded-lg bg-brand-primary text-white font-bold text-sm hover:bg-brand-primary/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-brand-primary text-white font-semibold text-sm shadow-lg shadow-brand-primary/25 transform-gpu transition-all duration-200 ease-out hover:shadow-xl hover:shadow-brand-primary/30 motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
                             >
                                 Explore services
-                                <svg className="ml-2 h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                                </svg>
+                                <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true" />
                             </a>
                             <a
                                 href={`${BASE}/research-support`}
-                                className="inline-flex items-center justify-center px-5 py-2.5 sm:py-3 rounded-lg border border-gray-300 dark:border-gray-600 text-brand-grey dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white/50 dark:bg-white/[0.03] backdrop-blur-sm text-brand-primary dark:text-gray-200 font-semibold text-sm transform-gpu transition-all duration-200 ease-out hover:border-accent/50 hover:bg-white dark:hover:bg-white/[0.07] motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
                             >
+                                <LifebuoyIcon className="h-4 w-4 text-accent" aria-hidden="true" />
                                 Get support
                             </a>
                         </motion.div>

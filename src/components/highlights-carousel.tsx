@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { PauseIcon, PlayIcon } from '@heroicons/react/24/solid';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -74,18 +76,14 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                         className="p-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label="Previous slide"
                     >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                        </svg>
+                        <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <button
                         onClick={next}
                         className="p-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label="Next slide"
                     >
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                        </svg>
+                        <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
                     </button>
                 </div>
             </div>
@@ -163,13 +161,9 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                         aria-label={paused ? 'Resume auto-play' : 'Pause auto-play'}
                     >
                         {paused ? (
-                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
+                            <PlayIcon className="h-4 w-4" aria-hidden="true" />
                         ) : (
-                            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-                            </svg>
+                            <PauseIcon className="h-4 w-4" aria-hidden="true" />
                         )}
                     </button>
                 </div>

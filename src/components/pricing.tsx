@@ -1,3 +1,5 @@
+import { CheckIcon } from '@heroicons/react/24/outline';
+
 export default function Pricing({ tiers }) {
     return (
         <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -39,9 +41,7 @@ export default function Pricing({ tiers }) {
                     <ul role="list" className="mt-5 flex-1 space-y-2.5">
                         {tier.features.map((feature) => (
                             <li key={feature} className="flex items-start gap-2.5 text-sm text-brand-grey dark:text-gray-300">
-                                <svg className="h-4 w-4 shrink-0 mt-0.5 text-accent" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                </svg>
+                                <CheckIcon className="h-4 w-4 shrink-0 mt-0.5 text-accent" aria-hidden="true" />
                                 {feature}
                             </li>
                         ))}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import { probe, type Status } from '../lib/service-probe';
 
 type ServiceInfo = {
@@ -137,12 +138,10 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
                 {label}
                 {countText && <span className="text-inherit ml-1.5 font-medium opacity-75">· {countText}</span>}
             </span>
-            <svg
+            <ArrowRightIcon
                 className="h-3.5 w-3.5 shrink-0 opacity-80 transition-transform duration-200 group-hover:translate-x-0.5"
-                fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" aria-hidden="true"
-            >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
+                aria-hidden="true"
+            />
         </a>
     );
 }

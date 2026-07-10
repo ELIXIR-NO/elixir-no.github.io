@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import { HiArrowSmRight } from "react-icons/hi";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 const news = (await getCollection("news"))
     .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
     .splice(0, 3);
@@ -21,7 +21,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     <li>
         <a href={`${BASE}/news`} class="link flex items-center">
             More news
-            <HiArrowSmRight/>
+            <ArrowRightIcon className="h-4 w-4 ml-1" aria-hidden="true" />
         </a>
     </li>
 </ul>

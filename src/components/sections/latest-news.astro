@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { ArrowRightIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -46,9 +47,7 @@ const featuredCover = featured?.data.cover?.source
                 class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent/5 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
                 View all news
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
+                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </a>
         </div>
 
@@ -88,9 +87,7 @@ const featuredCover = featured?.data.cover?.source
                         </p>
                         <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white group-hover:text-brand-secondary transition-colors">
                             Read article
-                            <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                            </svg>
+                            <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                         </span>
                     </div>
                 </a>
@@ -132,9 +129,7 @@ const featuredCover = featured?.data.cover?.source
                                 </p>
                             </div>
 
-                            <svg class="flex-shrink-0 h-5 w-5 text-gray-500 dark:text-gray-400 group-hover:text-accent transition-all group-hover:translate-x-1 mt-1" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
+                            <ChevronRightIcon className="flex-shrink-0 h-5 w-5 text-gray-500 dark:text-gray-400 group-hover:text-accent transition-all group-hover:translate-x-1 mt-1" aria-hidden="true" />
                         </a>
                     );
                 })}
@@ -148,9 +143,7 @@ const featuredCover = featured?.data.cover?.source
                 class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent/5 rounded-lg transition-colors"
             >
                 View all news
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                </svg>
+                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </a>
         </div>
     </div>

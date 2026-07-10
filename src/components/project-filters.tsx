@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { AdjustmentsHorizontalIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 export type FilterOption = {
     id: string;
@@ -85,9 +86,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                                                 : 'border-gray-300 dark:border-gray-600'
                                         }`}>
                                             {isActive && (
-                                                <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" aria-hidden="true">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                                </svg>
+                                                <CheckIcon className="h-3 w-3 text-white" aria-hidden="true" />
                                             )}
                                         </span>
                                         {opt.label}
@@ -106,9 +105,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                     onClick={clearAll}
                     className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors"
                 >
-                    <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
+                    <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     Clear all filters ({activeCount})
                 </button>
             )}
@@ -123,9 +120,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                 className="lg:hidden flex items-center gap-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-brand-primary dark:text-white transition-colors hover:border-accent/30 w-full justify-center"
                 aria-expanded={mobileOpen}
             >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-                </svg>
+                <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
                 Filters
                 {hasAnyFilter && (
                     <span className="rounded-full bg-accent text-white text-xs px-1.5 py-0.5 leading-none">

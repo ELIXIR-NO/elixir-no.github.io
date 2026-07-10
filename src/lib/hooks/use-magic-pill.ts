@@ -45,7 +45,7 @@ export function useMagicPill(activeIndex: number) {
         return () => window.removeEventListener('resize', onResize);
     }, [measure]);
 
-    // Re-measure once the web font (Space Grotesk) has loaded — item widths shift.
+    // Re-measure once web fonts have loaded — item widths shift as the face swaps.
     useEffect(() => {
         if (typeof document === 'undefined' || !('fonts' in document)) return;
         let cancelled = false;

@@ -86,7 +86,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                                                 : 'border-gray-300 dark:border-gray-600'
                                         }`}>
                                             {isActive && (
-                                                <CheckIcon className="h-3 w-3 text-white" aria-hidden="true" />
+                                                <CheckIcon className="h-3 w-3 text-white" strokeWidth={3} aria-hidden="true" />
                                             )}
                                         </span>
                                         {opt.label}

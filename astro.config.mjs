@@ -10,28 +10,34 @@ import { rehypeRelativeAssets } from './src/plugins/rehype-relative-assets.mjs';
 // https://astro.build/config
 export default defineConfig({
     site: 'https://elixir.no',
-    // Self-hosted, preloaded web fonts (no visitor→Google request; CLS-safe).
-    // Body drives UI + MDX prose; display drives headings only.
-    // Fonts API is experimental in Astro 5.x.
+    // Self-vendored, preloaded web fonts (files live in src/assets/fonts, so the
+    // build has no network dependency and visitors never hit Google; CLS-safe).
+    // Body drives UI + MDX prose; display drives headings only. Both are variable
+    // fonts, so one file per family covers its weight range.
+    // Fonts API is experimental in Astro 5.x (Astro is pinned to ~5.18 for it).
     experimental: {
         fonts: [
             {
-                provider: fontProviders.google(),
+                provider: fontProviders.local(),
                 name: 'Hanken Grotesk',
                 cssVariable: '--font-body',
-                weights: [400, 500, 600, 700],
-                styles: ['normal'],
-                subsets: ['latin'],
                 fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+                options: {
+                    variants: [
+                        { weight: '400 700', style: 'normal', src: ['./src/assets/fonts/hanken-grotesk.woff2'] },
+                    ],
+                },
             },
             {
-                provider: fontProviders.google(),
+                provider: fontProviders.local(),
                 name: 'Bricolage Grotesque',
                 cssVariable: '--font-display',
-                weights: [500, 600, 700, 800],
-                styles: ['normal'],
-                subsets: ['latin'],
                 fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+                options: {
+                    variants: [
+                        { weight: '500 800', style: 'normal', src: ['./src/assets/fonts/bricolage-grotesque.woff2'] },
+                    ],
+                },
             },
         ],
     },

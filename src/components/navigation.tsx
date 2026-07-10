@@ -6,11 +6,10 @@ import NavAboutMenu from "./nav-about-menu.tsx";
 import NavDropdown from "./nav-dropdown.tsx";
 import NavMobileAccordion from "./nav-mobile-accordion.tsx";
 import { useMagicPill } from "../lib/hooks/use-magic-pill";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const SearchIcon = ({ className }: { className?: string }) => (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-    </svg>
+    <MagnifyingGlassIcon className={className} aria-hidden="true" />
 );
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -29,7 +28,7 @@ const isActivePath = (pathname: string, href: string) =>
     pathname === href || pathname.startsWith(href + '/');
 
 const navLinkClass = (active: boolean) =>
-    `relative z-10 px-3 py-2 text-sm 2xl:text-base font-semibold rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+    `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white'
     }`;
 
@@ -85,8 +84,8 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         <div className="flex shrink-0">
                             <a href={`${BASE}/`} className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg">
                                 <span className="sr-only">ELIXIR Norway</span>
-                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className="hidden dark:block h-14 w-auto" width="120" height="48" />
-                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className="block dark:hidden h-14 w-auto" width="120" height="48" />
+                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className="hidden dark:block h-10 w-auto" width="120" height="48" />
+                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className="block dark:hidden h-10 w-auto" width="120" height="48" />
                             </a>
                         </div>
 
@@ -182,7 +181,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
             </header>
 
             {/* Spacer for fixed header */}
-            <div className="h-[84px]" aria-hidden="true" />
+            <div className="h-[76px]" aria-hidden="true" />
 
             {/* Mobile menu — full-screen overlay */}
             <AnimatePresence>

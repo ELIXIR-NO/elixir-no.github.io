@@ -1,10 +1,9 @@
 import { useState, type ReactNode } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const ChevronIcon = ({ className }: { className?: string }) => (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" d="m6 9 6 6 6-6" />
-    </svg>
+    <ChevronDownIcon className={className} aria-hidden="true" />
 );
 
 type Props = {

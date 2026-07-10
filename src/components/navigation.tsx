@@ -181,7 +181,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
             </header>
 
             {/* Spacer for fixed header */}
-            <div className="h-[76px]" aria-hidden="true" />
+            <div className="h-[84px]" aria-hidden="true" />
 
             {/* Mobile menu — full-screen overlay */}
             <AnimatePresence>

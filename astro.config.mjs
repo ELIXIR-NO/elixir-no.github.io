@@ -1,4 +1,4 @@
-import {defineConfig} from 'astro/config';
+import {defineConfig, fontProviders} from 'astro/config';
 import {rehypeHeadingIds} from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
 import tailwind from "@astrojs/tailwind";
@@ -10,6 +10,31 @@ import { rehypeRelativeAssets } from './src/plugins/rehype-relative-assets.mjs';
 // https://astro.build/config
 export default defineConfig({
     site: 'https://elixir.no',
+    // Self-hosted, preloaded web fonts (no visitor→Google request; CLS-safe).
+    // Body drives UI + MDX prose; display drives headings only.
+    // Fonts API is experimental in Astro 5.x.
+    experimental: {
+        fonts: [
+            {
+                provider: fontProviders.google(),
+                name: 'Hanken Grotesk',
+                cssVariable: '--font-body',
+                weights: [400, 500, 600, 700],
+                styles: ['normal'],
+                subsets: ['latin'],
+                fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+            {
+                provider: fontProviders.google(),
+                name: 'Bricolage Grotesque',
+                cssVariable: '--font-display',
+                weights: [500, 600, 700, 800],
+                styles: ['normal'],
+                subsets: ['latin'],
+                fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+            },
+        ],
+    },
     redirects: {
         // ── Legacy underscore/mixed-case slugs → year/slug ──────────────────────
         '/events/2025-06-10_arendalsuka':                           { destination: '/events/2025/arendalsuka',                                    status: 301 },

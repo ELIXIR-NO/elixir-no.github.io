@@ -1,6 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {collect, readCurrent} from './collect-candidates.mjs';
+import {collect, readCurrent, usableCover} from './collect-candidates.mjs';
+import {resolveArticle} from './frontmatter.mjs';
 
 test('collect returns current slides and a ranked candidate pool', () => {
     const {current, candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
@@ -15,4 +16,16 @@ test('collect returns current slides and a ranked candidate pool', () => {
 
 test('readCurrent parses slides.json', () => {
     assert.ok(Array.isArray(readCurrent()));
+});
+
+test('usableCover rejects a raw portrait/oversized cover and accepts a good one', () => {
+    const badArt = resolveArticle('news/2026/elixir-norway-all-hands'); // 3888x5184, 24.9MB
+    const goodArt = resolveArticle('news/2025/eosc-entrust-workshop');  // landscape, small
+    assert.equal(usableCover(badArt), false);
+    assert.equal(usableCover(goodArt), true);
+});
+
+test('collect excludes candidates whose cover fails the quality gates', () => {
+    const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
+    assert.ok(!candidates.some(c => c.ref === 'news/2026/elixir-norway-all-hands'));
 });

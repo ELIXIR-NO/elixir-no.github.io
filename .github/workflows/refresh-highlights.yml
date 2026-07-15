@@ -56,8 +56,10 @@ jobs:
         env:
           GITHUB_PAGES: true
 
-      - name: Open PR and auto-merge
+      - name: Open PR and merge
+        id: pr
         if: steps.refresh.outputs.result == 'changed' && steps.build.outcome == 'success'
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.SLIDES_BOT_TOKEN || github.token }}
         run: |
@@ -72,18 +74,21 @@ jobs:
           PR_URL=$(gh pr create --base main --head "$BRANCH" \
             --title "chore(slides): refresh homepage highlights" \
             --body "Automated highlights refresh. Slide selection and captions were regenerated from recent content; validation and build passed.")
-          gh pr merge "$PR_URL" --squash --auto --delete-branch \
-            || gh pr merge "$PR_URL" --squash --admin --delete-branch
+          # The workflow already ran validation + pnpm build as its own gate, so
+          # merge immediately with --admin (deterministic, no waiting on pr-test,
+          # which does not run for GITHUB_TOKEN-created PRs). A failure here is
+          # loud: continue-on-error keeps the run going so the issue is opened.
+          gh pr merge "$PR_URL" --squash --admin --delete-branch
 
       - name: Report failure
-        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure'
+        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           TITLE="Highlights refresh failed"
           BODY="The scheduled highlights refresh failed on run ${{ github.run_id }}. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
-          EXISTING=$(gh issue list --label slides-bot --state open --json number --jq '.[0].number' || echo "")
+          EXISTING=$(gh issue list --label slides-bot --state open --json number --jq '.[0].number // empty' || echo "")
           if [ -n "$EXISTING" ]; then
             gh issue comment "$EXISTING" --body "$BODY"
           else
@@ -91,6 +96,6 @@ jobs:
             gh issue create --title "$TITLE" --label slides-bot --body "$BODY"
           fi
 
-      - name: Fail job if pipeline or build failed
-        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure'
+      - name: Fail job if pipeline, build, or merge failed
+        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
         run: exit 1

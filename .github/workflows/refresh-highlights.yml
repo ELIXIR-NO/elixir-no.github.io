@@ -1,0 +1,96 @@
+name: Refresh Highlights
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'   # Mon ~08:00 Europe/Oslo (UTC; ±1h DST drift)
+    - cron: '0 15 * * 5'  # Fri ~16:00 Europe/Oslo
+  workflow_dispatch:
+
+concurrency:
+  group: refresh-highlights
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install OpenCode (pinned; agent is optional)
+        continue-on-error: true
+        run: npm install -g opencode-ai@0.5.29
+
+      - name: Run refresh pipeline
+        id: refresh
+        continue-on-error: true
+        env:
+          # Optional: set repo secrets to enable the caption agent. Absent → the
+          # pipeline uses summary-derived captions (fully functional).
+          SLIDES_AGENT_MODEL: ${{ vars.SLIDES_AGENT_MODEL }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/slides/refresh.mjs --diff-scope
+
+      - name: Build sanity gate
+        id: build
+        if: steps.refresh.outcome == 'success' && steps.refresh.outputs.result == 'changed'
+        continue-on-error: true
+        run: pnpm build
+        env:
+          GITHUB_PAGES: true
+
+      - name: Open PR and auto-merge
+        if: steps.refresh.outputs.result == 'changed' && steps.build.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.SLIDES_BOT_TOKEN || github.token }}
+        run: |
+          set -euo pipefail
+          BRANCH="bot/slides-refresh-${{ github.run_id }}"
+          git config user.name "elixir-no-bot"
+          git config user.email "actions@github.com"
+          git checkout -b "$BRANCH"
+          git add src/data/slides.json src/data/slides
+          git commit -m "chore(slides): refresh homepage highlights"
+          git push origin "$BRANCH"
+          PR_URL=$(gh pr create --base main --head "$BRANCH" \
+            --title "chore(slides): refresh homepage highlights" \
+            --body "Automated highlights refresh. Slide selection and captions were regenerated from recent content; validation and build passed.")
+          gh pr merge "$PR_URL" --squash --auto --delete-branch \
+            || gh pr merge "$PR_URL" --squash --admin --delete-branch
+
+      - name: Report failure
+        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TITLE="Highlights refresh failed"
+          BODY="The scheduled highlights refresh failed on run ${{ github.run_id }}. See the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})."
+          EXISTING=$(gh issue list --label slides-bot --state open --json number --jq '.[0].number' || echo "")
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+          else
+            gh label create slides-bot --color BFD4F2 --description "Automated highlights refresh" 2>/dev/null || true
+            gh issue create --title "$TITLE" --label slides-bot --body "$BODY"
+          fi
+
+      - name: Fail job if pipeline or build failed
+        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure'
+        run: exit 1

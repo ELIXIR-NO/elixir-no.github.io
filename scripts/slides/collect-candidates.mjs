@@ -37,7 +37,11 @@ function toCandidate(a) {
 
 export function collect(now = new Date()) {
     const current = readCurrent();
-    const ranked = rankCandidates(withCover(listArticles()).filter(usableCover), now);
+    // A fresh candidate must have a non-empty summary: the fallback caption is
+    // derived from it, and an empty summary would make caption == alt (== title),
+    // which the validator rejects and which would abort every run.
+    const usable = a => usableCover(a) && !!(a.summary && a.summary.trim());
+    const ranked = rankCandidates(withCover(listArticles()).filter(usable), now);
     const byRef = new Map(ranked.map(a => [a.ref, a]));
     for (const s of current) {
         if (s.sourceArticle && !byRef.has(s.sourceArticle)) {

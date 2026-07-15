@@ -60,3 +60,14 @@ test('the swap cap keeps the two highest-scored fresh, not any two', () => {
     const news = slides.filter(s => s._candidate).map(s => s.sourceArticle).sort();
     assert.deepEqual(news, ['news/2026/a', 'news/2026/b']); // top two by score, not c/d
 });
+
+test('retains an untracked (CMS-added) current entry and tags it evergreen', () => {
+    const current = [
+        {src: '/data/slides/nels.png', alt: 'NeLS', caption: 'c', evergreen: true},
+        {src: '/data/slides/human-added.png', alt: 'Human highlight', caption: 'Added via CMS'},
+    ];
+    const {slides} = selectSlides({current, candidates: []});
+    const human = slides.find(s => s.src === '/data/slides/human-added.png');
+    assert.ok(human, 'untracked entry must survive');
+    assert.equal(human.evergreen, true, 'untracked entry must be tagged evergreen');
+});

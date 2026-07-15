@@ -35,3 +35,9 @@ test('a bootstrapped sourceArticle ref is always present in candidates', () => {
     assert.ok(candidates.some(c => c.ref === 'news/2025/eosc-entrust-workshop'),
         'eosc-entrust (a tagged sourceArticle) must be scored and included');
 });
+
+test('every candidate has a non-empty summary (fallback caption needs it)', () => {
+    const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
+    assert.ok(candidates.length > 0);
+    assert.ok(candidates.every(c => c.summary && c.summary.trim()), 'no candidate may have an empty summary');
+});

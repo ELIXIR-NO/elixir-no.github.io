@@ -9,7 +9,13 @@ export function selectSlides({current, candidates}) {
     const byRef = new Map(candidates.map(c => [c.ref, c]));
     const scoreOf = ref => byRef.get(ref)?.score ?? 0;
 
-    const evergreens = current.filter(s => s.evergreen === true);
+    // Evergreen pins AND untracked entries (e.g. a slide freshly added via the
+    // CMS, which has no ownership key yet) are retained in place. Untracked ones
+    // are stamped `evergreen: true` so they are protected and self-heal their
+    // tag — never dropped. This is the spec's fail-closed rule.
+    const evergreens = current
+        .filter(s => s.evergreen === true || !s.sourceArticle)
+        .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
     const budget = Math.max(0, MAX_SLIDES - evergreens.length);
 
     const botIncumbents = current.filter(s => s.sourceArticle && s.evergreen !== true);

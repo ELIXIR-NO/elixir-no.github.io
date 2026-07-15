@@ -29,3 +29,9 @@ test('collect excludes candidates whose cover fails the quality gates', () => {
     const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
     assert.ok(!candidates.some(c => c.ref === 'news/2026/elixir-norway-all-hands'));
 });
+
+test('a bootstrapped sourceArticle ref is always present in candidates', () => {
+    const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
+    assert.ok(candidates.some(c => c.ref === 'news/2025/eosc-entrust-workshop'),
+        'eosc-entrust (a tagged sourceArticle) must be scored and included');
+});

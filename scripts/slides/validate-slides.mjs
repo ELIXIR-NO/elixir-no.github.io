@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {
-    SLIDES_JSON, SLIDES_DIR, MAX_SLIDES, MIN_SLIDES, SRC_RE,
+    SLIDES_JSON, SLIDES_DIR, MAX_SLIDES, MIN_SLIDES, SRC_RE, BOT_FILE_RE,
     MAX_CAPTION, MAX_ALT, MIN_IMG_WIDTH, MIN_ASPECT, MAX_IMG_BYTES,
 } from './constants.mjs';
 import {probeImage} from './image-probe.mjs';
@@ -39,9 +39,13 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
             const img = probeImage(abs);
             const ext = path.extname(abs).slice(1).toLowerCase();
             if (EXT_FORMAT[ext] !== img.format) v.push(`${at} format ${img.format} != extension .${ext}`);
-            if (img.width < MIN_IMG_WIDTH) v.push(`${at} width ${img.width} < ${MIN_IMG_WIDTH}`);
-            if (img.width / img.height < MIN_ASPECT) v.push(`${at} not landscape (${img.width}x${img.height})`);
-            if (img.bytes > MAX_IMG_BYTES) v.push(`${at} file too large (${img.bytes} > ${MAX_IMG_BYTES})`);
+            // Quality gates apply only to bot-created images (<year>-<slug>.<ext>).
+            // Legacy/human pins predate the automation and are grandfathered.
+            if (BOT_FILE_RE.test(path.basename(abs))) {
+                if (img.width < MIN_IMG_WIDTH) v.push(`${at} width ${img.width} < ${MIN_IMG_WIDTH}`);
+                if (img.width / img.height < MIN_ASPECT) v.push(`${at} not landscape (${img.width}x${img.height})`);
+                if (img.bytes > MAX_IMG_BYTES) v.push(`${at} file too large (${img.bytes} > ${MAX_IMG_BYTES})`);
+            }
         } catch (e) {
             v.push(`${at} image probe failed: ${e.message}`);
         }

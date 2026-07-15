@@ -1,5 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import os from 'node:os';
+import fs from 'node:fs';
+import path from 'node:path';
 import {validateSlides} from './validate-slides.mjs';
 import {SLIDES_DIR} from './constants.mjs';
 
@@ -33,4 +36,24 @@ test('grandfathers a large legacy-named evergreen image (quality gates are bot-o
     };
     // 3.37MB and a legacy filename (no <year>- prefix) → exempt from size/width/aspect.
     assert.deepEqual(validateSlides([bigLegacy], {slidesDir: SLIDES_DIR}), []);
+});
+
+test('still enforces quality gates on a bot-named image (guard is not a blanket exemption)', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'slides-validate-'));
+    try {
+        // The 3.37MB image copied under a bot-style name (BOT_FILE_RE matches),
+        // so the size gate must fire even though the same bytes are exempt under
+        // the legacy filename.
+        fs.copyFileSync(path.join(SLIDES_DIR, 'elixir-no-all-hands-2025.jpg'), path.join(dir, '2025-all-hands.jpg'));
+        const slide = {
+            src: '/data/slides/2025-all-hands.jpg',
+            alt: 'A group photo',
+            caption: 'A caption about the meeting.',
+            sourceArticle: 'news/2025/all-hands',
+        };
+        const violations = validateSlides([slide], {slidesDir: dir});
+        assert.ok(violations.some(m => /file too large/.test(m)), violations.join('; '));
+    } finally {
+        fs.rmSync(dir, {recursive: true, force: true});
+    }
 });

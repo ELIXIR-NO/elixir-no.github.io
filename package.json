@@ -16,7 +16,9 @@
     "postbuild": "pagefind --site dist",
     "test:slugs": "node scripts/check-slugs.mjs",
     "test:pages": "node scripts/test-pages.mjs",
-    "slides:collect": "node scripts/slides/collect-candidates.mjs"
+    "slides:collect": "node scripts/slides/collect-candidates.mjs",
+    "slides:refresh": "node scripts/slides/refresh.mjs",
+    "slides:validate": "node scripts/slides/validate-slides.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.0",

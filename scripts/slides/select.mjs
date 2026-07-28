@@ -28,6 +28,9 @@ export function selectSlides({current, candidates}) {
     const ambiguous = current.find(s => s.evergreen === true && s.sourceArticle);
     if (ambiguous) return halt(`${ambiguous.src} carries both evergreen and sourceArticle; remove one`);
 
+    const malformed = current.find(s => s.sourceArticle && typeof s.sourceArticle !== 'string');
+    if (malformed) return halt(`${malformed.src} has a non-string sourceArticle`);
+
     const evergreens = current
         .filter(s => s.evergreen === true || !s.sourceArticle)
         .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));

@@ -84,6 +84,13 @@ test('refuses to act on a dual-key entry instead of silently resolving it', () =
     assert.deepEqual(slides, current);
 });
 
+test('refuses to act on a sourceArticle that is not a ref string', () => {
+    const current = [{src: '/data/slides/x.png', alt: 'X', caption: 'c', sourceArticle: {ref: 'news/2026/a'}}];
+    const {blocked, changed} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.ok(blocked, 'a non-string ref must be named, not crash the comparator');
+    assert.equal(changed, false);
+});
+
 test('refuses to act when two incumbents name the same article', () => {
     // Which of the two to keep is the same unanswerable question as a dual-key
     // entry. Picking one silently deletes the other slide and its image.

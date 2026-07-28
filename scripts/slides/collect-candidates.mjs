@@ -48,8 +48,7 @@ function toCandidate(a) {
     };
 }
 
-export function collect(now = new Date()) {
-    const current = readCurrent();
+export function collect(now = new Date(), {current = readCurrent()} = {}) {
     const ranked = rankCandidates(withCover(listArticles()).filter(usableCandidate), now);
     const byRef = new Map(ranked.map(a => [a.ref, a]));
     for (const s of current) {

@@ -42,13 +42,17 @@ test('collect excludes candidates whose cover fails the quality gates', () => {
     assert.ok(!candidates.some(c => c.ref === 'news/2026/elixir-norway-all-hands'));
 });
 
-test('every bot-managed slide on screen is scored and offered back as a candidate', () => {
-    // Asserted against whatever slides.json holds rather than a fixed ref, so a
-    // content PR that retires an article cannot fail this on unrelated grounds.
-    const {current, candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
-    const refs = candidates.map(c => c.ref);
-    for (const s of current.filter(s => s.sourceArticle))
-        assert.ok(refs.includes(s.sourceArticle), `${s.sourceArticle} must be scored, not silently dropped`);
+test('an incumbent that has aged out of the ranked pool is still scored', () => {
+    // Hysteresis compares an incumbent against its challengers, so an incumbent
+    // missing from the pool would score 0 and be dropped the moment it left the
+    // top slots. Driven from a synthetic current: the committed slides.json has
+    // no bot-managed entry to exercise this with.
+    const aged = 'news/2018/fair-data-management-in-molecular-life-sciences';
+    const current = [{src: '/data/slides/x.png', alt: 'X', caption: 'c', sourceArticle: aged}];
+    const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)), {current});
+    const rescued = candidates.find(c => c.ref === aged);
+    assert.ok(rescued, 'an on-screen article must be scored even when it ranks below the pool');
+    assert.equal(typeof rescued.score, 'number');
 });
 
 test('usableCandidate accepts a well-formed article', () => {

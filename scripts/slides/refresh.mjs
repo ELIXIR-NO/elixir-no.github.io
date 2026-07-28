@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import {SLIDES_JSON} from './constants.mjs';
 import {collect} from './collect-candidates.mjs';
 import {selectSlides} from './select.mjs';
 import {writeCaptions} from './caption-agent.mjs';
@@ -22,9 +21,8 @@ export async function refresh({diffScope = false} = {}) {
     }
 
     await writeCaptions(slides);
-    const {deleted} = apply(slides);
+    const {deleted, slides: applied} = apply(slides);
 
-    const applied = JSON.parse(fs.readFileSync(SLIDES_JSON, 'utf8'));
     const violations = validateSlides(applied);
     if (diffScope) violations.push(...diffScopeViolations());
     if (violations.length) {

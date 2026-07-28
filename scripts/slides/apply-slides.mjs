@@ -31,5 +31,5 @@ export function apply(slides) {
     for (const f of deleted) fs.rmSync(path.join(SLIDES_DIR, f));
 
     fs.writeFileSync(SLIDES_JSON, JSON.stringify(clean, null, 4) + '\n');
-    return {deleted};
+    return {deleted, slides: clean};
 }

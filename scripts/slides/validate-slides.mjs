@@ -3,11 +3,34 @@ import path from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {
     SLIDES_JSON, SLIDES_DIR, MAX_SLIDES, MIN_SLIDES, SRC_RE, BOT_FILE_RE,
-    MAX_CAPTION, MAX_ALT, MIN_IMG_WIDTH, MIN_ASPECT, MAX_IMG_BYTES,
+    MAX_CAPTION, MAX_ALT, MIN_IMG_WIDTH, MIN_ASPECT, MAX_IMG_BYTES, ILLEGAL_TEXT_RE,
 } from './constants.mjs';
 import {probeImage} from './image-probe.mjs';
 
 const EXT_FORMAT = {png: 'png', jpg: 'jpeg', jpeg: 'jpeg', webp: 'webp'};
+
+// The acceptance rules live here so producers can check themselves against the
+// same predicate the gate enforces. `collect-candidates` screens covers with
+// imageQualityIssues, `caption-agent` screens model output with textIssues; if
+// either drifted from the gate the pipeline would pick work it then rejects.
+export function imageQualityIssues({width, height, bytes}) {
+    const issues = [];
+    if (width < MIN_IMG_WIDTH) issues.push(`width ${width} < ${MIN_IMG_WIDTH}`);
+    if (width / height < MIN_ASPECT) issues.push(`not landscape (${width}x${height})`);
+    if (bytes > MAX_IMG_BYTES) issues.push(`file too large (${bytes} > ${MAX_IMG_BYTES})`);
+    return issues;
+}
+
+export function textIssues(alt, caption) {
+    const issues = [];
+    for (const [field, val, max] of [['caption', caption, MAX_CAPTION], ['alt', alt, MAX_ALT]]) {
+        if (typeof val !== 'string' || !val.trim()) {issues.push(`${field} empty`); continue;}
+        if (val.length > max) issues.push(`${field} too long (${val.length} > ${max})`);
+        if (ILLEGAL_TEXT_RE.test(val)) issues.push(`${field} has illegal characters`);
+    }
+    if (typeof alt === 'string' && alt.trim() === (caption || '').trim()) issues.push('alt equals caption');
+    return issues;
+}
 
 export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
     const v = [];
@@ -25,14 +48,7 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
         if (s.evergreen === true && s.sourceArticle) v.push(`${at} has both evergreen and sourceArticle`);
         else if (!(s.evergreen === true) && !s.sourceArticle) v.push(`${at} untracked (no evergreen/sourceArticle)`);
 
-        for (const [field, max] of [['caption', MAX_CAPTION], ['alt', MAX_ALT]]) {
-            const val = s[field];
-            if (typeof val !== 'string' || !val.trim()) {v.push(`${at} ${field} empty`); continue;}
-            if (val.length > max) v.push(`${at} ${field} too long (${val.length} > ${max})`);
-            if (/[\x00-\x1f<>`]/.test(val)) v.push(`${at} ${field} has illegal characters`);
-        }
-        if (typeof s.alt === 'string' && s.alt.trim() === (s.caption || '').trim())
-            v.push(`${at} alt equals caption`);
+        for (const issue of textIssues(s.alt, s.caption)) v.push(`${at} ${issue}`);
 
         const abs = path.join(slidesDir, path.basename(s.src));
         if (!fs.existsSync(abs)) {v.push(`${at} image missing: ${abs}`); continue;}
@@ -42,11 +58,8 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
             if (EXT_FORMAT[ext] !== img.format) v.push(`${at} format ${img.format} != extension .${ext}`);
             // Quality gates apply only to bot-created images (<year>-<slug>.<ext>).
             // Legacy/human pins predate the automation and are grandfathered.
-            if (BOT_FILE_RE.test(path.basename(abs))) {
-                if (img.width < MIN_IMG_WIDTH) v.push(`${at} width ${img.width} < ${MIN_IMG_WIDTH}`);
-                if (img.width / img.height < MIN_ASPECT) v.push(`${at} not landscape (${img.width}x${img.height})`);
-                if (img.bytes > MAX_IMG_BYTES) v.push(`${at} file too large (${img.bytes} > ${MAX_IMG_BYTES})`);
-            }
+            if (BOT_FILE_RE.test(path.basename(abs)))
+                for (const issue of imageQualityIssues(img)) v.push(`${at} ${issue}`);
         } catch (e) {
             v.push(`${at} image probe failed: ${e.message}`);
         }

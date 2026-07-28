@@ -1,8 +1,9 @@
 import fs from 'node:fs';
-import {SLIDES_JSON, MIN_IMG_WIDTH, MIN_ASPECT, MAX_IMG_BYTES} from './constants.mjs';
+import {SLIDES_JSON} from './constants.mjs';
 import {listArticles, resolveArticle, withCover} from './frontmatter.mjs';
 import {rankCandidates, scoreArticle, topicsOf} from './rank.mjs';
 import {probeImage} from './image-probe.mjs';
+import {imageQualityIssues} from './validate-slides.mjs';
 
 export function readCurrent() {
     return JSON.parse(fs.readFileSync(SLIDES_JSON, 'utf8'));
@@ -16,10 +17,7 @@ export function readCurrent() {
 export function usableCover(a) {
     if (!a.coverAbsPath) return false;
     try {
-        const img = probeImage(a.coverAbsPath);
-        return img.width >= MIN_IMG_WIDTH
-            && img.width / img.height >= MIN_ASPECT
-            && img.bytes <= MAX_IMG_BYTES;
+        return !imageQualityIssues(probeImage(a.coverAbsPath)).length;
     } catch {
         return false;
     }

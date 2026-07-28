@@ -2,6 +2,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {MAX_CAPTION, MAX_ALT} from './constants.mjs';
+import {textIssues} from './validate-slides.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 
@@ -22,11 +23,7 @@ export function properNounsOk(text, cand) {
 }
 
 export function validAgentText(alt, caption, cand) {
-    if (typeof alt !== 'string' || typeof caption !== 'string') return false;
-    if (!alt.trim() || !caption.trim()) return false;
-    if (alt.length > MAX_ALT || caption.length > MAX_CAPTION) return false;
-    if (/[\x00-\x1f<>`]/.test(alt + caption)) return false;
-    if (alt.trim() === caption.trim()) return false;
+    if (textIssues(alt, caption).length) return false;
     return properNounsOk(caption, cand) && properNounsOk(alt, cand);
 }
 

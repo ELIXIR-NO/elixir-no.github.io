@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
-export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 export const SLIDES_JSON = path.join(REPO_ROOT, 'src/data/slides.json');
 export const SLIDES_DIR = path.join(REPO_ROOT, 'src/data/slides');
 export const CONTENT_DIR = path.join(REPO_ROOT, 'src/content');
@@ -19,6 +19,9 @@ export const MAX_ALT = 125;
 export const MIN_IMG_WIDTH = 800;
 export const MAX_IMG_BYTES = 3_000_000;
 export const MIN_ASPECT = 0.9; // width/height must be >= this (landscape-ish)
+
+// Control characters plus the three that break MDX/JSX or shell-quote a caption.
+export const ILLEGAL_TEXT_RE = /[\x00-\x1f<>`]/;
 
 export const SRC_RE = /^\/data\/slides\/[a-z0-9-]+\.(png|jpe?g|webp)$/;
 export const BOT_FILE_RE = /^\d{4}-[a-z0-9-]+\.(png|jpe?g|webp)$/;

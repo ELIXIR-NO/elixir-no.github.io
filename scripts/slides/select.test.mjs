@@ -71,3 +71,14 @@ test('retains an untracked (CMS-added) current entry and tags it evergreen', () 
     assert.ok(human, 'untracked entry must survive');
     assert.equal(human.evergreen, true, 'untracked entry must be tagged evergreen');
 });
+
+test('stamping an untracked entry counts as a change so the tag is written back', () => {
+    const current = [
+        {src: '/data/slides/nels.png', alt: 'NeLS', caption: 'c', evergreen: true},
+        {src: '/data/slides/human-added.png', alt: 'Human highlight', caption: 'Added via CMS'},
+    ];
+    // src/alt/caption are all identical to current; only the new evergreen tag
+    // differs. Reporting no-op here would strand the entry untracked forever.
+    const {changed} = selectSlides({current, candidates: []});
+    assert.equal(changed, true);
+});

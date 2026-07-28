@@ -14,8 +14,13 @@ Every slide entry carries exactly one signal:
 - `"sourceArticle": "collection/year/slug"`, bot-managed. Scored from that
   article each run; rotated by recency + editorial weight; dropped when it ages
   out. `funding-and-projects` refs have two segments (no year).
-- Neither key, treated as evergreen (fail closed) and logged. Should not occur
+- Neither key, treated as evergreen (fail closed) and stamped `evergreen: true`
+  on the next run, so the tag shows up in that run's PR diff. Should not occur
   after bootstrap.
+
+Carrying both keys is a validation error. If one slips in anyway, `evergreen`
+wins and the redundant `sourceArticle` is dropped the next time the file is
+written.
 
 Bot-created image files are named `<year>-<slug>.<ext>`. The bot only ever
 deletes files matching `^\d{4}-[a-z0-9-]+\.(png|jpe?g|webp)$` that are no longer

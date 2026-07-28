@@ -22,7 +22,8 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
         if (seen.has(s.src)) v.push(`${at} duplicate src: ${s.src}`);
         seen.add(s.src);
 
-        if (!(s.evergreen === true) && !s.sourceArticle) v.push(`${at} untracked (no evergreen/sourceArticle)`);
+        if (s.evergreen === true && s.sourceArticle) v.push(`${at} has both evergreen and sourceArticle`);
+        else if (!(s.evergreen === true) && !s.sourceArticle) v.push(`${at} untracked (no evergreen/sourceArticle)`);
 
         for (const [field, max] of [['caption', MAX_CAPTION], ['alt', MAX_ALT]]) {
             const val = s[field];

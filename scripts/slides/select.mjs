@@ -1,7 +1,13 @@
 import {MAX_SLIDES, HYSTERESIS_MARGIN, MAX_SWAPS} from './constants.mjs';
 
 const botFilename = c => `${c.year ?? '0000'}-${c.slug}.${c.coverExt}`;
-const pick = s => ({src: s.src, alt: s.alt ?? null, caption: s.caption ?? null});
+// Ownership keys are part of the comparison: a run whose only effect is
+// stamping an untracked entry `evergreen` must still be reported as changed,
+// or the tag is never persisted and the entry stays untracked forever.
+const pick = s => ({
+    src: s.src, alt: s.alt ?? null, caption: s.caption ?? null,
+    evergreen: s.evergreen === true, sourceArticle: s.sourceArticle ?? null,
+});
 const sameSeq = (a, b) =>
     JSON.stringify(a.map(pick)) === JSON.stringify(b.map(pick));
 

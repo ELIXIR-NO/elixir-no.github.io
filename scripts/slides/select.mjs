@@ -35,20 +35,19 @@ export function selectSlides({current, candidates}) {
         return halt(`${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; unpin one`);
     const budget = MAX_SLIDES - evergreens.length;
 
-    // One slide per article and one slide per file. A ref or a filename already
-    // spoken for disqualifies whatever comes next, whether that is a second
-    // incumbent naming the same article or a candidate whose generated filename
-    // collides with a pin or with an earlier candidate this same run.
-    const claimedRefs = new Set();
-    const claimedSrcs = new Set(current.map(s => s.src));
-
-    const botIncumbents = [];
-    for (const s of current) {
-        if (!s.sourceArticle || claimedRefs.has(s.sourceArticle)) continue;
-        claimedRefs.add(s.sourceArticle);
-        botIncumbents.push(s);
+    const botIncumbents = current.filter(s => s.sourceArticle);
+    const claimedRefs = new Set(botIncumbents.map(s => s.sourceArticle));
+    // Keeping one of two slides that name the same article means deleting the
+    // other and its image, on a guess. Same unanswerable question as a dual-key
+    // entry, so it gets the same answer.
+    if (claimedRefs.size < botIncumbents.length) {
+        const dupe = botIncumbents.find((s, i) => botIncumbents.findIndex(o => o.sourceArticle === s.sourceArticle) < i);
+        return halt(`two slides name ${dupe.sourceArticle}; remove one`);
     }
 
+    // One slide per file: a generated filename already taken by a pin, or by a
+    // higher-scored candidate this same run, disqualifies the candidate.
+    const claimedSrcs = new Set(current.map(s => s.src));
     const fresh = [];
     for (const c of candidates) {
         if (claimedRefs.has(c.ref) || claimedSrcs.has(botSrc(c))) continue;

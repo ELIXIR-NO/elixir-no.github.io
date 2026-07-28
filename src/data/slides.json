@@ -1,9 +1,9 @@
 [
     {
-        "src": "/data/slides/news-2025-eosc-entrust-workshop.png",
+        "src": "/data/slides/eosc-entrust.png",
         "alt": "EOSC-ENTRUST",
         "caption": "Pål Sætrom and Miikka Kallberg co-led the 2nd TRE Evaluation Workshop, bringing together 30 stakeholders to advance the TRE Blueprint and strengthen Trusted Research Environments across Europe. Organizers included Ingeborg Winge, Christine Stansberg, and Stefanie Kirschenmann.",
-        "sourceArticle": "news/2025/eosc-entrust-workshop"
+        "evergreen": true
     },
     {
         "src": "/data/slides/elixir-no-all-hands-2025.jpg",

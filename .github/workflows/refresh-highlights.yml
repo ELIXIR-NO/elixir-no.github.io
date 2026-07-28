@@ -89,7 +89,8 @@ jobs:
             # branch deletion is denied. Closing a merged PR would error and
             # turn a successful refresh into a red job.
             if [ "$(gh pr view "$PR_URL" --json state --jq .state)" = "MERGED" ]; then
-              echo "Merged; branch cleanup failed. Continuing."
+              echo "Merged; branch cleanup failed. Retrying the delete."
+              git push origin --delete "$BRANCH" || true
             else
               gh pr close "$PR_URL" --delete-branch \
                 --comment "Automated merge failed, closing so the next run starts from a clean base."

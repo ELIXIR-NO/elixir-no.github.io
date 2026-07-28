@@ -84,13 +84,17 @@ test('refuses to act on a dual-key entry instead of silently resolving it', () =
     assert.deepEqual(slides, current);
 });
 
-test('keeps one slide when two incumbents name the same article', () => {
+test('refuses to act when two incumbents name the same article', () => {
+    // Which of the two to keep is the same unanswerable question as a dual-key
+    // entry. Picking one silently deletes the other slide and its image.
     const dupes = [
         {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
         {src: '/data/slides/news-2026-a-copy.png', alt: 'A copy', caption: 'c', sourceArticle: 'news/2026/a'},
     ];
-    const {slides} = selectSlides({current: dupes, candidates: [cand('news/2026/a', 'a', 0.9)]});
-    assert.equal(slides.filter(s => s.sourceArticle === 'news/2026/a').length, 1);
+    const {slides, changed, blocked} = selectSlides({current: dupes, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.ok(blocked);
+    assert.equal(changed, false);
+    assert.deepEqual(slides, dupes);
 });
 
 test('two candidates that would generate one filename cannot both be selected', () => {
@@ -138,16 +142,6 @@ test('refuses to act when pins alone exceed MAX_SLIDES rather than emitting an i
     assert.ok(blocked, 'over-pinned state must be reported, not written');
     assert.equal(changed, false, 'must not drop the bot slide or write an over-length set');
     assert.equal(slides.length, current.length);
-});
-
-test('two incumbents sharing one sourceArticle do not inflate the set past budget', () => {
-    const pins = [1, 2, 3, 4, 5].map(i => ({src: `/data/slides/p${i}.png`, alt: `P${i}`, caption: 'c', evergreen: true}));
-    const dupes = [
-        {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
-        {src: '/data/slides/news-2026-a-copy.png', alt: 'A copy', caption: 'c', sourceArticle: 'news/2026/a'},
-    ];
-    const {slides} = selectSlides({current: [...pins, ...dupes], candidates: [cand('news/2026/a', 'a', 0.9)]});
-    assert.equal(slides.length, 6);
 });
 
 test('stamping an untracked entry counts as a change so the tag is written back', () => {

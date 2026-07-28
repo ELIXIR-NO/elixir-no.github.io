@@ -67,6 +67,13 @@ test('usableCandidate rejects an article with no summary even when its title is 
     assert.equal(usableCandidate({...goodCandidate, title: 'T'.repeat(200), summary: ''}), false);
 });
 
+test('usableCandidate rejects a non-string summary instead of throwing', () => {
+    // YAML turns an unquoted `summary: 2024` into a number. The bot runs before
+    // the build that would reject it, so it must not crash the pipeline.
+    for (const summary of [2024, true, ['a'], {a: 1}])
+        assert.equal(usableCandidate({...goodCandidate, summary}), false);
+});
+
 test('usableCandidate rejects a cover whose extension disagrees with its bytes', () => {
     assert.equal(usableCandidate({...goodCandidate, coverExt: 'jpg'}), false);
 });

@@ -41,14 +41,22 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
         v.push(`slide count ${slides.length} outside ${MIN_SLIDES}..${MAX_SLIDES}`);
 
     const seen = new Set();
+    const seenRefs = new Set();
     for (const [i, s] of slides.entries()) {
         const at = `slide[${i}]`;
         if (!SRC_RE.test(s.src || '')) {v.push(`${at} src invalid: ${s.src}`); continue;}
         if (seen.has(s.src)) v.push(`${at} duplicate src: ${s.src}`);
         seen.add(s.src);
 
+        // Mirrors what select.mjs halts on, so a human PR cannot land a state
+        // that would stop the bot on its next run.
         if (s.evergreen === true && s.sourceArticle) v.push(`${at} has both evergreen and sourceArticle`);
         else if (!(s.evergreen === true) && !s.sourceArticle) v.push(`${at} untracked (no evergreen/sourceArticle)`);
+        else if (s.sourceArticle && typeof s.sourceArticle !== 'string') v.push(`${at} sourceArticle is not a string`);
+        else if (s.sourceArticle) {
+            if (seenRefs.has(s.sourceArticle)) v.push(`${at} duplicate sourceArticle: ${s.sourceArticle}`);
+            seenRefs.add(s.sourceArticle);
+        }
 
         for (const issue of textIssues(s.alt, s.caption)) v.push(`${at} ${issue}`);
 

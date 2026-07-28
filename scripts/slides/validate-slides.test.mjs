@@ -38,6 +38,20 @@ test('grandfathers a large legacy-named evergreen image (quality gates are bot-o
     assert.deepEqual(validateSlides([bigLegacy], {slidesDir: SLIDES_DIR}), []);
 });
 
+test('rejects two slides naming the same article', () => {
+    const v = validateSlides([
+        {...ok, evergreen: undefined, sourceArticle: 'news/2026/a'},
+        {...ok, src: '/data/slides/rdm-promotion.png', evergreen: undefined, sourceArticle: 'news/2026/a'},
+    ], {slidesDir: SLIDES_DIR});
+    assert.ok(v.some(m => /duplicate sourceArticle/i.test(m)), v.join('; '));
+});
+
+test('rejects a sourceArticle that is not a ref string', () => {
+    const v = validateSlides([{...ok, evergreen: undefined, sourceArticle: {ref: 'news/2026/a'}}],
+        {slidesDir: SLIDES_DIR});
+    assert.ok(v.some(m => /sourceArticle/i.test(m)), v.join('; '));
+});
+
 test('rejects a slide carrying both ownership tags', () => {
     const v = validateSlides([{...ok, sourceArticle: 'news/2026/x'}], {slidesDir: SLIDES_DIR});
     assert.ok(v.some(m => /both/i.test(m)), v.join('; '));

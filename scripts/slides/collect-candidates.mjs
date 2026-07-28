@@ -30,6 +30,7 @@ export function usableCover(a) {
 // title yields alt === caption, which fails validation after every apply.
 export function usableCandidate(a) {
     if (!usableCover(a)) return false;
+    if (!a.summary?.trim()) return false; // fallbackText would caption it with the title
     const {alt, caption} = fallbackText(a);
     return !textIssues(alt, caption).length;
 }

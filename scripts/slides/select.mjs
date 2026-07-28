@@ -20,23 +20,41 @@ export function selectSlides({current, candidates}) {
     // CMS, which has no ownership key yet) are retained in place. Untracked ones
     // are stamped `evergreen: true` so they are protected and self-heal their
     // tag — never dropped. This is the spec's fail-closed rule.
+    const halt = reason => ({slides: current, changed: false, budget: 0, dropped: 0, blocked: reason});
+
+    // Which key wins is a guess either way, and guessing defers the problem:
+    // dropping sourceArticle unclaims the ref, so the next run picks the same
+    // article up again and shows it twice.
+    const ambiguous = current.find(s => s.evergreen === true && s.sourceArticle);
+    if (ambiguous) return halt(`${ambiguous.src} carries both evergreen and sourceArticle; remove one`);
+
     const evergreens = current
         .filter(s => s.evergreen === true || !s.sourceArticle)
         .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
     if (evergreens.length > MAX_SLIDES)
-        return {
-            slides: current, changed: false, budget: 0,
-            blocked: `${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; unpin one`,
-        };
+        return halt(`${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; unpin one`);
     const budget = MAX_SLIDES - evergreens.length;
 
-    const botIncumbents = current.filter(s => s.sourceArticle && s.evergreen !== true);
-    // Every ref already on screen is spoken for, including one held by a pin
-    // that also carries a sourceArticle. Otherwise the article would be picked
-    // again and shown twice under two filenames.
-    const claimedRefs = new Set(current.filter(s => s.sourceArticle).map(s => s.sourceArticle));
+    // One slide per article and one slide per file. A ref or a filename already
+    // spoken for disqualifies whatever comes next, whether that is a second
+    // incumbent naming the same article or a candidate whose generated filename
+    // collides with a pin or with an earlier candidate this same run.
+    const claimedRefs = new Set();
     const claimedSrcs = new Set(current.map(s => s.src));
-    const fresh = candidates.filter(c => !claimedRefs.has(c.ref) && !claimedSrcs.has(botSrc(c)));
+
+    const botIncumbents = [];
+    for (const s of current) {
+        if (!s.sourceArticle || claimedRefs.has(s.sourceArticle)) continue;
+        claimedRefs.add(s.sourceArticle);
+        botIncumbents.push(s);
+    }
+
+    const fresh = [];
+    for (const c of candidates) {
+        if (claimedRefs.has(c.ref) || claimedSrcs.has(botSrc(c))) continue;
+        claimedSrcs.add(botSrc(c));
+        fresh.push(c);
+    }
 
     const eff = (ref, isInc) => scoreOf(ref) * (isInc ? 1 + HYSTERESIS_MARGIN : 1);
     const pool = [
@@ -71,5 +89,8 @@ export function selectSlides({current, candidates}) {
         }));
 
     const slides = [...evergreens, ...survivors, ...news];
-    return {slides, changed: !sameSeq(current, slides), budget};
+    return {
+        slides, changed: !sameSeq(current, slides), budget,
+        dropped: botIncumbents.length - survivors.length,
+    };
 }

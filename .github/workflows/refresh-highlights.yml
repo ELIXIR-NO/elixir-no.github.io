@@ -71,9 +71,12 @@ jobs:
           git add src/data/slides.json src/data/slides
           git commit -m "chore(slides): refresh homepage highlights"
           git push origin "$BRANCH"
-          PR_URL=$(gh pr create --base main --head "$BRANCH" \
+          if ! PR_URL=$(gh pr create --base main --head "$BRANCH" \
             --title "chore(slides): refresh homepage highlights" \
-            --body "Automated highlights refresh. Slide selection and captions were regenerated from recent content; validation and build passed.")
+            --body "Automated highlights refresh. Slide selection and captions were regenerated from recent content; validation and build passed."); then
+            git push origin --delete "$BRANCH" || true
+            exit 1
+          fi
           # The workflow already ran validation + pnpm build as its own gate, so
           # merge immediately with --admin (deterministic, no waiting on pr-test,
           # which does not run for GITHUB_TOKEN-created PRs). A failure here is
@@ -82,9 +85,16 @@ jobs:
           # slides.json from this run's base, so merging it days later would
           # revert everything written in between.
           if ! gh pr merge "$PR_URL" --squash --admin --delete-branch; then
-            gh pr close "$PR_URL" --delete-branch \
-              --comment "Automated merge failed, closing so the next run starts from a clean base."
-            exit 1
+            # The merge can fail after actually merging, e.g. when only the
+            # branch deletion is denied. Closing a merged PR would error and
+            # turn a successful refresh into a red job.
+            if [ "$(gh pr view "$PR_URL" --json state --jq .state)" = "MERGED" ]; then
+              echo "Merged; branch cleanup failed. Continuing."
+            else
+              gh pr close "$PR_URL" --delete-branch \
+                --comment "Automated merge failed, closing so the next run starts from a clean base."
+              exit 1
+            fi
           fi
 
       - name: Report failure

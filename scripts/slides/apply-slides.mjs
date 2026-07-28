@@ -24,6 +24,7 @@ export function apply(slides) {
             const name = path.basename(s.src);
             if (retained.has(name))
                 throw new Error(`refusing to overwrite an image already in use: ${name}`);
+            retained.add(name);
             fs.copyFileSync(s._candidate.coverAbsPath, path.join(SLIDES_DIR, name));
         }
     }

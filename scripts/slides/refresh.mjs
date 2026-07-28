@@ -13,12 +13,16 @@ function setOutput(result) {
 
 export async function refresh({diffScope = false} = {}) {
     const {current, candidates} = collect(new Date());
-    const {slides, changed, blocked, budget} = selectSlides({current, candidates});
+    const {slides, changed, blocked, budget, dropped} = selectSlides({current, candidates});
     if (blocked) {
         console.error(`Cannot refresh: ${blocked}.`);
         return 1;
     }
-    if (budget === 0) console.warn('Every slot is pinned; the bot has nothing to rotate.');
+    if (budget === 0) {
+        console.warn(dropped
+            ? `Pins fill every slot; dropping ${dropped} bot slide(s) to make room.`
+            : 'Every slot is pinned; the bot has nothing to rotate.');
+    }
     if (!changed) {
         console.log('No slide changes needed.');
         setOutput('noop');

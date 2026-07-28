@@ -72,12 +72,45 @@ test('retains an untracked (CMS-added) current entry and tags it evergreen', () 
     assert.equal(human.evergreen, true, 'untracked entry must be tagged evergreen');
 });
 
-test('an article already pinned by a dual-key entry is not added a second time', () => {
+test('refuses to act on a dual-key entry instead of silently resolving it', () => {
+    // Stripping the redundant key would only defer the problem: the ref stops
+    // being claimed, and the next run picks the article up again as fresh.
     const current = [
         {src: '/data/slides/eosc.png', alt: 'EOSC', caption: 'c', evergreen: true, sourceArticle: 'news/2026/a'},
     ];
-    const {slides} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
-    assert.equal(slides.length, 1, 'one article must never occupy two slots');
+    const {slides, changed, blocked} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.ok(blocked, 'ambiguous ownership must be reported, not guessed at');
+    assert.equal(changed, false);
+    assert.deepEqual(slides, current);
+});
+
+test('keeps one slide when two incumbents name the same article', () => {
+    const dupes = [
+        {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
+        {src: '/data/slides/news-2026-a-copy.png', alt: 'A copy', caption: 'c', sourceArticle: 'news/2026/a'},
+    ];
+    const {slides} = selectSlides({current: dupes, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.equal(slides.filter(s => s.sourceArticle === 'news/2026/a').length, 1);
+});
+
+test('two candidates that would generate one filename cannot both be selected', () => {
+    // Same collection, slug and date-year, different refs: reachable because the
+    // year comes from the frontmatter date rather than the directory.
+    const candidates = [
+        cand('news/2025/foo', 'foo', 0.9, {year: 2025}),
+        cand('news/2024/foo', 'foo', 0.8, {year: 2025}),
+    ];
+    const {slides} = selectSlides({current: [], candidates});
+    assert.equal(new Set(slides.map(s => s.src)).size, slides.length);
+    assert.equal(slides.length, 1);
+});
+
+test('reports bot slides dropped for want of a slot rather than claiming a no-op', () => {
+    const pins = [1, 2, 3, 4, 5, 6].map(i => ({src: `/data/slides/p${i}.png`, alt: `P${i}`, caption: 'c', evergreen: true}));
+    const inc = {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'};
+    const {budget, dropped} = selectSlides({current: [...pins, inc], candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.equal(budget, 0);
+    assert.equal(dropped, 1, 'the purge must be visible to the caller');
 });
 
 test('filenames stay unique when two collections share a slug and year', () => {

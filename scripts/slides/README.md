@@ -20,9 +20,23 @@ Every slide entry carries exactly one signal:
   on the next run, so the tag shows up in that run's PR diff. Should not occur
   after bootstrap.
 
-Carrying both keys is a validation error. If one slips in anyway, `evergreen`
-wins and the redundant `sourceArticle` is dropped the next time the file is
-written.
+## The bot never guesses
+
+It acts only where one reading of the file is possible, and stops otherwise.
+Every state below is one a human can author but no bot run can produce, so
+stopping costs a rotation and resolving one silently costs a slide:
+
+- an entry carrying both ownership keys (dropping either one unclaims the
+  article, and the next run puts it on screen a second time)
+- two entries naming the same `sourceArticle` (keeping one deletes the other
+  and its image)
+- a `sourceArticle` that is not a ref string
+- more pinned slides than `MAX_SLIDES`
+
+Each halts the run with the offending `src` named and writes nothing. The
+workflow reports it on the `slides-bot` issue, and a human resolves it by
+editing `slides.json`. `pnpm slides:validate` catches all of them before a
+merge, which is why `pr-test.yml` runs it on every PR.
 
 Bot-created image files are named `<collection>-<year>-<slug>.<ext>`, and the bot
 only ever deletes unreferenced files matching that shape (`BOT_FILE_RE`). The
@@ -32,8 +46,9 @@ and it keeps bot names clear of CMS uploads, which are slugified from the alt
 text and so can start with a year. `apply()` additionally refuses to copy over
 any file a retained slide still points at.
 
-A slide count above `MAX_SLIDES` is unreachable by rotation: if pins alone
-exceed the limit the run stops and reports it instead of dropping anything.
+Only bot-created images are subject to the width, aspect and size gates.
+Anything a human put there predates the automation and is grandfathered, which
+is why a pinned image is best left under a name the bot cannot generate.
 
 ## CMS interaction
 

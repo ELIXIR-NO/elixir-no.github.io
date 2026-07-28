@@ -78,7 +78,14 @@ jobs:
           # merge immediately with --admin (deterministic, no waiting on pr-test,
           # which does not run for GITHUB_TOKEN-created PRs). A failure here is
           # loud: continue-on-error keeps the run going so the issue is opened.
-          gh pr merge "$PR_URL" --squash --admin --delete-branch
+          # An unmerged PR must not survive the run. It holds a whole-file
+          # slides.json from this run's base, so merging it days later would
+          # revert everything written in between.
+          if ! gh pr merge "$PR_URL" --squash --admin --delete-branch; then
+            gh pr close "$PR_URL" --delete-branch \
+              --comment "Automated merge failed, closing so the next run starts from a clean base."
+            exit 1
+          fi
 
       - name: Report failure
         if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'

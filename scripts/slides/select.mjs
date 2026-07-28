@@ -1,6 +1,7 @@
 import {MAX_SLIDES, HYSTERESIS_MARGIN, MAX_SWAPS} from './constants.mjs';
 
-const botFilename = c => `${c.year ?? '0000'}-${c.slug}.${c.coverExt}`;
+const botFilename = c => `${c.collection}-${c.year ?? '0000'}-${c.slug}.${c.coverExt}`;
+const botSrc = c => `/data/slides/${botFilename(c)}`;
 // Ownership keys are part of the comparison: a run whose only effect is
 // stamping an untracked entry `evergreen` must still be reported as changed,
 // or the tag is never persisted and the entry stays untracked forever.
@@ -22,11 +23,20 @@ export function selectSlides({current, candidates}) {
     const evergreens = current
         .filter(s => s.evergreen === true || !s.sourceArticle)
         .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
-    const budget = Math.max(0, MAX_SLIDES - evergreens.length);
+    if (evergreens.length > MAX_SLIDES)
+        return {
+            slides: current, changed: false, budget: 0,
+            blocked: `${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; unpin one`,
+        };
+    const budget = MAX_SLIDES - evergreens.length;
 
     const botIncumbents = current.filter(s => s.sourceArticle && s.evergreen !== true);
-    const incumbentRefs = new Set(botIncumbents.map(s => s.sourceArticle));
-    const fresh = candidates.filter(c => !incumbentRefs.has(c.ref));
+    // Every ref already on screen is spoken for, including one held by a pin
+    // that also carries a sourceArticle. Otherwise the article would be picked
+    // again and shown twice under two filenames.
+    const claimedRefs = new Set(current.filter(s => s.sourceArticle).map(s => s.sourceArticle));
+    const claimedSrcs = new Set(current.map(s => s.src));
+    const fresh = candidates.filter(c => !claimedRefs.has(c.ref) && !claimedSrcs.has(botSrc(c)));
 
     const eff = (ref, isInc) => scoreOf(ref) * (isInc ? 1 + HYSTERESIS_MARGIN : 1);
     const pool = [
@@ -51,15 +61,15 @@ export function selectSlides({current, candidates}) {
     }
 
     // Order: surviving incumbents in current order, then new ones by score.
-    const chosenRefs = new Set(chosen.map(p => p.ref));
-    const survivors = botIncumbents.filter(s => chosenRefs.has(s.sourceArticle));
+    // Matched by identity, not by ref: two entries can share a sourceArticle.
+    const survivors = botIncumbents.filter(s => chosen.some(p => p.entry === s));
     const news = chosen
         .filter(p => !p.isInc)
         .map(p => ({
-            src: `/data/slides/${botFilename(p.cand)}`,
+            src: botSrc(p.cand),
             alt: null, caption: null, sourceArticle: p.cand.ref, _candidate: p.cand,
         }));
 
     const slides = [...evergreens, ...survivors, ...news];
-    return {slides, changed: !sameSeq(current, slides)};
+    return {slides, changed: !sameSeq(current, slides), budget};
 }

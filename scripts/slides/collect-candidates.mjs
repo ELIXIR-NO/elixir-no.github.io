@@ -3,7 +3,8 @@ import {SLIDES_JSON} from './constants.mjs';
 import {listArticles, resolveArticle, withCover} from './frontmatter.mjs';
 import {rankCandidates, scoreArticle, topicsOf} from './rank.mjs';
 import {probeImage} from './image-probe.mjs';
-import {imageQualityIssues} from './validate-slides.mjs';
+import {imageQualityIssues, textIssues, extensionMatches} from './validate-slides.mjs';
+import {fallbackText} from './caption-agent.mjs';
 
 export function readCurrent() {
     return JSON.parse(fs.readFileSync(SLIDES_JSON, 'utf8'));
@@ -17,10 +18,20 @@ export function readCurrent() {
 export function usableCover(a) {
     if (!a.coverAbsPath) return false;
     try {
-        return !imageQualityIssues(probeImage(a.coverAbsPath)).length;
+        const img = probeImage(a.coverAbsPath);
+        return extensionMatches(img, a.coverExt) && !imageQualityIssues(img).length;
     } catch {
         return false;
     }
+}
+
+// The captions an article would get if the agent is off or rejected must
+// themselves pass the gate. Without this an article whose summary repeats its
+// title yields alt === caption, which fails validation after every apply.
+export function usableCandidate(a) {
+    if (!usableCover(a)) return false;
+    const {alt, caption} = fallbackText(a);
+    return !textIssues(alt, caption).length;
 }
 
 function toCandidate(a) {
@@ -35,11 +46,7 @@ function toCandidate(a) {
 
 export function collect(now = new Date()) {
     const current = readCurrent();
-    // A fresh candidate must have a non-empty summary: the fallback caption is
-    // derived from it, and an empty summary would make caption == alt (== title),
-    // which the validator rejects and which would abort every run.
-    const usable = a => usableCover(a) && !!(a.summary && a.summary.trim());
-    const ranked = rankCandidates(withCover(listArticles()).filter(usable), now);
+    const ranked = rankCandidates(withCover(listArticles()).filter(usableCandidate), now);
     const byRef = new Map(ranked.map(a => [a.ref, a]));
     for (const s of current) {
         if (s.sourceArticle && !byRef.has(s.sourceArticle)) {

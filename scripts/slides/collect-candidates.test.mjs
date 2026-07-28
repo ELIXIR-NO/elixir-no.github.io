@@ -1,7 +1,16 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {collect, readCurrent, usableCover} from './collect-candidates.mjs';
+import path from 'node:path';
+import {collect, readCurrent, usableCover, usableCandidate} from './collect-candidates.mjs';
 import {resolveArticle} from './frontmatter.mjs';
+import {SLIDES_DIR} from './constants.mjs';
+
+const goodCandidate = {
+    title: 'A perfectly ordinary headline',
+    summary: 'A summary that says something else entirely.',
+    coverAbsPath: path.join(SLIDES_DIR, 'nels.png'),
+    coverExt: 'png',
+};
 
 test('collect returns current slides and a ranked candidate pool', () => {
     const {current, candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
@@ -34,6 +43,25 @@ test('a bootstrapped sourceArticle ref is always present in candidates', () => {
     const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
     assert.ok(candidates.some(c => c.ref === 'news/2025/eosc-entrust-workshop'),
         'eosc-entrust (a tagged sourceArticle) must be scored and included');
+});
+
+test('usableCandidate accepts a well-formed article', () => {
+    assert.equal(usableCandidate(goodCandidate), true);
+});
+
+test('usableCandidate rejects an article whose summary repeats its title', () => {
+    // The fallback caption is the summary and the fallback alt is the title, so
+    // an article like this would produce alt === caption and fail the gate.
+    assert.equal(usableCandidate({...goodCandidate, summary: goodCandidate.title}), false);
+});
+
+test('usableCandidate rejects a cover whose extension disagrees with its bytes', () => {
+    assert.equal(usableCandidate({...goodCandidate, coverExt: 'jpg'}), false);
+});
+
+test('no article in the repo would produce a caption identical to its alt', () => {
+    const {candidates} = collect(new Date(Date.UTC(2026, 6, 15)));
+    assert.ok(candidates.every(c => c.title.trim() !== c.summary.trim()));
 });
 
 test('every candidate has a non-empty summary (fallback caption needs it)', () => {

@@ -72,6 +72,51 @@ test('retains an untracked (CMS-added) current entry and tags it evergreen', () 
     assert.equal(human.evergreen, true, 'untracked entry must be tagged evergreen');
 });
 
+test('an article already pinned by a dual-key entry is not added a second time', () => {
+    const current = [
+        {src: '/data/slides/eosc.png', alt: 'EOSC', caption: 'c', evergreen: true, sourceArticle: 'news/2026/a'},
+    ];
+    const {slides} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.equal(slides.length, 1, 'one article must never occupy two slots');
+});
+
+test('filenames stay unique when two collections share a slug and year', () => {
+    const candidates = [
+        cand('news/2025/x', 'x', 0.9, {collection: 'news', year: 2025}),
+        cand('events/2025/x', 'x', 0.8, {collection: 'events', year: 2025}),
+    ];
+    const {slides} = selectSlides({current: [], candidates});
+    assert.equal(new Set(slides.map(s => s.src)).size, 2);
+});
+
+test('skips a candidate whose generated filename is already claimed by a pin', () => {
+    const current = [{src: '/data/slides/news-2025-x.png', alt: 'Human pin', caption: 'c', evergreen: true}];
+    const {slides} = selectSlides({current, candidates: [cand('news/2025/x', 'x', 0.9, {year: 2025})]});
+    assert.equal(slides.length, 1, 'the pin must not be shadowed by a same-named bot slide');
+    assert.equal(slides[0].alt, 'Human pin');
+});
+
+test('refuses to act when pins alone exceed MAX_SLIDES rather than emitting an invalid set', () => {
+    const current = [
+        ...Array.from({length: 7}, (_, i) => ({src: `/data/slides/p${i}.png`, alt: `P${i}`, caption: 'c', evergreen: true})),
+        {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
+    ];
+    const {slides, changed, blocked} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.ok(blocked, 'over-pinned state must be reported, not written');
+    assert.equal(changed, false, 'must not drop the bot slide or write an over-length set');
+    assert.equal(slides.length, current.length);
+});
+
+test('two incumbents sharing one sourceArticle do not inflate the set past budget', () => {
+    const pins = [1, 2, 3, 4, 5].map(i => ({src: `/data/slides/p${i}.png`, alt: `P${i}`, caption: 'c', evergreen: true}));
+    const dupes = [
+        {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
+        {src: '/data/slides/news-2026-a-copy.png', alt: 'A copy', caption: 'c', sourceArticle: 'news/2026/a'},
+    ];
+    const {slides} = selectSlides({current: [...pins, ...dupes], candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.equal(slides.length, 6);
+});
+
 test('stamping an untracked entry counts as a change so the tag is written back', () => {
     const current = [
         {src: '/data/slides/nels.png', alt: 'NeLS', caption: 'c', evergreen: true},

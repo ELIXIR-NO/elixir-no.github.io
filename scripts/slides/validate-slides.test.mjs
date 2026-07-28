@@ -49,9 +49,9 @@ test('still enforces quality gates on a bot-named image (guard is not a blanket 
         // The 3.37MB image copied under a bot-style name (BOT_FILE_RE matches),
         // so the size gate must fire even though the same bytes are exempt under
         // the legacy filename.
-        fs.copyFileSync(path.join(SLIDES_DIR, 'elixir-no-all-hands-2025.jpg'), path.join(dir, '2025-all-hands.jpg'));
+        fs.copyFileSync(path.join(SLIDES_DIR, 'elixir-no-all-hands-2025.jpg'), path.join(dir, 'news-2025-all-hands.jpg'));
         const slide = {
-            src: '/data/slides/2025-all-hands.jpg',
+            src: '/data/slides/news-2025-all-hands.jpg',
             alt: 'A group photo',
             caption: 'A caption about the meeting.',
             sourceArticle: 'news/2025/all-hands',

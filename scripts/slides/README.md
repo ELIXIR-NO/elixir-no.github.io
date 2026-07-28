@@ -13,7 +13,9 @@ Every slide entry carries exactly one signal:
   the bot. Set this to protect a slide.
 - `"sourceArticle": "collection/year/slug"`, bot-managed. Scored from that
   article each run; rotated by recency + editorial weight; dropped when it ages
-  out. `funding-and-projects` refs have two segments (no year).
+  out. `funding-and-projects` refs have two segments (no year), and no entry in
+  that collection can surface until its schema gains a `cover` field: the
+  selector only considers articles that have one.
 - Neither key, treated as evergreen (fail closed) and stamped `evergreen: true`
   on the next run, so the tag shows up in that run's PR diff. Should not occur
   after bootstrap.
@@ -22,10 +24,16 @@ Carrying both keys is a validation error. If one slips in anyway, `evergreen`
 wins and the redundant `sourceArticle` is dropped the next time the file is
 written.
 
-Bot-created image files are named `<year>-<slug>.<ext>`. The bot only ever
-deletes files matching `^\d{4}-[a-z0-9-]+\.(png|jpe?g|webp)$` that are no longer
-referenced and belonged to a `sourceArticle` entry, so legacy/human files
-(none start with a 4-digit year) are structurally safe.
+Bot-created image files are named `<collection>-<year>-<slug>.<ext>`, and the bot
+only ever deletes unreferenced files matching that shape (`BOT_FILE_RE`). The
+collection is in the name for two reasons: a slug is unique only within its
+collection (news and events both hold `2025/elixir-industry-engagement-day`),
+and it keeps bot names clear of CMS uploads, which are slugified from the alt
+text and so can start with a year. `apply()` additionally refuses to copy over
+any file a retained slide still points at.
+
+A slide count above `MAX_SLIDES` is unreachable by rotation: if pins alone
+exceed the limit the run stops and reports it instead of dropping anything.
 
 ## CMS interaction
 

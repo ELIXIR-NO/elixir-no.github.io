@@ -24,7 +24,12 @@ export const MIN_ASPECT = 0.9; // width/height must be >= this (landscape-ish)
 export const ILLEGAL_TEXT_RE = /[\x00-\x1f<>`]/;
 
 export const SRC_RE = /^\/data\/slides\/[a-z0-9-]+\.(png|jpe?g|webp)$/;
-export const BOT_FILE_RE = /^\d{4}-[a-z0-9-]+\.(png|jpe?g|webp)$/;
+
+// Bot-created images are `<collection>-<year>-<slug>.<ext>`. The collection is
+// part of the name because a slug is only unique within its collection: news
+// and events both hold `2025/elixir-industry-engagement-day`.
+export const BOT_FILE_RE =
+    new RegExp(`^(?:${COLLECTIONS.join('|')})-\\d{4}-[a-z0-9-]+\\.(?:png|jpe?g|webp)$`);
 
 // Editorial weighting: matched against lowercased `${title} ${summary} ${tags}`.
 export const FLAGSHIP_TOPICS = [

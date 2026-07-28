@@ -9,6 +9,8 @@ import {probeImage} from './image-probe.mjs';
 
 const EXT_FORMAT = {png: 'png', jpg: 'jpeg', jpeg: 'jpeg', webp: 'webp'};
 
+export const extensionMatches = (img, ext) => EXT_FORMAT[ext] === img.format;
+
 // The acceptance rules live here so producers can check themselves against the
 // same predicate the gate enforces. `collect-candidates` screens covers with
 // imageQualityIssues, `caption-agent` screens model output with textIssues; if
@@ -55,7 +57,7 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
         try {
             const img = probeImage(abs);
             const ext = path.extname(abs).slice(1).toLowerCase();
-            if (EXT_FORMAT[ext] !== img.format) v.push(`${at} format ${img.format} != extension .${ext}`);
+            if (!extensionMatches(img, ext)) v.push(`${at} format ${img.format} != extension .${ext}`);
             // Quality gates apply only to bot-created images (<year>-<slug>.<ext>).
             // Legacy/human pins predate the automation and are grandfathered.
             if (BOT_FILE_RE.test(path.basename(abs)))

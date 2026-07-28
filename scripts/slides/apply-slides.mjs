@@ -18,10 +18,13 @@ export function staleBotFiles(existing, referenced) {
 }
 
 export function apply(slides) {
+    const retained = new Set(slides.filter(s => !s._candidate).map(s => path.basename(s.src)));
     for (const s of slides) {
         if (s._candidate) {
-            const dest = path.join(SLIDES_DIR, path.basename(s.src));
-            fs.copyFileSync(s._candidate.coverAbsPath, dest);
+            const name = path.basename(s.src);
+            if (retained.has(name))
+                throw new Error(`refusing to overwrite an image already in use: ${name}`);
+            fs.copyFileSync(s._candidate.coverAbsPath, path.join(SLIDES_DIR, name));
         }
     }
     const clean = slides.map(cleanEntry);

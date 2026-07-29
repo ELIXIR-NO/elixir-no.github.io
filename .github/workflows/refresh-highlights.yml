@@ -56,11 +56,14 @@ jobs:
         env:
           GITHUB_PAGES: true
 
-      - name: Open PR and merge
+      - name: Open PR
         id: pr
         if: steps.refresh.outputs.result == 'changed' && steps.build.outcome == 'success'
         continue-on-error: true
         env:
+          # A PAT makes pr-test.yml run on the PR; PRs opened with the default
+          # GITHUB_TOKEN get no checks. Validation and pnpm build above already
+          # gated this branch either way.
           GH_TOKEN: ${{ secrets.SLIDES_BOT_TOKEN || github.token }}
         run: |
           set -euo pipefail
@@ -71,32 +74,39 @@ jobs:
           git add src/data/slides.json src/data/slides
           git commit -m "chore(slides): refresh homepage highlights"
           git push origin "$BRANCH"
+
+          # Read before creating, or the new PR supersedes itself.
+          SUPERSEDED=$(gh pr list --state open --base main --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("bot/slides-refresh-")) | .number')
+
+          cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
+          Automated highlights refresh, open for review.
+
+          Slide selection and captions were regenerated from recent content;
+          `pnpm slides:validate` and `pnpm build` passed in the workflow run that
+          opened this.
+
+          Merge it or close it, but do not leave it sitting. The branch holds a
+          whole `slides.json` written against main as of this run, so the next
+          run replaces this PR rather than rebasing it.
+          EOF
+
           if ! PR_URL=$(gh pr create --base main --head "$BRANCH" \
             --title "chore(slides): refresh homepage highlights" \
-            --body "Automated highlights refresh. Slide selection and captions were regenerated from recent content; validation and build passed."); then
+            --body-file "$RUNNER_TEMP/pr-body.md"); then
             git push origin --delete "$BRANCH" || true
             exit 1
           fi
-          # The workflow already ran validation + pnpm build as its own gate, so
-          # merge immediately with --admin (deterministic, no waiting on pr-test,
-          # which does not run for GITHUB_TOKEN-created PRs). A failure here is
-          # loud: continue-on-error keeps the run going so the issue is opened.
-          # An unmerged PR must not survive the run. It holds a whole-file
-          # slides.json from this run's base, so merging it days later would
-          # revert everything written in between.
-          if ! gh pr merge "$PR_URL" --squash --admin --delete-branch; then
-            # The merge can fail after actually merging, e.g. when only the
-            # branch deletion is denied. Closing a merged PR would error and
-            # turn a successful refresh into a red job.
-            if [ "$(gh pr view "$PR_URL" --json state --jq .state)" = "MERGED" ]; then
-              echo "Merged; branch cleanup failed. Retrying the delete."
-              git push origin --delete "$BRANCH" || true
-            else
-              gh pr close "$PR_URL" --delete-branch \
-                --comment "Automated merge failed, closing so the next run starts from a clean base."
-              exit 1
-            fi
-          fi
+
+          # One open refresh at a time. Each run recomputes the carousel from
+          # main as it stands now, so an older PR is not a smaller change, it is
+          # a different answer to the same question; merging both can put back a
+          # slide the newer run deliberately dropped. Closed PRs keep a Restore
+          # branch button, so nothing is lost.
+          for N in $SUPERSEDED; do
+            gh pr close "$N" --delete-branch \
+              --comment "Superseded by ${PR_URL}, computed from the current main."
+          done
 
       - name: Report failure
         if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
@@ -114,6 +124,6 @@ jobs:
             gh issue create --title "$TITLE" --label slides-bot --body "$BODY"
           fi
 
-      - name: Fail job if pipeline, build, or merge failed
+      - name: Fail job if pipeline, build, or PR failed
         if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
         run: exit 1

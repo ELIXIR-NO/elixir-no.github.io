@@ -65,5 +65,12 @@ and reordering. Ownership keys are preserved end to end; no action required.
 
 The GitHub workflow `.github/workflows/refresh-highlights.yml` runs the pipeline
 on cron (Mon 07:00 UTC, Fri 15:00 UTC) and on manual dispatch, then opens a PR
-and auto-merges. On any hard failure it opens/updates one `slides-bot`-labelled
-issue instead of merging.
+from `bot/slides-refresh-<run-id>` for a human to merge. On any hard failure it
+opens/updates one `slides-bot`-labelled issue and opens no PR.
+
+Only one refresh PR is open at a time: opening a new one closes any older one.
+Each run recomputes the whole carousel against main as it stands then, so an
+older PR is a competing answer rather than an earlier instalment, and merging
+both can restore a slide the newer run dropped. Review promptly or the work is
+thrown away; the closed PR still offers a Restore branch button if you need it
+back.

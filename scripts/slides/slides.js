@@ -568,7 +568,10 @@ export function extractJsonArray(text) {
 export function defaultRunAgent(inputJson) {
     const model = process.env.SLIDES_AGENT_MODEL;
     if (!model || process.env.SLIDES_AGENT === 'off') return Promise.resolve('');
-    const prompt = `Here is the input. Return only the JSON array.\n${inputJson}`;
+    // State the task, not just the format. "Return only the JSON array" alone
+    // reads as "echo the array you were given", and small models do exactly that.
+    const prompt = 'Write alt and caption for every slide below, following your ' +
+        `rules. Return only the JSON array of {id, alt, caption}.\n${inputJson}`;
     const r = spawnSync('opencode', ['run', '--model', model, prompt],
         {cwd: HERE, encoding: 'utf8', timeout: 120_000, maxBuffer: 4 << 20});
     return Promise.resolve(r.status === 0 ? (r.stdout || '') : '');

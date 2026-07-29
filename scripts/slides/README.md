@@ -56,12 +56,31 @@ The `/admin` SlidesEditor seeds its form with `useState({ ...slide })` and edits
 only `alt`/`caption`/`src`, so `sourceArticle`/`evergreen` survive both editing
 and reordering. Ownership keys are preserved end to end; no action required.
 
+## Layout
+
+Four files, and `README.md`:
+
+- `slides.js`, the whole pipeline. Sections run in dependency order (constants,
+  article reading, ranking, acceptance rules, collection, selection, captions,
+  apply, refresh) and everything is a pure function of its arguments except the
+  clearly marked file writes in `apply` and the `spawnSync` in the caption agent.
+- `slides.test.js`, the suite, sectioned to match.
+- `slides.AGENTS.md`, the caption agent's rules. Loaded via the `instructions`
+  key below, not by filename: opencode only auto-discovers a file called
+  exactly `AGENTS.md`.
+- `opencode.json`, model plus a tool allowlist that denies everything. The agent
+  gets JSON in and returns JSON out; it cannot read, write, or run anything.
+
 ## Operator commands
 
 - `pnpm slides:collect`, print the ranked candidate pool + current state (dry).
 - `pnpm slides:refresh`, run the full pipeline locally (writes files).
 - `pnpm slides:validate`, run the sanity gate against the working tree.
+- `pnpm slides:test`, the unit suite.
 - `bash scripts/manage-slides.sh`, interactive manual editor (unchanged).
+
+Each maps to `node scripts/slides/slides.js <command>`; `refresh` and `validate`
+also take `--diff-scope` to assert nothing outside `src/data/slides*` changed.
 
 The GitHub workflow `.github/workflows/refresh-highlights.yml` runs the pipeline
 on cron (Mon 07:00 UTC, Fri 15:00 UTC) and on manual dispatch, then opens a PR

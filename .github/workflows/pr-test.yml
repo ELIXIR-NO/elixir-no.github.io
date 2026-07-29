@@ -27,10 +27,10 @@ jobs:
         run: node scripts/check-slugs.mjs
 
       - name: Validate homepage slides
-        run: node scripts/slides/validate-slides.mjs
+        run: node scripts/slides/slides.js validate
 
       - name: Slides pipeline unit tests
-        run: node --test scripts/slides/*.test.mjs
+        run: node --test scripts/slides/slides.test.js
 
       - name: Build (static output)
         run: pnpm build

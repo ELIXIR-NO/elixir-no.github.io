@@ -46,7 +46,7 @@ jobs:
           # pipeline uses summary-derived captions (fully functional).
           SLIDES_AGENT_MODEL: ${{ vars.SLIDES_AGENT_MODEL }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-        run: node scripts/slides/refresh.mjs --diff-scope
+        run: node scripts/slides/slides.js refresh --diff-scope
 
       - name: Build sanity gate
         id: build

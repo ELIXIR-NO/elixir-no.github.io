@@ -1,17 +1,5 @@
 [
     {
-        "src": "/data/slides/eosc-entrust.png",
-        "alt": "EOSC-ENTRUST",
-        "caption": "Pål Sætrom and Miikka Kallberg co-led the 2nd TRE Evaluation Workshop, bringing together 30 stakeholders to advance the TRE Blueprint and strengthen Trusted Research Environments across Europe. Organizers included Ingeborg Winge, Christine Stansberg, and Stefanie Kirschenmann.",
-        "evergreen": true
-    },
-    {
-        "src": "/data/slides/elixir-no-all-hands-2025.jpg",
-        "alt": "Group photo for ELIXIR Norway All Hands 2025",
-        "caption": "This year's ELIXIR Norway All Hands was organised physically in Ås!",
-        "evergreen": true
-    },
-    {
         "src": "/data/slides/nels.png",
         "alt": "NeLS Landing Page",
         "caption": "NeLS, the Norwegian e-Infrastructure for Life Sciences, for data analysis, sharing and storage",

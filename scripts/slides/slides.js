@@ -330,7 +330,7 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
         if (seen.has(s.src)) v.push(`${at} duplicate src: ${s.src}`);
         seen.add(s.src);
 
-        // Mirrors what select.mjs halts on, so a human PR cannot land a state
+        // Mirrors what selectSlides halts on, so a human PR cannot land a state
         // that would stop the bot on its next run.
         if (s.evergreen === true && s.sourceArticle) v.push(`${at} has both evergreen and sourceArticle`);
         else if (!(s.evergreen === true) && !s.sourceArticle) v.push(`${at} untracked (no evergreen/sourceArticle)`);
@@ -348,7 +348,7 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
             const img = probeImage(abs);
             const ext = path.extname(abs).slice(1).toLowerCase();
             if (!extensionMatches(img, ext)) v.push(`${at} format ${img.format} != extension .${ext}`);
-            // Quality gates apply only to bot-created images (<year>-<slug>.<ext>).
+            // Quality gates apply only to bot-created images (BOT_FILE_RE).
             // Legacy/human pins predate the automation and are grandfathered.
             if (BOT_FILE_RE.test(path.basename(abs)))
                 for (const issue of imageQualityIssues(img)) v.push(`${at} ${issue}`);

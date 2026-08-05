@@ -360,8 +360,10 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
 }
 
 export function diffScopeViolations() {
-    const out = execFileSync('git', ['diff', '--name-only', 'HEAD'], {encoding: 'utf8'});
-    return out.split('\n').map(s => s.trim()).filter(Boolean)
+    // `git status`, not `git diff`, which cannot see untracked files: a stray
+    // temp file written outside the slides paths is exactly what this guards.
+    const out = execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], {encoding: 'utf8'});
+    return out.split('\n').map(s => s.slice(3).trim()).filter(Boolean)
         .filter(p => p !== 'src/data/slides.json' && !p.startsWith('src/data/slides/'))
         .map(p => `out-of-scope change: ${p}`);
 }
@@ -463,7 +465,8 @@ export function selectSlides({current, candidates}) {
         .filter(s => s.evergreen === true || !s.sourceArticle)
         .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
     if (evergreens.length > MAX_SLIDES)
-        return halt(`${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; unpin one`);
+        return halt(`${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; `
+            + `unpin one of ${evergreens.map(s => s.src).join(', ')}`);
     const budget = MAX_SLIDES - evergreens.length;
 
     const botIncumbents = current.filter(s => s.sourceArticle);
@@ -473,7 +476,8 @@ export function selectSlides({current, candidates}) {
     // entry, so it gets the same answer.
     if (claimedRefs.size < botIncumbents.length) {
         const dupe = botIncumbents.find((s, i) => botIncumbents.findIndex(o => o.sourceArticle === s.sourceArticle) < i);
-        return halt(`two slides name ${dupe.sourceArticle}; remove one`);
+        const pair = botIncumbents.filter(s => s.sourceArticle === dupe.sourceArticle).map(s => s.src);
+        return halt(`${pair.join(' and ')} both name ${dupe.sourceArticle}; remove one`);
     }
 
     // One slide per file: a generated filename already taken by a pin, or by a

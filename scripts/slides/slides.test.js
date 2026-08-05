@@ -362,6 +362,9 @@ test('refuses to act when two incumbents name the same article', () => {
     ];
     const {slides, changed, blocked} = selectSlides({current: dupes, candidates: [cand('news/2026/a', 'a', 0.9)]});
     assert.ok(blocked);
+    // Naming both srcs is the whole value of halting: the operator has to find
+    // the pair by hand otherwise.
+    for (const s of dupes) assert.match(blocked, new RegExp(s.src));
     assert.equal(changed, false);
     assert.deepEqual(slides, dupes);
 });
@@ -409,6 +412,7 @@ test('refuses to act when pins alone exceed MAX_SLIDES rather than emitting an i
     ];
     const {slides, changed, blocked} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
     assert.ok(blocked, 'over-pinned state must be reported, not written');
+    assert.match(blocked, /\/data\/slides\/p0\.png/, 'the pins to choose between must be named');
     assert.equal(changed, false, 'must not drop the bot slide or write an over-length set');
     assert.equal(slides.length, current.length);
 });

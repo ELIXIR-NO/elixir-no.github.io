@@ -27,7 +27,9 @@ One object per input slide, same `id`.
 4. Include a person's name only if it appears verbatim in the summary.
 5. Plain text only, no HTML, markdown, emoji, backticks, or line breaks.
    `caption` ≤ 280 characters, `alt` ≤ 125 characters.
-6. `alt` describes what the image shows; never copy the caption; do not start
-   with "image of" / "photo of".
+6. You never receive the image, only `title` and `summary`. So `alt` names the
+   slide's subject in a few words drawn from the `title`: never describe visual
+   detail, never guess who or what is pictured, and never open with "image of",
+   "photo of" or "group photo of". Never copy the caption.
 7. Neutral institutional English. No superlatives, marketing, or speculation.
 8. Keep Norwegian characters (Å, å, Ø, ø, Æ, æ) intact.

@@ -81,6 +81,9 @@ Four files, and `README.md`:
 ## Operator commands
 
 - `pnpm slides:collect`, print the ranked candidate pool + current state (dry).
+  Its `rejected` list names every article that has a cover but cannot be used,
+  and why. Check it first when an article you expected on the homepage never
+  appears: a phone photo straight off a camera fails on both size and aspect.
 - `pnpm slides:refresh`, run the full pipeline locally (writes files).
 - `pnpm slides:validate`, run the sanity gate against the working tree.
 - `pnpm slides:test`, the unit suite.

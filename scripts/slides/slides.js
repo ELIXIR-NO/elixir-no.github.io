@@ -397,14 +397,37 @@ export function usableCover(a) {
 // The captions an article would get if the agent is off or rejected must
 // themselves pass the gate. Without this an article whose summary repeats its
 // title yields alt === caption, which fails validation after every apply.
-export function usableCandidate(a) {
-    if (!usableCover(a)) return false;
+// Why an article with a cover still cannot be used. Editors hit this by
+// uploading a photo straight off a camera, and a silent rejection reads as the
+// bot ignoring them, so `collect` reports these rather than dropping them.
+export function candidateIssues(a) {
+    if (!a.coverAbsPath) return ['no cover in frontmatter'];
+    // Checked before probing so an SVG logo reports as unsupported rather than
+    // as a corrupt raster, which sends the reader hunting for a broken file.
+    if (!EXT_FORMAT[a.coverExt]) return [`unsupported cover format .${a.coverExt}`];
+    let img;
+    try {
+        img = probeImage(a.coverAbsPath);
+    } catch (e) {
+        return [`cover unreadable: ${e.message}`];
+    }
+    const issues = [];
+    if (!extensionMatches(img, a.coverExt)) issues.push(`format ${img.format} != extension .${a.coverExt}`);
+    issues.push(...imageQualityIssues(img));
     // fallbackText would otherwise caption it with the title. Typed rather than
     // truthy: YAML yields a number for an unquoted `summary: 2024`, and the bot
     // runs before the build that would reject it.
-    if (typeof a.summary !== 'string' || !a.summary.trim()) return false;
-    const {alt, caption} = fallbackText(a);
-    return !textIssues(alt, caption).length;
+    if (typeof a.summary !== 'string' || !a.summary.trim()) {
+        issues.push('no summary');
+    } else {
+        const {alt, caption} = fallbackText(a);
+        issues.push(...textIssues(alt, caption));
+    }
+    return issues;
+}
+
+export function usableCandidate(a) {
+    return !candidateIssues(a).length;
 }
 
 function toCandidate(a) {
@@ -426,7 +449,11 @@ export function collect(now = new Date(), {current = readCurrent()} = {}) {
             if (a && a.coverAbsPath) byRef.set(a.ref, {...a, score: scoreArticle(a, now), topics: topicsOf(a)});
         }
     }
-    return {current, candidates: [...byRef.values()].map(toCandidate)};
+    const rejected = withCover(listArticles())
+        .filter(a => !byRef.has(a.ref))
+        .map(a => ({ref: a.ref, issues: candidateIssues(a)}))
+        .filter(r => r.issues.length);
+    return {current, candidates: [...byRef.values()].map(toCandidate), rejected};
 }
 
 // ========================================================================

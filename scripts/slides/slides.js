@@ -326,6 +326,7 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
     const seenRefs = new Set();
     for (const [i, s] of slides.entries()) {
         const at = `slide[${i}]`;
+        if (!s || typeof s !== 'object') {v.push(`${at} is not an object`); continue;}
         if (!SRC_RE.test(s.src || '')) {v.push(`${at} src invalid: ${s.src}`); continue;}
         if (seen.has(s.src)) v.push(`${at} duplicate src: ${s.src}`);
         seen.add(s.src);
@@ -455,15 +456,17 @@ export function selectSlides({current, candidates}) {
     // Which key wins is a guess either way, and guessing defers the problem:
     // dropping sourceArticle unclaims the ref, so the next run picks the same
     // article up again and shows it twice.
+    const notAnEntry = current.findIndex(s => !s || typeof s !== 'object');
+    if (notAnEntry !== -1) return halt(`slide[${notAnEntry}] is not an object`);
+
     const ambiguous = current.find(s => s.evergreen === true && s.sourceArticle);
     if (ambiguous) return halt(`${ambiguous.src} carries both evergreen and sourceArticle; remove one`);
 
     const malformed = current.find(s => s.sourceArticle && typeof s.sourceArticle !== 'string');
     if (malformed) return halt(`${malformed.src} has a non-string sourceArticle`);
 
-    const evergreens = current
-        .filter(s => s.evergreen === true || !s.sourceArticle)
-        .map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
+    const pinned = current.filter(s => s.evergreen === true || !s.sourceArticle);
+    const evergreens = pinned.map(s => (s.evergreen === true ? s : {...s, evergreen: true}));
     if (evergreens.length > MAX_SLIDES)
         return halt(`${evergreens.length} pinned slides exceed the ${MAX_SLIDES} slot limit; `
             + `unpin one of ${evergreens.map(s => s.src).join(', ')}`);
@@ -512,7 +515,6 @@ export function selectSlides({current, candidates}) {
         chosen = chosen.slice(0, budget);
     }
 
-    // Order: surviving incumbents in current order, then new ones by score.
     // Matched by identity, not by ref: two entries can share a sourceArticle.
     const survivors = botIncumbents.filter(s => chosen.some(p => p.entry === s));
     const news = chosen
@@ -522,7 +524,12 @@ export function selectSlides({current, candidates}) {
             alt: null, caption: null, sourceArticle: p.cand.ref, _candidate: p.cand,
         }));
 
-    const slides = [...evergreens, ...survivors, ...news];
+    // Everything retained keeps the position it already had, pins included. The
+    // CMS offers up/down reordering, and hoisting pins to the front would undo
+    // an editor's arrangement twice a week, in a PR that does nothing else.
+    const replacement = new Map(pinned.map((s, i) => [s, evergreens[i]]));
+    for (const s of survivors) replacement.set(s, s);
+    const slides = [...current.filter(s => replacement.has(s)).map(s => replacement.get(s)), ...news];
     return {
         slides, changed: !sameSeq(current, slides), budget,
         dropped: botIncumbents.length - survivors.length,
@@ -556,15 +563,42 @@ export function validAgentText(alt, caption, cand) {
     return properNounsOk(caption, cand) && properNounsOk(alt, cand);
 }
 
+const parseArray = s => {
+    try {
+        const v = JSON.parse(s);
+        return Array.isArray(v) ? v : null;
+    } catch {
+        return null;
+    }
+};
+
 export function extractJsonArray(text) {
     const t = String(text || '').trim();
     if (!t) return null;
-    for (const candidate of [t, (t.match(/\[[\s\S]*\]/) || [])[0]]) {
-        if (!candidate) continue;
-        try {
-            const v = JSON.parse(candidate);
-            if (Array.isArray(v)) return v;
-        } catch { /* try next */ }
+    const whole = parseArray(t);
+    if (whole) return whole;
+
+    // Balanced scan rather than first `[` to last `]`: a model preamble often
+    // carries a stray bracket, and that greedy span then parses as nothing.
+    for (let i = 0; i < t.length; i++) {
+        if (t[i] !== '[') continue;
+        let depth = 0, inString = false, escaped = false;
+        for (let j = i; j < t.length; j++) {
+            const ch = t[j];
+            if (inString) {
+                if (escaped) escaped = false;
+                else if (ch === '\\') escaped = true;
+                else if (ch === '"') inString = false;
+                continue;
+            }
+            if (ch === '"') inString = true;
+            else if (ch === '[') depth++;
+            else if (ch === ']' && --depth === 0) {
+                const v = parseArray(t.slice(i, j + 1));
+                if (v) return v;
+                break;
+            }
+        }
     }
     return null;
 }
@@ -598,9 +632,14 @@ export async function writeCaptions(slides, {runAgent = defaultRunAgent} = {}) {
     for (const s of news) {
         const c = s._candidate;
         const a = byId.get(c.id);
-        if (a && validAgentText(a.alt, a.caption, c)) {
-            s.alt = a.alt.trim();
-            s.caption = a.caption.trim();
+        // Trim first, then judge what will actually be stored. A trailing
+        // newline is the commonest thing in model output, and validating the
+        // raw string threw away otherwise good text for a character we strip.
+        const alt = typeof a?.alt === 'string' ? a.alt.trim() : a?.alt;
+        const caption = typeof a?.caption === 'string' ? a.caption.trim() : a?.caption;
+        if (a && validAgentText(alt, caption, c)) {
+            s.alt = alt;
+            s.caption = caption;
         } else {
             const fb = fallbackText(c);
             s.alt = fb.alt;
@@ -673,6 +712,14 @@ export async function refresh({diffScope = false} = {}) {
             : 'Every slot is pinned; the bot has nothing to rotate.');
     }
     if (!changed) {
+        // Selection being stable says nothing about the file being sound. A
+        // deleted image or an emptied caption would otherwise report healthy
+        // forever, and this job is the thing best placed to notice.
+        const standing = validateSlides(slides);
+        if (standing.length) {
+            console.error('Slides are unchanged but invalid:\n' + standing.map(m => '  - ' + m).join('\n'));
+            return 1;
+        }
         console.log('No slide changes needed.');
         setOutput('noop');
         return 0;

@@ -19,8 +19,9 @@ Every slide entry carries exactly one signal:
   off the file with gray-matter rather than through the collection schema, so
   adding a `cover` to an entry is all it takes.
 - Neither key, treated as evergreen (fail closed) and stamped `evergreen: true`
-  on the next run, so the tag shows up in that run's PR diff. Should not occur
-  after bootstrap.
+  on the next run, so the tag shows up in that run's PR diff. Should not occur:
+  the CMS pins the slides it creates, and `slides:validate` rejects an untagged
+  entry, so only a hand-edit gets here.
 
 ## The bot never guesses
 
@@ -57,6 +58,10 @@ is why a pinned image is best left under a name the bot cannot generate.
 The `/admin` SlidesEditor seeds its form with `useState({ ...slide })` and edits
 only `alt`/`caption`/`src`, so `sourceArticle`/`evergreen` survive both editing
 and reordering. Ownership keys are preserved end to end; no action required.
+
+Carousel order survives too. Everything the bot retains keeps the position it
+had, so an arrangement made with the up/down buttons stands, and new slides are
+appended after it.
 
 ## Layout
 

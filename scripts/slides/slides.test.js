@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {test} from 'node:test';
 import {
-    cleanEntry, collect, fallbackText, listArticles, parseArticleDate, probeImage,
+    cleanEntry, collect, extractJsonArray, fallbackText, listArticles, parseArticleDate, probeImage,
     properNounsOk, rankCandidates, readCurrent, referencedBasenames, resolveArticle,
     scoreArticle, selectSlides, SLIDES_DIR, staleBotFiles, usableCandidate,
     usableCover, validateSlides, withCover, writeCaptions,
@@ -346,6 +346,24 @@ test('refuses to act on a dual-key entry instead of silently resolving it', () =
     assert.deepEqual(slides, current);
 });
 
+test('reports a malformed entry instead of throwing at the operator', () => {
+    // `[null]` is valid JSON and hand-editable. A stack trace names no slide.
+    assert.deepEqual(validateSlides([null]), ['slide[0] is not an object']);
+    assert.match(selectSlides({current: [null], candidates: []}).blocked, /slide\[0\]/);
+});
+
+test('leaves a human arrangement alone instead of hoisting pins', () => {
+    // The CMS offers up/down reordering. Rebuilding the order every run would
+    // undo an editor twice a week, in a PR whose only content is the reversion.
+    const current = [
+        {src: '/data/slides/news-2026-a.png', alt: 'A', caption: 'c', sourceArticle: 'news/2026/a'},
+        {src: '/data/slides/nels.png', alt: 'NeLS', caption: 'c', evergreen: true},
+    ];
+    const {slides, changed} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
+    assert.deepEqual(slides.map(s => s.src), current.map(s => s.src));
+    assert.equal(changed, false, 'a pure reordering must not open a PR');
+});
+
 test('refuses to act on a sourceArticle that is not a ref string', () => {
     const current = [{src: '/data/slides/x.png', alt: 'X', caption: 'c', sourceArticle: {ref: 'news/2026/a'}}];
     const {blocked, changed} = selectSlides({current, candidates: [cand('news/2026/a', 'a', 0.9)]});
@@ -455,6 +473,26 @@ test('uses valid agent text', async () => {
 test('rejects hallucinated proper nouns', () => {
     assert.equal(properNounsOk('Written by Jane Doe', {title: 'GDI', summary: 'about gdi'}), false);
     assert.equal(properNounsOk('About the GDI project', {title: 'GDI project', summary: 'the GDI project'}), true);
+});
+
+test('accepts agent text that only needs trimming', async () => {
+    // A trailing newline is the commonest artifact in model output. Judging the
+    // untrimmed string threw away good text over a character we strip anyway.
+    const s = [newSlide('x', 'GDI go-live', 'ELIXIR Norway deploys GDI infrastructure.')];
+    const agent = async () => JSON.stringify([{id: 'news/2026/x', alt: 'A network diagram\n', caption: 'ELIXIR Norway deploys GDI infrastructure.\n'}]);
+    const out = await writeCaptions(s, {runAgent: agent});
+    assert.equal(out[0].alt, 'A network diagram');
+    assert.equal(out[0].caption, 'ELIXIR Norway deploys GDI infrastructure.');
+});
+
+test('finds the array even when the model wrote a bracket before it', () => {
+    // First-`[`-to-last-`]` spans the preamble too and parses as nothing, which
+    // silently fell back for the whole batch.
+    assert.deepEqual(extractJsonArray('Here [is] your answer: [{"id":"x"}]'), [{id: 'x'}]);
+    assert.deepEqual(extractJsonArray('```json\n[{"id":"x"}]\n```'), [{id: 'x'}]);
+    assert.deepEqual(extractJsonArray('{"slides":[{"id":"x"}]}'), [{id: 'x'}]);
+    assert.deepEqual(extractJsonArray('note: [{"id":"a]b"}]'), [{id: 'a]b'}]);
+    assert.equal(extractJsonArray('no array here [nope'), null);
 });
 
 // ========================================================================

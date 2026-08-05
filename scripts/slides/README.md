@@ -13,9 +13,11 @@ Every slide entry carries exactly one signal:
   the bot. Set this to protect a slide.
 - `"sourceArticle": "collection/year/slug"`, bot-managed. Scored from that
   article each run; rotated by recency + editorial weight; dropped when it ages
-  out. `funding-and-projects` refs have two segments (no year), and no entry in
-  that collection can surface until its schema gains a `cover` field: the
-  selector only considers articles that have one.
+  out. `funding-and-projects` refs have two segments (no year), and nothing in
+  that collection surfaces today because no entry declares a `cover`: the
+  selector only considers articles that have one. Frontmatter is read straight
+  off the file with gray-matter rather than through the collection schema, so
+  adding a `cover` to an entry is all it takes.
 - Neither key, treated as evergreen (fail closed) and stamped `evergreen: true`
   on the next run, so the tag shows up in that run's PR diff. Should not occur
   after bootstrap.

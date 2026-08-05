@@ -193,6 +193,10 @@ export interface Slide {
     src: string;
     alt: string;
     caption?: string;
+    // Exactly one of these. `evergreen` pins a slide; `sourceArticle` marks one
+    // the refresh job owns. An entry carrying neither fails slide validation.
+    evergreen?: true;
+    sourceArticle?: string;
 }
 
 export const ELIXIR_GROUPS = [

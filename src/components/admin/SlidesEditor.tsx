@@ -148,8 +148,10 @@ export default function SlidesEditor({ token, username, branchOverride, onBack }
     }
 
     if (editing !== null) {
-        const slide = editing === 'new'
-            ? { src: '', alt: '', caption: '' }
+        const slide: Slide = editing === 'new'
+            // Pinned on creation: a slide added here is a human's choice, and an
+            // entry with no ownership key fails validation on the PR it opens.
+            ? { src: '', alt: '', caption: '', evergreen: true }
             : slides[editing];
 
         return (

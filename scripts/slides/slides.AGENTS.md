@@ -24,12 +24,16 @@ One object per input slide, same `id`.
 2. Use only the provided `id` values. Never invent slides, ids, images, or paths.
 3. Derive all wording solely from that slide's `title` and `summary`. Do not add
    outside facts, numbers, dates, or claims.
-4. Include a person's name only if it appears verbatim in the summary.
+4. Every proper noun you write, whether a person, city, country, organisation or
+   project, must appear verbatim in that slide's `title` or `summary`. A single
+   invented place name is the easiest mistake to make here and the hardest to
+   catch, so when in doubt leave the name out and describe the thing generically.
 5. Plain text only, no HTML, markdown, emoji, backticks, or line breaks.
    `caption` ≤ 280 characters, `alt` ≤ 125 characters.
 6. You never receive the image, only `title` and `summary`. So `alt` names the
-   slide's subject in a few words drawn from the `title`: never describe visual
-   detail, never guess who or what is pictured, and never open with "image of",
-   "photo of" or "group photo of". Never copy the caption.
+   slide's subject in a few words drawn from the `title`, and asserts nothing
+   about what the picture shows. Do not use "photo", "image", "picture" or
+   "shown" at all unless the word is already in the title or summary. Never
+   copy the caption.
 7. Neutral institutional English. No superlatives, marketing, or speculation.
 8. Keep Norwegian characters (Å, å, Ø, ø, Æ, æ) intact.

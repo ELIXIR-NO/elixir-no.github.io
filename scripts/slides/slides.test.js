@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {test} from 'node:test';
 import {
-    cleanEntry, collect, extractJsonArray, fallbackText, listArticles, parseArticleDate, probeImage,
+    cleanEntry, collect, extractJsonArray, fallbackText, imageClaimOk, listArticles, parseArticleDate, probeImage,
     properNounsOk, rankCandidates, readCurrent, referencedBasenames, resolveArticle,
     scoreArticle, selectSlides, SLIDES_DIR, staleBotFiles, usableCandidate,
     usableCover, validateSlides, withCover, writeCaptions,
@@ -473,6 +473,18 @@ test('uses valid agent text', async () => {
 test('rejects hallucinated proper nouns', () => {
     assert.equal(properNounsOk('Written by Jane Doe', {title: 'GDI', summary: 'about gdi'}), false);
     assert.equal(properNounsOk('About the GDI project', {title: 'GDI project', summary: 'the GDI project'}), true);
+});
+
+test('rejects alt that claims to describe the picture', () => {
+    // The agent is never sent the image, so "Group photo of ..." is invented
+    // whatever the article is. It stands only when the source uses the word.
+    const cand = {title: 'GDI Node Hackathon', summary: 'Developers met in Lapland.'};
+    assert.equal(imageClaimOk('Group photo from the GDI Node Hackathon', cand), false);
+    assert.equal(imageClaimOk('Participants shown at the hackathon', cand), false);
+    assert.equal(imageClaimOk('GDI Node Hackathon in Lapland', cand), true);
+    assert.equal(
+        imageClaimOk('Winning photo', {title: 'Photo competition', summary: 'Our photo competition.'}),
+        true, 'a source that talks about photos may say photo');
 });
 
 test('accepts agent text that only needs trimming', async () => {

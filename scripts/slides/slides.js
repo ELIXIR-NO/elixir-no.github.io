@@ -560,8 +560,20 @@ export function properNounsOk(text, cand) {
     return runs.every(r => src.includes(r));
 }
 
+// The agent is sent title and summary, never the image, so any alt asserting
+// what the picture shows is unfounded by construction. Allowed only when the
+// source itself uses the word, as an article about a photo competition would.
+const IMAGE_CLAIM_RE = /\b(photo|photograph|picture|image|pictured|depicts?|depicted|shown)\w*/i;
+
+export function imageClaimOk(alt, cand) {
+    const claim = String(alt || '').match(IMAGE_CLAIM_RE);
+    if (!claim) return true;
+    return `${cand.title} ${cand.summary}`.toLowerCase().includes(claim[0].toLowerCase());
+}
+
 export function validAgentText(alt, caption, cand) {
     if (textIssues(alt, caption).length) return false;
+    if (!imageClaimOk(alt, cand)) return false;
     return properNounsOk(caption, cand) && properNounsOk(alt, cand);
 }
 

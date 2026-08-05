@@ -363,8 +363,10 @@ export function validateSlides(slides, {slidesDir = SLIDES_DIR} = {}) {
 export function diffScopeViolations() {
     // `git status`, not `git diff`, which cannot see untracked files: a stray
     // temp file written outside the slides paths is exactly what this guards.
-    const out = execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], {encoding: 'utf8'});
-    return out.split('\n').map(s => s.slice(3).trim()).filter(Boolean)
+    // -z because porcelain otherwise C-quotes any path holding a space or a
+    // non-ASCII byte, and a quoted path matches no prefix here.
+    const out = execFileSync('git', ['status', '--porcelain', '-z', '--untracked-files=all'], {encoding: 'utf8'});
+    return out.split('\0').map(s => s.slice(3).trim()).filter(Boolean)
         .filter(p => p !== 'src/data/slides.json' && !p.startsWith('src/data/slides/'))
         .map(p => `out-of-scope change: ${p}`);
 }
@@ -450,15 +452,15 @@ export function selectSlides({current, candidates}) {
     // Evergreen pins AND untracked entries (e.g. a slide freshly added via the
     // CMS, which has no ownership key yet) are retained in place. Untracked ones
     // are stamped `evergreen: true` so they are protected and self-heal their
-    // tag — never dropped. This is the spec's fail-closed rule.
+    // tag, never dropped. This is the spec's fail-closed rule.
     const halt = reason => ({slides: current, changed: false, budget: 0, dropped: 0, blocked: reason});
+
+    const notAnEntry = current.findIndex(s => !s || typeof s !== 'object');
+    if (notAnEntry !== -1) return halt(`slide[${notAnEntry}] is not an object`);
 
     // Which key wins is a guess either way, and guessing defers the problem:
     // dropping sourceArticle unclaims the ref, so the next run picks the same
     // article up again and shows it twice.
-    const notAnEntry = current.findIndex(s => !s || typeof s !== 'object');
-    if (notAnEntry !== -1) return halt(`slide[${notAnEntry}] is not an object`);
-
     const ambiguous = current.find(s => s.evergreen === true && s.sourceArticle);
     if (ambiguous) return halt(`${ambiguous.src} carries both evergreen and sourceArticle; remove one`);
 

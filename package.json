@@ -15,7 +15,11 @@
     "astro": "astro",
     "postbuild": "pagefind --site dist",
     "test:slugs": "node scripts/check-slugs.mjs",
-    "test:pages": "node scripts/test-pages.mjs"
+    "test:pages": "node scripts/test-pages.mjs",
+    "slides:collect": "node scripts/slides/slides.js collect",
+    "slides:refresh": "node scripts/slides/slides.js refresh",
+    "slides:validate": "node scripts/slides/slides.js validate",
+    "slides:test": "node --test scripts/slides/slides.test.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.0",
@@ -46,6 +50,7 @@
     "@types/dompurify": "^3.2.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "gray-matter": "^4.0.3",
     "npm-run-all2": "^9.0.2",
     "pagefind": "^1.5.0"
   },

@@ -26,6 +26,12 @@ jobs:
       - name: Check slug naming conventions
         run: node scripts/check-slugs.mjs
 
+      - name: Validate homepage slides
+        run: node scripts/slides/slides.js validate
+
+      - name: Slides pipeline unit tests
+        run: node --test scripts/slides/slides.test.js
+
       - name: Build (static output)
         run: pnpm build
         env:

@@ -1,0 +1,15 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "model": "{env:SLIDES_AGENT_MODEL}",
+    "instructions": ["slides.AGENTS.md"],
+    "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false,
+        "read": false,
+        "glob": false,
+        "grep": false,
+        "webfetch": false,
+        "task": false
+    }
+}

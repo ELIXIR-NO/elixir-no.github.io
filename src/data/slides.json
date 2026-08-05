@@ -1,27 +1,20 @@
 [
     {
-        "src": "/data/slides/eosc-entrust.png",
-        "alt": "EOSC-ENTRUST",
-        "caption": "Pål Sætrom and Miikka Kallberg co-led the 2nd TRE Evaluation Workshop, bringing together 30 stakeholders to advance the TRE Blueprint and strengthen Trusted Research Environments across Europe. Organizers included Ingeborg Winge, Christine Stansberg, and Stefanie Kirschenmann."
-    },
-    {
-        "src": "/data/slides/elixir-no-all-hands-2025.jpg",
-        "alt": "Group photo for ELIXIR Norway All Hands 2025",
-        "caption": "This year's ELIXIR Norway All Hands was organised physically in Ås!"
-    },
-    {
         "src": "/data/slides/nels.png",
         "alt": "NeLS Landing Page",
-        "caption": "NeLS, the Norwegian e-Infrastructure for Life Sciences, for data analysis, sharing and storage"
+        "caption": "NeLS, the Norwegian e-Infrastructure for Life Sciences, for data analysis, sharing and storage",
+        "evergreen": true
     },
     {
         "src": "/data/slides/genomic-data-infrastructure.png",
         "alt": "Genomic Data Infrastructure (GDI)",
-        "caption": "ELIXIR Norway is deploying GDI infrastructure to go live by 2026 with existing datasets and Genome of Europe (GoE) reference data, enabling federated discovery and analysis across 27+ European countries."
+        "caption": "ELIXIR Norway is deploying GDI infrastructure to go live by 2026 with existing datasets and Genome of Europe (GoE) reference data, enabling federated discovery and analysis across 27+ European countries.",
+        "evergreen": true
     },
     {
         "src": "/data/slides/rdm-promotion.png",
         "alt": "RDMkit",
-        "caption": "The ELIXIR RDMkit: research data management made simple"
+        "caption": "The ELIXIR RDMkit: research data management made simple",
+        "evergreen": true
     }
 ]

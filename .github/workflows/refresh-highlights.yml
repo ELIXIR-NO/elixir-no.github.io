@@ -73,18 +73,22 @@ jobs:
           git checkout -b "$BRANCH"
           git add src/data/slides.json src/data/slides
           git commit -m "chore(slides): refresh homepage highlights"
-          git push origin "$BRANCH"
 
-          # Read before creating, or the new PR supersedes itself.
-          SUPERSEDED=$(gh pr list --state open --base main --json number,headRefName \
+          # Read before creating, or the new PR supersedes itself. This runs
+          # before the push because a bare assignment from a command
+          # substitution carries its exit status: if the list call fails,
+          # set -e ends the step here, and there is no pushed branch to orphan.
+          SUPERSEDED=$(gh pr list --state open --base main --limit 100 --json number,headRefName \
             --jq '.[] | select(.headRefName | startswith("bot/slides-refresh-")) | .number')
+
+          git push origin "$BRANCH"
 
           cat > "$RUNNER_TEMP/pr-body.md" <<'EOF'
           Automated highlights refresh, open for review.
 
-          Slide selection and captions were regenerated from recent content;
-          `pnpm slides:validate` and `pnpm build` passed in the workflow run that
-          opened this.
+          Slide selection and captions were regenerated from recent content. The
+          pipeline validated the result after writing it, and `pnpm build` passed,
+          both in the workflow run that opened this.
 
           Merge it or close it, but do not leave it sitting. The branch holds a
           whole `slides.json` written against main as of this run, so the next
@@ -103,15 +107,25 @@ jobs:
           # a different answer to the same question; merging both can put back a
           # slide the newer run deliberately dropped. Closed PRs keep a Restore
           # branch button, so nothing is lost.
+          # A close that fails must not turn this run red: the new PR is already
+          # open and mergeable, and someone merging the old one by hand in the
+          # seconds since the list above is a normal way to get here.
           for N in $SUPERSEDED; do
             gh pr close "$N" --delete-branch \
-              --comment "Superseded by ${PR_URL}, computed from the current main."
+              --comment "Superseded by ${PR_URL}, computed from the current main." \
+              || echo "::warning::could not close superseded PR #${N}; close it by hand"
           done
 
       - name: Report failure
-        if: steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
+        # failure() catches the steps above these three: a broken `pnpm install`
+        # stops the carousel refreshing just as effectively as a broken pipeline,
+        # and would otherwise only show up as a red run nobody is watching.
+        if: failure() || steps.refresh.outcome == 'failure' || steps.build.outcome == 'failure' || steps.pr.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
+          # gh reads the repo from the git remote, and a failure before checkout
+          # leaves no remote to read.
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
           TITLE="Highlights refresh failed"

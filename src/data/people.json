@@ -207,58 +207,95 @@
     },
     "uio": {
       "name": "University of Oslo",
-      "people": [
-        {
-          "username": "rein-aasland",
-          "name": "Rein Aasland",
-          "title": "Professor, Head of Node",
-          "photo": "/data/people/rein-aasland.png",
-          "profile-url": "https://www.mn.uio.no/ibv/personer/vit/reina/",
-          "affiliations": [],
-          "elixir-groups": [
+	"people": [
+	    {
+		"username": "anthony-mathelier",
+		"name": "Anthony Mathelier",
+		"title": "Senior Researcher, Head of Node",
+		"photo": "/data/people/anthony-mathelier.jpg",
+		"profile-url": "https://www.med.uio.no/ncmbm/english/people/aca/anthoma",
+		"affiliations": [],
+		"elixir-groups": [
+		    {
+			"name": "node-leaders",
+			"role": null
+		    }
+		]
+            },
+	    {
+		"username": "eivind-valen",
+		"name": "Eivind Valen",
+		"title": "Professor, Head of Node",
+		"photo": "/data/people/eivind-valen.png",
+		"profile-url": "https://www.mn.uio.no/ibv/english/people/aca/edv/index.html",
+		"affiliations": [],
+		"elixir-groups": [
+		    {
+			"name": "node-leaders",
+			"role": null
+		    }
+		]
+            },
+	    {
+		"username": "eivind-hovig",
+		"name": "Eivind Hovig",
+		"title": "Professor Emeritus",
+		"photo": "/data/people/eivind-hovig.png",
+		"profile-url": "https://www.mn.uio.no/ifi/english/people/aca/ehovig/",
+		"affiliations": [],
+		"elixir-groups": [
+		    {
+			"name": "node-leaders",
+			"role": "Deputy Head of ELIXIR Norway"
+		    }
+		]
+	    },
             {
-              "name": "node-leaders",
-              "role": null
-            }
-          ]
-        },
-        {
-          "username": "eivind-hovig",
-          "name": "Eivind Hovig",
-          "title": "Professor Emeritus",
-          "photo": "/data/people/eivind-hovig.png",
-          "profile-url": "https://www.mn.uio.no/ifi/english/people/aca/ehovig/",
-          "affiliations": [],
-          "elixir-groups": [
+		"username": "roger-simm",
+		"name": "Roger Simm",
+		"title": "Head of the Department of Biosciences, ELIXIR Norway steering board member",
+		"photo": "/data/people/rogersimm.jpg",
+		"profile-url": "https://www.mn.uio.no/ibv/english/people/adm/rogersim/",
+		"affiliations": [],
+		"elixir-groups": [
+		    {
+			"name": "steering-board",
+			"role": null
+		    }
+		]
+            },
+	    {
+		"username": "federico-bianchini",
+		"name": "Federico Bianchini",
+		"title": "Senior Engineer, PhD",
+		"photo": "/data/people/federico-bianchini.png",
+		"profile-url": "https://www.mn.uio.no/bils/english/people/fredebi/",
+		"affiliations": [],
+		"elixir-groups": [
+		    {
+			"name": "coordinators",
+			"role": "Deputy Training Coordinator"
+		    }
+		]
+            },
+	    {
+		"username": "rein-aasland",
+		"name": "Rein Aasland",
+		"title": "Professor, Special Advisor",
+		"photo": "/data/people/rein-aasland.png",
+		"profile-url": "https://www.mn.uio.no/ibv/personer/vit/reina/",
+		"affiliations": [],
+		"elixir-groups": []
+            },
             {
-              "name": "node-leaders",
-              "role": "Co-head of ELIXIR Norway"
-            }
-          ]
-        },
-        {
-          "username": "roger-simm",
-          "name": "Roger Simm",
-          "title": "Head of the Department of Biosciences, ELIXIR Norway steering board member",
-          "photo": "/data/people/rogersimm.jpg",
-          "profile-url": "https://www.mn.uio.no/ibv/english/people/adm/rogersim/",
-          "affiliations": [],
-          "elixir-groups": [
-            {
-              "name": "steering-board",
-              "role": null
-            }
-          ]
-        },
-        {
-          "username": "martina-visnovska",
-          "name": "Martina Visnovska",
-          "title": "Researcher, PhD",
-          "photo": "/data/people/martina-visnovska.png",
-          "profile-url": null,
-          "affiliations": [],
-          "elixir-groups": []
-        },
+		"username": "martina-visnovska",
+		"name": "Martina Visnovska",
+		"title": "Researcher, PhD",
+		"photo": "/data/people/martina-visnovska.png",
+		"profile-url": null,
+		"affiliations": [],
+		"elixir-groups": []
+            },
         {
           "username": "sveinung-gundersen",
           "name": "Sveinung Gundersen",
@@ -268,20 +305,7 @@
           "affiliations": [],
           "elixir-groups": []
         },
-        {
-          "username": "federico-bianchini",
-          "name": "Federico Bianchini",
-          "title": "Senior Engineer, PhD",
-          "photo": "/data/people/federico-bianchini.png",
-          "profile-url": "https://www.mn.uio.no/bils/english/people/fredebi/",
-          "affiliations": [],
-          "elixir-groups": [
-            {
-              "name": "coordinators",
-              "role": "Deputy Training Coordinator"
-            }
-          ]
-        },
+
         {
           "username": "victor-kalbskopf",
           "name": "Victor Kalbskopf",

@@ -1,15 +1,5 @@
 [
     {
-        "src": "/data/slides/eosc-entrust.png",
-        "alt": "EOSC-ENTRUST",
-        "caption": "Pål Sætrom and Miikka Kallberg co-led the 2nd TRE Evaluation Workshop, bringing together 30 stakeholders to advance the TRE Blueprint and strengthen Trusted Research Environments across Europe. Organizers included Ingeborg Winge, Christine Stansberg, and Stefanie Kirschenmann."
-    },
-    {
-        "src": "/data/slides/elixir-no-all-hands-2025.jpg",
-        "alt": "Group photo for ELIXIR Norway All Hands 2025",
-        "caption": "This year's ELIXIR Norway All Hands was organised physically in Ås!"
-    },
-    {
         "src": "/data/slides/nels.png",
         "alt": "NeLS Landing Page",
         "caption": "NeLS, the Norwegian e-Infrastructure for Life Sciences, for data analysis, sharing and storage"
@@ -23,5 +13,15 @@
         "src": "/data/slides/rdm-promotion.png",
         "alt": "RDMkit",
         "caption": "The ELIXIR RDMkit: research data management made simple"
+    },
+    {
+        "src": "/data/slides/news-2026-gdi-node-hackathon-finland.png",
+        "alt": "Norway Joins 19 Countries at GDI Node Hackathon in Lapland",
+        "caption": "ELIXIR Norway participated in a three-day GDI hackathon in Finnish Lapland, where 59 developers from 19 EU countries advanced the federated Genomic Data Infrastructure for secure cross-border genomic data sharing."
+    },
+    {
+        "src": "/data/slides/news-2025-ahm-europe.jpeg",
+        "alt": "All Hands Meeting - ELIXIR Europe 2025 in Thessaloniki, Greece",
+        "caption": "ELIXIR Norway was well represented at the 11th ELIXIR All Hands meeting, which took place in Thessaloniki 2-5 June."
     }
 ]

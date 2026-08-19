@@ -2,7 +2,7 @@
 import Page from "../../layouts/page.astro";
 import { getCollection } from "astro:content";
 import { idToSlug, resolveContentAsset } from "../../lib/utils";
-import { ArrowRightIcon, CalendarIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon, CalendarIcon, NewspaperIcon } from "@heroicons/react/24/outline";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -14,6 +14,14 @@ function parseDate(dateString: string): number {
 const now = Date.now();
 const events = await getCollection("events");
 events.sort((a, b) => parseDate(b.data.date) - parseDate(a.data.date));
+
+const eventNewsSlugs = new Set([
+    "2025/ahm-europe",
+    "2025/eosc-entrust-workshop",
+]);
+const relatedNews = (await getCollection("news"))
+    .filter((entry) => eventNewsSlugs.has(idToSlug(entry.id)))
+    .sort((a, b) => parseDate(b.data.date) - parseDate(a.data.date));
 
 const upcoming = events.filter(e => parseDate(e.data.date) >= now);
 const past = events.filter(e => parseDate(e.data.date) < now);
@@ -150,8 +158,63 @@ function formatDate(dateString: string): string {
         </section>
     )}
 
+    {relatedNews.length > 0 && (
+        <section class={past.length > 0 || upcoming.length > 0 ? "mt-16" : "mt-12"}>
+            <div class="max-w-3xl">
+                <h2 class="text-xl font-semibold text-brand-primary dark:text-white">Event reports in the news archive</h2>
+                <p class="mt-3 text-sm leading-relaxed text-brand-grey dark:text-gray-400">
+                    Some past happenings are still best kept as news stories. We surface them here without changing their news format.
+                </p>
+            </div>
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {relatedNews.map((entry) => {
+                    const slug = idToSlug(entry.id);
+                    const cover = entry.data?.cover?.source
+                        ? resolveContentAsset(`${entry.collection}/${entry.id}`, entry.data.cover.source)
+                        : null;
+                    return (
+                        <a
+                            href={`${BASE}/news/${slug}`}
+                            class="group flex flex-col rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] overflow-hidden transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        >
+                            {cover ? (
+                                <div class="h-40 bg-gray-50 dark:bg-white/5 overflow-hidden">
+                                    <img
+                                        src={cover}
+                                        alt={entry.data.title}
+                                        class="w-full h-full object-cover"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            ) : (
+                                <div class="h-40 bg-gradient-to-br from-brand-primary/5 to-brand-secondary/10 dark:from-brand-primary/10 dark:to-brand-secondary/5 flex items-center justify-center">
+                                    <NewspaperIcon className="h-10 w-10 text-brand-secondary/20" aria-hidden="true" />
+                                </div>
+                            )}
+                            <div class="flex flex-col flex-1 p-5">
+                                <time class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                    {formatDate(entry.data.date)}
+                                </time>
+                                <h3 class="mt-2 text-base font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors line-clamp-2">
+                                    {entry.data.title}
+                                </h3>
+                                <p class="mt-2 text-sm leading-relaxed text-brand-grey dark:text-gray-400 line-clamp-3 flex-1">
+                                    {entry.data.summary}
+                                </p>
+                                <div class="mt-4 flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:text-accent transition-colors">
+                                    Read news article
+                                    <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                </div>
+                            </div>
+                        </a>
+                    );
+                })}
+            </div>
+        </section>
+    )}
+
     <!-- Empty state -->
-    {events.length === 0 && (
+    {events.length === 0 && relatedNews.length === 0 && (
         <div class="mt-16 text-center py-20">
             <CalendarIcon className="mx-auto h-12 w-12 text-brand-grey/20" aria-hidden="true" />
             <p class="mt-4 text-brand-grey dark:text-gray-400">No events scheduled at this time.</p>

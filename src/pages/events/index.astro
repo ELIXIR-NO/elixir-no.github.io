@@ -27,6 +27,11 @@ function formatDate(dateString: string): string {
     if (isNaN(d.getTime())) return dateString;
     return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
+
+function getDateTime(dateString: string): string {
+    const d = new Date(Date.parse(dateString));
+    return isNaN(d.getTime()) ? dateString : d.toISOString();
+}
 ---
 
 <Page variant="wide" seo={{
@@ -82,7 +87,7 @@ function formatDate(dateString: string): string {
                                 </div>
                             )}
                             <div class="flex flex-col flex-1 p-5">
-                                <time class="text-xs font-medium text-accent">
+                                <time class="text-xs font-medium text-accent" datetime={getDateTime(event.data.date)}>
                                     {formatDate(event.data.date)}
                                 </time>
                                 <h3 class="mt-2 text-base font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors line-clamp-2">
@@ -133,7 +138,7 @@ function formatDate(dateString: string): string {
                                 </div>
                             )}
                             <div class="flex flex-col flex-1 p-5">
-                                <time class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <time class="text-xs font-medium text-gray-500 dark:text-gray-400" datetime={getDateTime(event.data.date)}>
                                     {formatDate(event.data.date)}
                                 </time>
                                 <h3 class="mt-2 text-base font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors line-clamp-2">
@@ -188,7 +193,7 @@ function formatDate(dateString: string): string {
                                 </div>
                             )}
                             <div class="flex flex-col flex-1 p-5">
-                                <time class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <time class="text-xs font-medium text-gray-500 dark:text-gray-400" datetime={getDateTime(entry.data.date)}>
                                     {formatDate(entry.data.date)}
                                 </time>
                                 <h3 class="mt-2 text-base font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors line-clamp-2">

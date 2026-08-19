@@ -46,7 +46,7 @@ export const collections: Collection[] = [
         canCreate: true,
         depth: 2,
         layoutPath: '../../../../layouts/page.astro',
-        description: 'News articles published on elixir.no/news. Each article has a title, date, summary, optional cover image, tags for filtering, and author usernames that link to the people directory. Articles are organized by year.',
+        description: 'News articles published on elixir.no/news. Each article has a title, date, summary, optional cover image, tags for filtering, and author usernames that link to the people directory. Articles can also be surfaced from the Events page while remaining news items. Articles are organized by year.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },
             { name: 'date', label: 'Date', type: 'date', required: true },
@@ -54,6 +54,7 @@ export const collections: Collection[] = [
             { name: 'cover', label: 'Cover Image', type: 'image' },
             { name: 'tags', label: 'Tags', type: 'list', hint: 'Lowercase, hyphens (e.g., training-events)' },
             { name: 'authors', label: 'Authors', type: 'list', hint: 'Usernames from people.json (e.g., kjell-petersen)' },
+            { name: 'showOnEventsPage', label: 'Show on Events page', type: 'boolean', hint: 'Use for news items that should also appear in the Events page news archive section.' },
         ],
     },
     {

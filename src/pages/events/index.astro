@@ -15,12 +15,8 @@ const now = Date.now();
 const events = await getCollection("events");
 events.sort((a, b) => parseDate(b.data.date) - parseDate(a.data.date));
 
-const eventNewsSlugs = new Set([
-    "2025/ahm-europe",
-    "2025/eosc-entrust-workshop",
-]);
 const relatedNews = (await getCollection("news"))
-    .filter((entry) => eventNewsSlugs.has(idToSlug(entry.id)))
+    .filter((entry) => entry.data.showOnEventsPage)
     .sort((a, b) => parseDate(b.data.date) - parseDate(a.data.date));
 
 const upcoming = events.filter(e => parseDate(e.data.date) >= now);
@@ -217,7 +213,7 @@ function formatDate(dateString: string): string {
     {events.length === 0 && relatedNews.length === 0 && (
         <div class="mt-16 text-center py-20">
             <CalendarIcon className="mx-auto h-12 w-12 text-brand-grey/20" aria-hidden="true" />
-            <p class="mt-4 text-brand-grey dark:text-gray-400">No events scheduled at this time.</p>
+            <p class="mt-4 text-brand-grey dark:text-gray-400">No events or related news at this time.</p>
         </div>
     )}
 

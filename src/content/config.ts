@@ -72,6 +72,7 @@ const news = defineCollection({
         summary: z.string(),
         tags: z.array(z.string()).optional(),
         authors: z.array(z.string()).optional(),
+        showOnEventsPage: z.boolean().optional(),
     }),
 });
 

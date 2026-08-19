@@ -54,7 +54,7 @@ export const collections: Collection[] = [
             { name: 'cover', label: 'Cover Image', type: 'image' },
             { name: 'tags', label: 'Tags', type: 'list', hint: 'Lowercase, hyphens (e.g., training-events)' },
             { name: 'authors', label: 'Authors', type: 'list', hint: 'Usernames from people.json (e.g., kjell-petersen)' },
-            { name: 'showOnEventsPage', label: 'Show on Events page', type: 'boolean', hint: 'Use for news items that should also appear in the Events page news archive section.' },
+            { name: 'showOnEventsPage', label: 'Show on Events Page', type: 'boolean', hint: 'Use for news items that should also appear in the Events page news archive section.' },
         ],
     },
     {

@@ -93,9 +93,31 @@ export const pastEvents = (pageSize = 10) =>
 export const materials = (pageSize = 10) =>
     fetchList<TessMaterial>("materials", { page_size: pageSize, node: ["Norway"] });
 
+// These URLs come from a feed we do not control and get baked into static HTML,
+// so a bad one would stay on the page until the next build. Anything that is not
+// http(s), a `javascript:` URL being the case that matters, is dropped for a
+// TESS address we build ourselves.
+function safeUrl(raw: string | undefined, fallback: string): string {
+    if (!raw) return fallback;
+    try {
+        const { protocol } = new URL(raw);
+        return protocol === "http:" || protocol === "https:" ? raw : fallback;
+    } catch {
+        return fallback;
+    }
+}
+
 /** Link to the event's own registration page, falling back to its TESS entry. */
 export function eventLink(event: TessEvent): string {
-    return event.url || (event.slug ? `${API}/events/${event.slug}` : API);
+    const onTess = event.slug
+        ? `${API}/events/${encodeURIComponent(event.slug)}`
+        : `${API}/events`;
+    return safeUrl(event.url, onTess);
+}
+
+/** Link to the material on TESS, falling back to the Norwegian listing. */
+export function materialLink(material: TessMaterial): string {
+    return safeUrl(material.url, `${API}/materials?node[]=Norway`);
 }
 
 /** "12 Mar 2026", or a range when the event spans more than one day. */

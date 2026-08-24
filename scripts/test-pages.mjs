@@ -117,6 +117,20 @@ function parseSitemap(xml) {
 // File-extension pattern — used to distinguish real assets from nav links.
 const HAS_EXT = /\.[a-z0-9]{1,6}$/i;
 
+// Some hrefs come from feeds we do not control (TeSS on /training) and get baked
+// into static HTML at build time, so a `javascript:` URL would ship and stay
+// shipped. Anything outside this set is a defect, not a style preference.
+const SAFE_SCHEMES = new Set(['http', 'https', 'mailto', 'tel']);
+const SCHEMED_HREF = /(?:href|src)="([a-zA-Z][a-zA-Z0-9+.-]*):/g;
+
+function extractUnsafeSchemes(html) {
+  const found = new Set();
+  for (const [, scheme] of html.matchAll(SCHEMED_HREF)) {
+    if (!SAFE_SCHEMES.has(scheme.toLowerCase())) found.add(scheme.toLowerCase());
+  }
+  return [...found];
+}
+
 const ASSET_ATTRS = [
   // src attributes (scripts, images — always files)
   /\bsrc=["']([^"']+)["']/g,
@@ -195,6 +209,7 @@ async function main() {
   const pageErrors = [];    // { url, status, error }
   const ssrPages = [];      // SSR pages in sitemap (no static HTML file)
   const assetErrors = [];   // { asset, foundOn, status, error }
+  const schemeErrors = [];  // { url, scheme }
   const assetCache = new Map(); // url → status
 
   // Parse sitemap
@@ -242,6 +257,10 @@ async function main() {
       pageErrors.push({ url: siteUrl, status: null, error: err.message });
     }
 
+    for (const scheme of pageHtml ? extractUnsafeSchemes(pageHtml) : []) {
+      schemeErrors.push({ url: siteUrl, scheme });
+    }
+
     // Check assets found in page HTML
     if (pageHtml) {
       const assets = extractLocalAssets(pageHtml, localUrl);
@@ -277,6 +296,7 @@ async function main() {
   console.log('  ┌─────────────────────────────────────────────┐');
   console.log(`  │  Pages   ${String(pageOk).padStart(4)}/${String(staticTotal).padEnd(4)} ok   ${pageErrors.length > 0 ? c.red(`${pageErrors.length} failed`) : c.green('all passed')}           │`);
   console.log(`  │  Assets  ${String(assetOk).padStart(4)}/${String(totalAssets).padEnd(4)} ok   ${assetErrors.length > 0 ? c.red(`${assetErrors.length} failed`) : c.green('all passed')}           │`);
+  console.log(`  │  Links   ${schemeErrors.length > 0 ? c.red(`${String(schemeErrors.length).padStart(4)} unsafe scheme(s)`) : c.green('   0 unsafe schemes   ')}          │`);
   if (ssrPages.length > 0)
     console.log(`  │  SSR     ${String(ssrPages.length).padStart(4)} pages skipped (no static HTML)      │`);
   console.log('  └─────────────────────────────────────────────┘\n');
@@ -286,6 +306,14 @@ async function main() {
     for (const { url, status, error } of pageErrors) {
       const tag = status ? c.red(`HTTP ${status}`) : c.yellow('ERROR');
       console.log(`    ${tag}  ${url}${error ? `  — ${error}` : ''}`);
+    }
+    console.log();
+  }
+
+  if (schemeErrors.length > 0) {
+    console.log(c.red(c.bold('  Unsafe URL schemes:')));
+    for (const { url, scheme } of schemeErrors) {
+      console.log(`    ${c.red(scheme + ':')}  ${url}`);
     }
     console.log();
   }
@@ -302,7 +330,7 @@ async function main() {
 
   server.close();
 
-  const failed = pageErrors.length + assetErrors.length;
+  const failed = pageErrors.length + assetErrors.length + schemeErrors.length;
   if (failed > 0) {
     console.log(c.red(c.bold(`  ${failed} issue(s) found. Fix before deploying.\n`)));
     process.exit(1);

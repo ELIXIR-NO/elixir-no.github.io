@@ -11,7 +11,7 @@ import {
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import Unavailable from "../../components/tess-unavailable.astro";
-import { upcomingEvents, pastEvents, materials, eventLink, eventDates, eventPlace } from "../../lib/tess";
+import { upcomingEvents, pastEvents, materials, eventLink, materialLink, eventDates, eventPlace } from "../../lib/tess";
 
 // Fetched at build time rather than from the browser: TESS rejects a request
 // that does not ask for JSON, and the error page it returns carries no CORS
@@ -202,7 +202,7 @@ const [upcoming, past, trainingMaterials] = await Promise.all([
                     <ul id="material-list" class="mt-4 divide-y divide-gray-200/60 dark:divide-gray-700/30">
                         {trainingMaterials.items.map((material) => (
                             <li class="py-4 first:pt-0 last:pb-0" data-title={material.title.toLowerCase()}>
-                                <a href={material.url} target="_blank" rel="noopener noreferrer"
+                                <a href={materialLink(material)} target="_blank" rel="noopener noreferrer"
                                    class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                                     <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{material.title}</p>
                                     {material.description && (

@@ -1,0 +1,21 @@
+---
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+
+interface Props {
+    /** Where to send people instead, on TeSS. */
+    href?: string;
+}
+
+const { href = "https://tess.elixir-europe.org/" } = Astro.props;
+---
+
+<div class="flex flex-col items-center gap-2 py-10 text-center">
+    <ExclamationTriangleIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+    <p class="text-sm text-gray-600 dark:text-gray-400">
+        This listing could not be loaded from TeSS when the site was last built.
+    </p>
+    <a href={href} target="_blank" rel="noopener noreferrer"
+       class="rounded text-sm font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+        Browse it on TeSS instead
+    </a>
+</div>

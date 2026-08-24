@@ -10,17 +10,23 @@ import {
     MagnifyingGlassIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
+import Unavailable from "../../components/tess-unavailable.astro";
+import { upcomingEvents, pastEvents, materials, eventLink, materialLink, eventDates, eventPlace } from "../../lib/tess";
 
-const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Fetched at build time rather than from the browser: TESS rejects a request
+// that does not ask for JSON, and the error page it returns carries no CORS
+// headers. See src/lib/tess.ts.
+const [upcoming, past, trainingMaterials] = await Promise.all([
+    upcomingEvents(5),
+    pastEvents(10),
+    materials(10),
+]);
 ---
 
 <Page variant="wide" seo={{
     title: "Training",
     description: "Open-access bioinformatics training from ELIXIR Norway — introductory workshops to advanced courses in genomics, data management, and computational biology.",
 }}>
-
-    <!-- TeSS widget CSS -->
-    <link rel="stylesheet" href="https://elixirtess.github.io/TeSS_widgets/css/tess-widget.css" slot="head" />
 
     <!-- Hero -->
     <div class="max-w-3xl">
@@ -137,216 +143,137 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
         </div>
     </section>
 
-    <!-- Upcoming training (TeSS widget) -->
+    <!-- Upcoming training -->
     <section class="mt-20" id="upcoming-events">
-        <div class="flex items-center gap-3 mb-6">
-            <span class="inline-flex items-center gap-1.5 rounded-full bg-green-100 dark:bg-green-900/20 px-3 py-1 text-xs font-semibold text-green-700 dark:text-green-400">
-                <span class="h-1.5 w-1.5 rounded-full bg-green-500 dark:bg-green-400 animate-pulse"></span>
-                Live
-            </span>
+        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
             <h2 class="text-2xl font-bold text-brand-primary dark:text-white">Upcoming training</h2>
+            <a href="https://tess.elixir-europe.org/events?country[]=Norway"
+               target="_blank" rel="noopener noreferrer"
+               class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                Browse all on TeSS
+            </a>
         </div>
-        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6 tess-container">
-            <div id="tess-widget-events-list" class="tess-widget tess-widget-list"></div>
-            <div id="tess-widget-events-list-placeholder" class="hidden items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
-                <CalendarIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-                No upcoming training events at the moment.
-            </div>
+        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
+            {upcoming.items.length > 0 ? (
+                <ul class="divide-y divide-gray-200/60 dark:divide-gray-700/30">
+                    {upcoming.items.map((event) => (
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href={eventLink(event)} target="_blank" rel="noopener noreferrer"
+                               class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                                <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{event.title}</p>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                    {[eventDates(event), eventPlace(event)].filter(Boolean).join(" \u00b7 ")}
+                                </p>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            ) : upcoming.reachable ? (
+                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
+                    <CalendarIcon className="mr-2 h-5 w-5" aria-hidden="true" />
+                    No upcoming training events at the moment.
+                </p>
+            ) : (
+                <Unavailable href="https://tess.elixir-europe.org/events?country[]=Norway" />
+            )}
         </div>
     </section>
 
-    <!-- Training material (TeSS widget) -->
+    <!-- Training material -->
     <section class="mt-16" id="training-material">
-        <h2 class="text-2xl font-bold text-brand-primary dark:text-white mb-6">Training materials</h2>
-        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6 tess-container">
-            <div id="training-materials-list" class="tess-widget tess-widget-list"></div>
+        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
+            <h2 class="text-2xl font-bold text-brand-primary dark:text-white">Training materials</h2>
+            <a href="https://tess.elixir-europe.org/materials?node[]=Norway"
+               target="_blank" rel="noopener noreferrer"
+               class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                Browse all on TeSS
+            </a>
+        </div>
+        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
+            {trainingMaterials.items.length > 0 ? (
+                <Fragment>
+                    <label for="material-filter" class="sr-only">Filter training materials</label>
+                    <div class="relative">
+                        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                        <input id="material-filter" type="search" autocomplete="off"
+                               placeholder="Filter materials by title"
+                               class="w-full rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] py-2 pl-9 pr-3 text-sm text-brand-grey dark:text-gray-200 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+                    </div>
+                    <ul id="material-list" class="mt-4 divide-y divide-gray-200/60 dark:divide-gray-700/30">
+                        {trainingMaterials.items.map((material) => (
+                            <li class="py-4 first:pt-0 last:pb-0" data-title={material.title.toLowerCase()}>
+                                <a href={materialLink(material)} target="_blank" rel="noopener noreferrer"
+                                   class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                                    <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{material.title}</p>
+                                    {material.description && (
+                                        <p class="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">{material.description}</p>
+                                    )}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                    <p id="material-empty" hidden aria-live="polite"
+                       class="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                        No materials match that filter.
+                    </p>
+                </Fragment>
+            ) : trainingMaterials.reachable ? (
+                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
+                    <BookOpenIcon className="mr-2 h-5 w-5" aria-hidden="true" />
+                    No training materials listed at the moment.
+                </p>
+            ) : (
+                <Unavailable href="https://tess.elixir-europe.org/materials?node[]=Norway" />
+            )}
         </div>
     </section>
 
-    <!-- Past events (TeSS widget) -->
+    <!-- Past events -->
     <section class="mt-16" id="past-events">
         <h2 class="text-2xl font-bold text-brand-primary dark:text-white mb-6">Past training events</h2>
-        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6 tess-container">
-            <div id="past-training-materials-list" class="tess-widget tess-widget-list"></div>
+        <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
+            {past.items.length > 0 ? (
+                <ul class="divide-y divide-gray-200/60 dark:divide-gray-700/30">
+                    {past.items.map((event) => (
+                        <li class="py-4 first:pt-0 last:pb-0">
+                            <a href={eventLink(event)} target="_blank" rel="noopener noreferrer"
+                               class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+                                <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{event.title}</p>
+                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                    {[eventDates(event), eventPlace(event)].filter(Boolean).join(" \u00b7 ")}
+                                </p>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            ) : past.reachable ? (
+                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
+                    <CalendarIcon className="mr-2 h-5 w-5" aria-hidden="true" />
+                    No past training events to show.
+                </p>
+            ) : (
+                <Unavailable href="https://tess.elixir-europe.org/events?country[]=Norway&include_expired=true" />
+            )}
         </div>
     </section>
 
-    <!-- TeSS widget scripts -->
-    <script is:inline src="https://elixirtess.github.io/TeSS_widgets/js/tess-widget-standalone.js"></script>
-    <script is:inline>
-        function initTeSSWidgets() {
-            if (typeof TessWidget === 'undefined') return;
-            TessWidget.Events(document.getElementById('tess-widget-events-list'), 'SimpleList', {
-                params: { pageSize: 5, country: ['Norway'] }
-            });
-            setTimeout(function() {
-                var container = document.getElementById('tess-widget-events-list');
-                var placeholder = document.getElementById('tess-widget-events-list-placeholder');
-                if (!container || !placeholder) return;
-                var hasContent = Array.from(container.children).some(function(child) {
-                    return child.tagName !== 'UL' || (child.tagName === 'UL' && child.children.length > 0);
-                });
-                if (!hasContent) {
-                    container.style.display = 'none';
-                    placeholder.style.display = 'flex';
-                }
-            }, 1500);
-        }
+    <script>
+        const filter = document.getElementById("material-filter") as HTMLInputElement | null;
+        const list = document.getElementById("material-list");
+        const empty = document.getElementById("material-empty");
 
-        function initTrainingMaterials() {
-            if (typeof TessWidget === 'undefined') return;
-            TessWidget.Materials(document.getElementById('training-materials-list'), 'SimpleList', {
-                opts: { enableSearch: true },
-                params: { pageSize: 10, node: ['Norway'] }
-            });
-        }
+        filter?.addEventListener("input", () => {
+            const term = filter.value.trim().toLowerCase();
+            let shown = 0;
 
-        function initPastTrainingMaterials() {
-            if (typeof TessWidget === 'undefined') return;
-            TessWidget.Events(document.getElementById('past-training-materials-list'), 'SimpleList', {
-                params: { pageSize: 10, country: ['Norway'], sort: 'new', includeExpired: true, includeDisabled: false }
-            });
-        }
-
-        // Init when TeSS script loads — try immediately, then on load
-        if (typeof TessWidget !== 'undefined') {
-            initTeSSWidgets();
-            initTrainingMaterials();
-            initPastTrainingMaterials();
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    initTeSSWidgets();
-                    initTrainingMaterials();
-                    initPastTrainingMaterials();
-                }, 500);
-            });
-        }
+            for (const item of list?.querySelectorAll<HTMLLIElement>("li[data-title]") ?? []) {
+                const match = !term || (item.dataset.title ?? "").includes(term);
+                item.hidden = !match;
+                if (match) shown++;
+            }
+            if (empty) empty.hidden = shown > 0;
+        });
     </script>
 
-    <!-- TeSS widget style overrides -->
-    <style is:global>
-        .tess-container .tess-widget ul {
-            list-style: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        .tess-container .tess-widget li {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            padding: 0.75rem 0;
-        }
-        .tess-container .tess-widget li:last-child {
-            border-bottom: none;
-        }
-        .tess-container .tess-widget a {
-            color: #023452;
-            font-weight: 500;
-            text-decoration: none;
-        }
-        .tess-container .tess-widget a:hover {
-            color: rgb(var(--color-accent));
-        }
-        .dark .tess-container .tess-widget a {
-            color: rgb(var(--color-accent));
-        }
-        .dark .tess-container .tess-widget a:hover {
-            color: #f9a75e;
-        }
-        .dark .tess-container .tess-widget li {
-            border-color: rgba(255, 255, 255, 0.06);
-        }
-        .dark .tess-container .tess-widget,
-        .dark .tess-container .tess-widget * {
-            color: #d1d5db;
-        }
-        /* Search controls — make full width */
-        .tess-container .tess-widget .tess-controls {
-            display: flex !important;
-            width: 100% !important;
-            margin-bottom: 1rem !important;
-        }
-        .tess-container .tess-widget .tess-controls .tess-search {
-            display: flex !important;
-            width: 100% !important;
-        }
-        /* Light mode — input */
-        .tess-container .tess-widget .tess-controls .tess-search input {
-            width: 100% !important;
-            flex: 1 !important;
-            padding: 0.625rem 2rem 0.625rem 0.875rem !important;
-            font-size: 0.875rem !important;
-            line-height: 1.5 !important;
-            color: #023452 !important;
-            border: 1px solid #e5e7eb !important;
-            border-radius: 0.75rem 0 0 0.75rem !important;
-            background: #fff !important;
-            outline: none !important;
-            transition: border-color 0.15s, box-shadow 0.15s !important;
-            box-sizing: border-box !important;
-        }
-        .tess-container .tess-widget .tess-controls .tess-search input::placeholder {
-            color: #9ca3af !important;
-        }
-        .tess-container .tess-widget .tess-controls .tess-search input:focus {
-            border-color: rgb(var(--color-accent)) !important;
-            box-shadow: 0 0 0 1px rgb(var(--color-accent)) !important;
-        }
-        /* Light mode — button */
-        .tess-container .tess-widget .tess-controls .tess-search button {
-            padding: 0.625rem 1rem !important;
-            font-size: 0.875rem !important;
-            line-height: 1.5 !important;
-            color: #023452 !important;
-            border: 1px solid #e5e7eb !important;
-            border-left: 0 !important;
-            border-radius: 0 0.75rem 0.75rem 0 !important;
-            background: #f9fafb !important;
-            cursor: pointer !important;
-            transition: background 0.15s, color 0.15s !important;
-        }
-        .tess-container .tess-widget .tess-controls .tess-search button:hover {
-            background: rgb(var(--color-accent)) !important;
-            color: #fff !important;
-            border-color: rgb(var(--color-accent)) !important;
-        }
-        /* Light mode — clear link */
-        .tess-container .tess-widget .tess-controls .tess-search .tess-search-clear {
-            color: #9ca3af !important;
-        }
-        .tess-container .tess-widget .tess-controls .tess-search .tess-search-clear:hover {
-            color: #023452 !important;
-        }
-        /* Dark mode — input */
-        .dark .tess-container .tess-widget .tess-controls .tess-search input {
-            color: #e5e7eb !important;
-            border-color: rgba(255, 255, 255, 0.12) !important;
-            background: rgba(255, 255, 255, 0.03) !important;
-        }
-        .dark .tess-container .tess-widget .tess-controls .tess-search input::placeholder {
-            color: #6b7280 !important;
-        }
-        .dark .tess-container .tess-widget .tess-controls .tess-search input:focus {
-            border-color: rgb(var(--color-accent)) !important;
-            box-shadow: 0 0 0 1px rgb(var(--color-accent)) !important;
-        }
-        /* Dark mode — button */
-        .dark .tess-container .tess-widget .tess-controls .tess-search button {
-            color: #d1d5db !important;
-            border-color: rgba(255, 255, 255, 0.12) !important;
-            background: rgba(255, 255, 255, 0.05) !important;
-        }
-        .dark .tess-container .tess-widget .tess-controls .tess-search button:hover {
-            background: rgb(var(--color-accent)) !important;
-            color: #fff !important;
-            border-color: rgb(var(--color-accent)) !important;
-        }
-        /* Dark mode — clear link */
-        .dark .tess-container .tess-widget .tess-controls .tess-search .tess-search-clear {
-            color: #6b7280 !important;
-        }
-        .dark .tess-container .tess-widget .tess-controls .tess-search .tess-search-clear:hover {
-            color: #e5e7eb !important;
-        }
-    </style>
 
 </Page>

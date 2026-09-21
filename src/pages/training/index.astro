@@ -5,22 +5,12 @@ import {
     ArrowTopRightOnSquareIcon,
     BeakerIcon,
     BookOpenIcon,
-    CalendarIcon,
     CircleStackIcon,
     MagnifyingGlassIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
-import Unavailable from "../../components/tess-unavailable.astro";
-import { upcomingEvents, pastEvents, materials, eventLink, materialLink, eventDates, eventPlace } from "../../lib/tess";
-
-// Fetched at build time rather than from the browser: TESS rejects a request
-// that does not ask for JSON, and the error page it returns carries no CORS
-// headers. See src/lib/tess.ts.
-const [upcoming, past, trainingMaterials] = await Promise.all([
-    upcomingEvents(5),
-    pastEvents(10),
-    materials(10),
-]);
+import { TessEvents, TessMaterials } from "../../components/tess-listings";
+import { browseLinks } from "../../lib/tess";
 ---
 
 <Page variant="wide" seo={{
@@ -147,35 +137,14 @@ const [upcoming, past, trainingMaterials] = await Promise.all([
     <section class="mt-20" id="upcoming-events">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
             <h2 class="text-2xl font-bold text-brand-primary dark:text-white">Upcoming training</h2>
-            <a href="https://tess.elixir-europe.org/events?country[]=Norway"
+            <a href={browseLinks.upcoming}
                target="_blank" rel="noopener noreferrer"
                class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 Browse all on TeSS
             </a>
         </div>
         <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
-            {upcoming.items.length > 0 ? (
-                <ul class="divide-y divide-gray-200/60 dark:divide-gray-700/30">
-                    {upcoming.items.map((event) => (
-                        <li class="py-4 first:pt-0 last:pb-0">
-                            <a href={eventLink(event)} target="_blank" rel="noopener noreferrer"
-                               class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                                <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{event.title}</p>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {[eventDates(event), eventPlace(event)].filter(Boolean).join(" \u00b7 ")}
-                                </p>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            ) : upcoming.reachable ? (
-                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
-                    <CalendarIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-                    No upcoming training events at the moment.
-                </p>
-            ) : (
-                <Unavailable href="https://tess.elixir-europe.org/events?country[]=Norway" />
-            )}
+            <TessEvents client:idle when="upcoming" />
         </div>
     </section>
 
@@ -183,48 +152,14 @@ const [upcoming, past, trainingMaterials] = await Promise.all([
     <section class="mt-16" id="training-material">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
             <h2 class="text-2xl font-bold text-brand-primary dark:text-white">Training materials</h2>
-            <a href="https://tess.elixir-europe.org/materials?node[]=Norway"
+            <a href={browseLinks.materials}
                target="_blank" rel="noopener noreferrer"
                class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 Browse all on TeSS
             </a>
         </div>
         <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
-            {trainingMaterials.items.length > 0 ? (
-                <Fragment>
-                    <label for="material-filter" class="sr-only">Filter training materials</label>
-                    <div class="relative">
-                        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
-                        <input id="material-filter" type="search" autocomplete="off"
-                               placeholder="Filter materials by title"
-                               class="w-full rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] py-2 pl-9 pr-3 text-sm text-brand-grey dark:text-gray-200 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
-                    </div>
-                    <ul id="material-list" class="mt-4 divide-y divide-gray-200/60 dark:divide-gray-700/30">
-                        {trainingMaterials.items.map((material) => (
-                            <li class="py-4 first:pt-0 last:pb-0" data-title={material.title.toLowerCase()}>
-                                <a href={materialLink(material)} target="_blank" rel="noopener noreferrer"
-                                   class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                                    <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{material.title}</p>
-                                    {material.description && (
-                                        <p class="mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">{material.description}</p>
-                                    )}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                    <p id="material-empty" hidden aria-live="polite"
-                       class="py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                        No materials match that filter.
-                    </p>
-                </Fragment>
-            ) : trainingMaterials.reachable ? (
-                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
-                    <BookOpenIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-                    No training materials listed at the moment.
-                </p>
-            ) : (
-                <Unavailable href="https://tess.elixir-europe.org/materials?node[]=Norway" />
-            )}
+            <TessMaterials client:idle />
         </div>
     </section>
 
@@ -232,48 +167,8 @@ const [upcoming, past, trainingMaterials] = await Promise.all([
     <section class="mt-16" id="past-events">
         <h2 class="text-2xl font-bold text-brand-primary dark:text-white mb-6">Past training events</h2>
         <div class="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-6">
-            {past.items.length > 0 ? (
-                <ul class="divide-y divide-gray-200/60 dark:divide-gray-700/30">
-                    {past.items.map((event) => (
-                        <li class="py-4 first:pt-0 last:pb-0">
-                            <a href={eventLink(event)} target="_blank" rel="noopener noreferrer"
-                               class="group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                                <p class="font-semibold text-brand-primary dark:text-white transition-colors group-hover:text-accent">{event.title}</p>
-                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                                    {[eventDates(event), eventPlace(event)].filter(Boolean).join(" \u00b7 ")}
-                                </p>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-            ) : past.reachable ? (
-                <p class="flex items-center justify-center py-10 text-sm text-gray-500 dark:text-gray-400">
-                    <CalendarIcon className="mr-2 h-5 w-5" aria-hidden="true" />
-                    No past training events to show.
-                </p>
-            ) : (
-                <Unavailable href="https://tess.elixir-europe.org/events?country[]=Norway&include_expired=true" />
-            )}
+            <TessEvents client:idle when="past" />
         </div>
     </section>
-
-    <script>
-        const filter = document.getElementById("material-filter") as HTMLInputElement | null;
-        const list = document.getElementById("material-list");
-        const empty = document.getElementById("material-empty");
-
-        filter?.addEventListener("input", () => {
-            const term = filter.value.trim().toLowerCase();
-            let shown = 0;
-
-            for (const item of list?.querySelectorAll<HTMLLIElement>("li[data-title]") ?? []) {
-                const match = !term || (item.dataset.title ?? "").includes(term);
-                item.hidden = !match;
-                if (match) shown++;
-            }
-            if (empty) empty.hidden = shown > 0;
-        });
-    </script>
-
 
 </Page>

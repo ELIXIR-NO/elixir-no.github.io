@@ -81,14 +81,21 @@ async function fetchList<T>(path: string, params: Params): Promise<TessResult<T>
 export const upcomingEvents = (pageSize = 5) =>
     fetchList<TessEvent>("events", { page_size: pageSize, country: ["Norway"] });
 
-export const pastEvents = (pageSize = 10) =>
-    fetchList<TessEvent>("events", {
-        page_size: pageSize,
-        sort: "new",
+const hasEnded = (event: TessEvent) => Date.parse(event.end ?? event.start ?? "") < Date.now();
+
+// include_expired adds ended events to the upcoming ones rather than replacing
+// them, so the ones still to come are filtered out here; fetching double keeps
+// the list full once they are gone. "late" sorts by start date, newest first.
+export async function pastEvents(pageSize = 10): Promise<TessResult<TessEvent>> {
+    const result = await fetchList<TessEvent>("events", {
+        page_size: pageSize * 2,
+        sort: "late",
         country: ["Norway"],
         include_expired: true,
         include_disabled: false,
     });
+    return { ...result, items: result.items.filter(hasEnded).slice(0, pageSize) };
+}
 
 export const materials = (pageSize = 10) =>
     fetchList<TessMaterial>("materials", { page_size: pageSize, node: ["Norway"] });

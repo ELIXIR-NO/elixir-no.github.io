@@ -1,7 +1,9 @@
 const API = "https://tess.elixir-europe.org";
 
-const ATTEMPTS: number = 5;
-const TIMEOUT_MS = 20_000;
+// Sized for someone waiting on the page: one slow TESS response is tolerated,
+// a dead one gives way to the "could not be loaded" state inside a minute.
+const ATTEMPTS: number = 3;
+const TIMEOUT_MS = 15_000;
 
 export interface TessEvent {
     id: number;
@@ -47,9 +49,10 @@ function query(params: Params): string {
     return q.toString();
 }
 
-// Without an explicit JSON Accept header TESS serves an HTML 403 instead of the
-// API response, which is what broke the browser widget this replaced: the error
-// page carries no CORS headers, so the failure surfaced as a CORS violation.
+// Without an explicit JSON Accept header TESS serves an HTML 403 with no CORS
+// headers, which the browser reports as a CORS failure. Accept is also the only
+// header sent, and that is deliberate: it keeps this a simple request, because
+// TESS answers the preflight a custom header would trigger with a 403.
 // TESS also returns 5xx intermittently, hence the retries.
 async function fetchList<T>(path: string, params: Params): Promise<TessResult<T>> {
     const url = `${API}/${path}?${query(params)}`;
@@ -72,7 +75,7 @@ async function fetchList<T>(path: string, params: Params): Promise<TessResult<T>
                 console.warn(`[tess] ${path} failed after ${tries} (${reason}); the section will say so`);
                 return { items: [], reachable: false };
             }
-            await new Promise(r => setTimeout(r, attempt * 1500));
+            await new Promise(r => setTimeout(r, attempt * 1000));
         }
     }
     return { items: [], reachable: false };
@@ -81,22 +84,35 @@ async function fetchList<T>(path: string, params: Params): Promise<TessResult<T>
 export const upcomingEvents = (pageSize = 5) =>
     fetchList<TessEvent>("events", { page_size: pageSize, country: ["Norway"] });
 
-export const pastEvents = (pageSize = 10) =>
-    fetchList<TessEvent>("events", {
-        page_size: pageSize,
-        sort: "new",
+const hasEnded = (event: TessEvent) => Date.parse(event.end ?? event.start ?? "") < Date.now();
+
+// include_expired adds ended events to the upcoming ones rather than replacing
+// them, so the ones still to come are filtered out here; fetching double keeps
+// the list full once they are gone. "late" sorts by start date, newest first.
+export async function pastEvents(pageSize = 10): Promise<TessResult<TessEvent>> {
+    const result = await fetchList<TessEvent>("events", {
+        page_size: pageSize * 2,
+        sort: "late",
         country: ["Norway"],
         include_expired: true,
         include_disabled: false,
     });
+    return { ...result, items: result.items.filter(hasEnded).slice(0, pageSize) };
+}
 
 export const materials = (pageSize = 10) =>
     fetchList<TessMaterial>("materials", { page_size: pageSize, node: ["Norway"] });
 
-// These URLs come from a feed we do not control and get baked into static HTML,
-// so a bad one would stay on the page until the next build. Anything that is not
-// http(s), a `javascript:` URL being the case that matters, is dropped for a
-// TESS address we build ourselves.
+/** The same listings on TESS itself, for "browse all" links and fallbacks. */
+export const browseLinks = {
+    upcoming: `${API}/events?country[]=Norway`,
+    past: `${API}/events?country[]=Norway&include_expired=true`,
+    materials: `${API}/materials?node[]=Norway`,
+} as const;
+
+// These URLs come from a feed we do not control and go straight into an href.
+// Anything that is not http(s), a `javascript:` URL being the case that matters,
+// is dropped for a TESS address we build ourselves.
 function safeUrl(raw: string | undefined, fallback: string): string {
     if (!raw) return fallback;
     try {
@@ -117,7 +133,7 @@ export function eventLink(event: TessEvent): string {
 
 /** Link to the material on TESS, falling back to the Norwegian listing. */
 export function materialLink(material: TessMaterial): string {
-    return safeUrl(material.url, `${API}/materials?node[]=Norway`);
+    return safeUrl(material.url, browseLinks.materials);
 }
 
 /** "12 Mar 2026", or a range when the event spans more than one day. */

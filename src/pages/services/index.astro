@@ -7,7 +7,9 @@ import { slugToTitleCase, idToSlug, resolveContentAsset } from "../../lib/utils"
 import { ArrowRightIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
-const services = (await getCollection("services")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const allServices = (await getCollection("services")).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const services = allServices.filter(s => !s.data.unavailable);
+const unavailableServices = allServices.filter(s => s.data.unavailable);
 
 const statusServices = services
     .filter(s => s.data.website)
@@ -121,6 +123,54 @@ const tags = [...tagCounts.entries()]
             );
         })}
     </div>
+
+    {unavailableServices.length > 0 && (
+        <section class="mt-20" aria-labelledby="unavailable-services">
+            <h2 id="unavailable-services" class="text-2xl font-bold text-brand-primary dark:text-white">Unavailable services</h2>
+            <p class="mt-3 text-sm leading-relaxed text-brand-grey dark:text-gray-400 max-w-2xl">
+                The websites for these services no longer respond. They stay listed here so anyone
+                following an old link or citation can still find what they were, and if you relied on
+                one of them, write to <a href="mailto:support@elixir.no" class="text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">support@elixir.no</a>.
+            </p>
+            <ul class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {unavailableServices.map((service) => {
+                    const logo = service.data.logo ? resolveContentAsset(`${service.collection}/${service.id}`, service.data.logo) : null;
+                    return (
+                        <li>
+                            <a
+                                href={`${BASE}/services/${idToSlug(service.id)}`}
+                                class="group flex h-full items-start gap-4 rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50/60 dark:bg-white/[0.01] p-5 transition-colors hover:border-gray-400 dark:hover:border-gray-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
+                            >
+                                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-gray-200 p-1.5 grayscale opacity-70" aria-hidden="true">
+                                    {logo
+                                        ? <img src={logo} alt="" aria-hidden="true" class="max-h-full max-w-full object-contain" loading="lazy" />
+                                        : <span class="text-lg font-bold text-gray-500">{service.data.title.charAt(0)}</span>}
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <h3 class="text-[15px] font-semibold text-gray-700 dark:text-gray-200 group-hover:text-accent transition-colors leading-snug">
+                                            {service.data.title}
+                                        </h3>
+                                        <span class="rounded-full bg-gray-200/70 dark:bg-white/[0.08] px-2 py-0.5 text-xs font-medium text-gray-600 dark:text-gray-300">
+                                            Unavailable
+                                        </span>
+                                    </div>
+                                    <p class="mt-1.5 text-sm leading-relaxed text-gray-600 dark:text-gray-400 line-clamp-2">
+                                        {service.data.summary}
+                                    </p>
+                                    {service.data.website && (
+                                        <p class="mt-2 font-mono text-xs text-gray-500 dark:text-gray-400 truncate">
+                                            {new URL(service.data.website).hostname}
+                                        </p>
+                                    )}
+                                </div>
+                            </a>
+                        </li>
+                    );
+                })}
+            </ul>
+        </section>
+    )}
 
     <!-- Filtering script -->
     <script is:inline>

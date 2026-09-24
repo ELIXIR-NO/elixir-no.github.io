@@ -2,7 +2,7 @@
 import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
-import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -63,6 +63,7 @@ const period: string | undefined = frontmatter?.period;
 const funder: { name?: string | null; link?: string | null } | undefined = frontmatter?.funder;
 const externalLink: string | undefined = frontmatter?.external_link;
 const serviceUrl: string | undefined = frontmatter?.website;
+const serviceUnavailable: boolean = frontmatter?.unavailable === true;
 const keywords: string[] = frontmatter?.keywords ?? [];
 
 // Resolve authors for news articles
@@ -367,7 +368,18 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {/* Service external link */}
-                        {contentType === 'services' && serviceUrl && (
+                        {contentType === 'services' && serviceUnavailable && (
+                            <div class="mt-6 flex gap-3 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 bg-gray-50/60 dark:bg-white/[0.02] p-4 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                                <ExclamationTriangleIcon className="mt-0.5 h-5 w-5 shrink-0 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                                <p>
+                                    <strong class="font-semibold text-brand-primary dark:text-white">This service is unavailable.</strong>{' '}
+                                    {serviceUrl ? <>Its website at <span class="font-mono text-xs">{new URL(serviceUrl).hostname}</span> no longer responds, so the links on this page are unlikely to work.</> : 'It no longer responds.'}{' '}
+                                    The description below is kept for reference. If you relied on it, write to <a href="mailto:support@elixir.no" class="text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">support@elixir.no</a>.
+                                </p>
+                            </div>
+                        )}
+
+                        {contentType === 'services' && serviceUrl && !serviceUnavailable && (
                             <a
                                 href={serviceUrl}
                                 target="_blank"

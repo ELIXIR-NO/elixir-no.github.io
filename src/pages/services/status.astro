@@ -5,7 +5,7 @@ import ServiceStatus from "../../components/service-status";
 import { idToSlug, resolveContentAsset } from "../../lib/utils";
 
 const services = (await getCollection("services"))
-    .filter(s => s.data.website)
+    .filter(s => s.data.website && !s.data.unavailable)
     .sort((a, b) => a.data.title.localeCompare(b.data.title))
     .map(s => ({
         title: s.data.title,

@@ -80,13 +80,14 @@ export const collections: Collection[] = [
         canCreate: true,
         depth: 1,
         layoutPath: '../../../layouts/page.astro',
-        description: 'Bioinformatics services offered by ELIXIR Norway, shown at elixir.no/services. Each service has a title, summary, optional logo, tags for categorization, and an external website URL shown as a "Visit service" button.',
+        description: 'Bioinformatics services offered by ELIXIR Norway, shown at elixir.no/services. Each service has a title, summary, optional logo, tags for categorization, and an external website URL shown as a "Visit service" button. Mark a service unavailable when its website is down for good: it moves to a separate section, loses the button and is left out of the status checks.',
         fields: [
             { name: 'title', label: 'Title', type: 'string', required: true },
             { name: 'summary', label: 'Summary', type: 'text', required: true },
             { name: 'logo', label: 'Logo', type: 'image' },
             { name: 'tags', label: 'Tags', type: 'list', hint: 'e.g., e-infrastructure, analysis' },
             { name: 'website', label: 'Website URL', type: 'string', hint: 'External link to the service (e.g., https://usegalaxy.no)' },
+            { name: 'unavailable', label: 'Unavailable', type: 'boolean', default: false, hint: 'The service no longer responds; keeps it listed as unavailable' },
         ],
     },
     {

@@ -65,7 +65,7 @@ export const organizations: Record<string, Organization> = {
         contacts: [
             { reason: 'Node leader — Anthony Mathelier', email: 'anthony.mathelier@ncmbm.uio.no' },
             { reason: 'Node leader — Eivind Valen', email: 'eivind.valen@ibv.uio.no' },
-            { reason: 'Bioinformatics Core Faciltiy', email: 'bioinformatics@ous-research.no' }
+            { reason: 'Bioinformatics Core Facility', email: 'bioinformatics@ous-research.no' },
             ,
         ],
         links: [],

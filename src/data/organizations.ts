@@ -42,6 +42,7 @@ export const organizations: Record<string, Organization> = {
         contacts: [
             { reason: 'Technical support', email: 'support@elixir.no' },
             { reason: 'Contact ELIXIR Norway', email: 'contact@elixir.no' },
+            { reason: 'Node leader — Sushma Nagaraja Grellscheid', email: 'sushma.grellscheid@uib.no' },
         ],
         links: [
             { text: 'Norwegian e-infrastructure for Life Science (NeLS)', url: 'https://nels.elixir.no' },
@@ -59,11 +60,13 @@ export const organizations: Record<string, Organization> = {
         color: '#c8102e',
         coverImage: '/content/about/oslo/oslo.png',
         subtitle: 'ELIXIR@UiO',
-        coordinates: { lat: 59.938300, lng: 10.722622 },
-        address: 'Kristine Bonnevies hus, Blindernveien 31, 0373 Oslo',
+        coordinates: { lat: 59.94534025063024, lng: 10.720026873759796 },
+        address: 'Life Sciences Building, Problemveien 25-29, 0371 Oslo',
         contacts: [
-            { reason: 'Technical support (BCF services)', email: 'bioinformatics@ous-research.no' },
-            { reason: 'Group leader — Rein Aasland', email: 'rein.aasland@ibv.uio.no' },
+            { reason: 'Node leader — Anthony Mathelier', email: 'anthony.mathelier@ncmbm.uio.no' },
+            { reason: 'Node leader — Eivind Valen', email: 'eivind.valen@ibv.uio.no' },
+            { reason: 'Bioinformatics Core Facility', email: 'bioinformatics@ous-research.no' },
+            ,
         ],
         links: [],
     },
@@ -79,7 +82,9 @@ export const organizations: Record<string, Organization> = {
         subtitle: 'ELIXIR@UiT — Arctic microbial genomics & software engineering',
         coordinates: { lat: 69.681222, lng: 18.987015 },
         address: 'Forskningsparken 3, 9037 Tromsø',
-        contacts: [],
+        contacts: [
+            { reason: 'Node leader — Erik Hjerde ', email: 'erik.hjerde@uit.no' }
+        ],
         links: [
             { text: 'Pathogen Portal Norway', url: 'https://www.pathogens.no/' },
             { text: 'Marine Meta-genomics Portal', url: 'https://sfb.mmp2.sigma2.no/' },
@@ -97,7 +102,11 @@ export const organizations: Record<string, Organization> = {
         subtitle: 'ELIXIR@NTNU — Gene regulation, genomics & biobank analytics',
         coordinates: { lat: 63.4195386, lng: 10.3910016 },
         address: 'Erling Skjalgsons gate 1, 7491 Trondheim',
-        contacts: [],
+        contacts: [
+            { reason: 'Node leader — Pål Sætrom', email: 'pal.satrom@ntnu.no' },
+            { reason: 'Bioinformatics Core Faciltiy', email: 'konika.chawla@ntnu.no' }
+            ,
+        ],
         links: [],
     },
     aas: {
@@ -112,7 +121,10 @@ export const organizations: Record<string, Organization> = {
         subtitle: 'ELIXIR@NMBU — Fish genomics & aquaculture bioinformatics',
         coordinates: { lat: 59.6657582, lng: 10.7598507 },
         address: 'Oluf Thesens vei 6, 1433 Ås',
-        contacts: [],
+        contacts: [
+            { reason: 'Node leader — Simen Rød Sandve', email: 'simen.sandve@nmbu.no' }
+            ,
+        ],
         links: [],
     },
 };

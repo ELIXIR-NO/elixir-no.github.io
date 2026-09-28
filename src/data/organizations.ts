@@ -48,7 +48,7 @@ export const organizations: Record<string, Organization> = {
             { text: 'Norwegian e-infrastructure for Life Science (NeLS)', url: 'https://nels.elixir.no' },
             { text: 'Computational Biology Unit (CBU) UiB', url: 'https://cbu.w.uib.no/' },
         ],
-        callout: 'For a bioinformatics support request regarding a project you are working on, please use the helpdesk e-mail address: contact@elixir.no. That will reach a large group of bioinformaticians that will try to answer your request by e-mail, and if needed a local meeting can be organised.',
+        callout: 'For a ics support request regarding a project you are working on, please use the helpdesk e-mail address: contact@elixir.no. That will reach a large group of bioinformaticians that will try to answer your request by e-mail, and if needed a local meeting can be organised.',
     },
     oslo: {
         key: 'uio',
@@ -66,7 +66,6 @@ export const organizations: Record<string, Organization> = {
             { reason: 'Node leader — Anthony Mathelier', email: 'anthony.mathelier@ncmbm.uio.no' },
             { reason: 'Node leader — Eivind Valen', email: 'eivind.valen@ibv.uio.no' },
             { reason: 'Bioinformatics Core Facility', email: 'bioinformatics@ous-research.no' },
-            ,
         ],
         links: [],
     },

@@ -85,6 +85,7 @@ const services = defineCollection({
         summary: z.string(),
         tags: z.array(z.string()).optional(),
         website: z.string().url().optional(),
+        unavailable: z.boolean().default(false),
     }),
 });
 

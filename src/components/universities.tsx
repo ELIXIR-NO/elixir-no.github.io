@@ -26,7 +26,7 @@ export default function Universities() {
 
     return (
         <motion.div
-            className="flex flex-wrap items-center justify-center gap-x-12 gap-y-10 sm:gap-x-16 lg:gap-x-20"
+            className="flex flex-wrap items-center justify-start lg:justify-between gap-x-12 gap-y-10 sm:gap-x-16 lg:gap-x-20"
             variants={shouldReduceMotion ? undefined : container}
             initial="hidden"
             whileInView="show"

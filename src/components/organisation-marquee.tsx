@@ -5,11 +5,11 @@ export default function OrganisationMarquee() {
     return (
         <section className="py-16 lg:py-20">
             <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                <div className="text-center mb-14">
-                    <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                <div className="mb-12">
+                    <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                         Five Organisations Across Norway
                     </h2>
-                    <p className="mt-3 text-lg text-body max-w-2xl mx-auto">
+                    <p className="mt-3 text-lg text-body max-w-2xl">
                         A collaboration between five leading institutions, combining expertise to advance
                         life science research and innovation.
                     </p>

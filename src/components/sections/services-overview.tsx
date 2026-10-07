@@ -14,7 +14,6 @@ interface Service {
     title: string;
     description: React.ReactNode;
     icon: React.ReactNode;
-    color: string;
     href: string;
 }
 
@@ -23,28 +22,24 @@ const services: Service[] = [
         title: 'Research Support',
         description: 'Short and long-term support with bioinformatics analyses, programming and data management tasks.',
         icon: <LifebuoyIcon className="w-5 h-5" aria-hidden="true" />,
-        color: '#3b82f6',
         href: `${BASE}/research-support`,
     },
     {
         title: 'Services',
         description: 'Analysis and management of life science data within marine, health, genomics, proteomics and more.',
         icon: <Squares2X2Icon className="w-5 h-5" aria-hidden="true" />,
-        color: '#f47d20',
         href: `${BASE}/services`,
     },
     {
         title: 'e-Infrastructure',
-        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
+        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
-        color: '#10b981',
         href: `${BASE}/e-infrastructure`,
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">SAFE</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">SAFE</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
-        color: '#8b5cf6',
         href: `${BASE}/sensitive-data`,
     },
 ];
@@ -74,7 +69,7 @@ export default function ServicesOverview() {
                         viewport={{ once: true, margin: '-60px' }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                        <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                             Unlock the Power of Your Data
                         </h2>
                         <p className="mt-4 text-lg text-body leading-relaxed">
@@ -82,7 +77,7 @@ export default function ServicesOverview() {
                         </p>
                         <a
                             href={`${BASE}/services`}
-                            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         >
                             Explore all services
                             <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
@@ -103,13 +98,10 @@ export default function ServicesOverview() {
                                 href={svc.href}
                                 variants={shouldReduceMotion ? undefined : item}
                                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                                className="group relative px-5 py-5 rounded-xl border border-gray-100 dark:border-gray-800 bg-transparent transition-[border-color,box-shadow,background-color] duration-200 hover:bg-white hover:border-gray-200/80 dark:hover:bg-dark-surface dark:hover:border-gray-700/50 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="group relative flex flex-col px-5 py-5 rounded-card border border-rule bg-surface transition-colors duration-200 hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             >
-                                <div
-                                    className="w-9 h-9 rounded-lg flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
-                                    style={{ backgroundColor: `${svc.color}12` }}
-                                >
-                                    <span style={{ color: svc.color }}>{svc.icon}</span>
+                                <div className="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-5 text-ink">
+                                    {svc.icon}
                                 </div>
                                 <h3 className="text-base font-semibold text-ink mb-2">
                                     {svc.title}
@@ -117,7 +109,7 @@ export default function ServicesOverview() {
                                 <p className="text-sm leading-relaxed text-body">
                                     {svc.description}
                                 </p>
-                                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors group-hover:text-accent">
+                                <span className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
                                     Learn more
                                     <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                 </span>

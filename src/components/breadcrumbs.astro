@@ -35,7 +35,7 @@ const allCrumbs = [{ label: 'Home', href: '/' }, ...autoCrumbs];
                 <li class="flex items-center">
                     {index > 0 && (
                             <svg
-                                    class="h-5 w-5 text-gray-500 mx-2"
+                                    class="h-5 w-5 text-rule mx-2"
                                     fill="currentColor"
                                     viewBox="0 0 20 20"
                                     aria-hidden="true"
@@ -46,13 +46,13 @@ const allCrumbs = [{ label: 'Home', href: '/' }, ...autoCrumbs];
                     {crumb.href ? (
                             <a
                                     href={crumb.href}
-                                    class="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                                    class="text-muted hover:text-ink underline-offset-4 decoration-marker decoration-2 hover:underline transition-colors"
                             >
                                 {crumb.label}
                             </a>
                     ) : (
                             <span
-                                    class="font-semibold text-gray-900 dark:text-white"
+                                    class="font-semibold text-ink"
                                     aria-current="page"
                             >
             {crumb.label}

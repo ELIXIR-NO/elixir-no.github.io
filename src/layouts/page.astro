@@ -136,24 +136,22 @@ function periodToRelative(p: string): string {
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Status badge colors (reused from listing page)
-const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
+const statusColors: Record<string, { text: string; dot: string }> = {
     ongoing: {
-        bg: 'bg-green-100 dark:bg-green-900/20',
         text: 'text-green-700 dark:text-green-400',
-        dot: 'bg-green-500 dark:bg-green-400',
+        dot: 'bg-green-600 dark:bg-green-400',
     },
     completed: {
-        bg: 'bg-gray-100 dark:bg-gray-800/40',
         text: 'text-muted',
-        dot: 'bg-gray-400 dark:bg-gray-500',
+        dot: 'bg-muted',
     },
 };
 
 const categoryColors: Record<string, string> = {
-    european: 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400',
-    elixir: 'bg-accent/10 text-accent',
-    norwegian: 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400',
-    global: 'bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400',
+    european: 'before:bg-blue-600 dark:before:bg-blue-400',
+    elixir: 'before:bg-marker',
+    norwegian: 'before:bg-red-600 dark:before:bg-red-400',
+    global: 'before:bg-purple-600 dark:before:bg-purple-400',
 };
 
 // Max width classes based on variant
@@ -251,7 +249,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType === 'news' && tags.length > 0 && (
                             <div class="flex flex-wrap gap-2 mb-4">
                                 {tags.map((tag: string) => (
-                                    <span class="rounded-full px-3 py-1 text-xs font-semibold bg-accent/10 text-accent">
+                                    <span class="rounded-control border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(tag)}
                                     </span>
                                 ))}
@@ -263,14 +261,14 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 {status && status !== 'unknown' && (() => {
                                     const sc = statusColors[status] ?? statusColors.completed;
                                     return (
-                                        <span class={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${sc.bg} ${sc.text}`}>
-                                            <span class={`h-1.5 w-1.5 rounded-full ${sc.dot}`} />
+                                        <span class={`inline-flex items-center gap-1.5 rounded-control border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
+                                            <span class={`h-1.5 w-1.5 ${sc.dot}`} />
                                             {slugToTitleCase(status)}
                                         </span>
                                     );
                                 })()}
                                 {category && category !== 'unknown' && (
-                                    <span class={`rounded-full px-3 py-1 text-xs font-semibold ${categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-muted'}`}>
+                                    <span class={`inline-flex items-center gap-1.5 rounded-control border border-rule px-2 py-0.5 text-xs font-semibold text-ink before:h-1.5 before:w-1.5 before:content-[''] ${categoryColors[category] ?? 'before:bg-muted'}`}>
                                         {slugToTitleCase(category)}
                                     </span>
                                 )}
@@ -278,7 +276,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {finalTitle && (
-                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink text-balance leading-[1.15]">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-[-0.03em] text-ink text-balance leading-[1.1]">
                                 {finalTitle}
                             </h1>
                         )}
@@ -292,7 +290,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                         <img
                                             src={author.photo}
                                             alt=""
-                                            class="h-9 w-9 rounded-full ring-2 ring-white dark:ring-dark-background object-cover"
+                                            class="h-9 w-9 rounded-full ring-2 ring-paper object-cover"
                                             loading="lazy"
                                         />
                                     ))}
@@ -303,7 +301,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                             <>
                                                 {i > 0 && <span class="text-muted">, </span>}
                                                 {author.url
-                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">{author.name}</a>
+                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors">{author.name}</a>
                                                     : <span>{author.name}</span>
                                                 }
                                             </>
@@ -327,7 +325,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 <time datetime={dateObj.toISOString()}>
                                     {formattedDate}
                                 </time>
-                                <span class="text-gray-300 dark:text-gray-600">&middot;</span>
+                                <span class="text-rule">&middot;</span>
                                 <span>{relativeDate}</span>
                             </div>
                         )}
@@ -383,7 +381,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType === 'projects' && keywords.length > 0 && (
                             <div class="mt-5 flex flex-wrap gap-2">
                                 {keywords.map((kw: string) => (
-                                    <span class="rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-800/40 text-muted">
+                                    <span class="rounded-control border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(kw)}
                                     </span>
                                 ))}
@@ -402,7 +400,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                         finalTitle ||
                                         "Cover image"
                                     }
-                                    class="w-full rounded-xl"
+                                    class="w-full rounded-photo border border-rule"
                                     loading="lazy"
                                 />
                                 {finalCover.caption && (

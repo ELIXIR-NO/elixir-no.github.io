@@ -18,7 +18,7 @@
   }
 
   .dark {
-    --color-accent: 244 125 32;
+    --color-accent: 247 148 74;
     --color-paper: 10 22 30;
     --color-surface: 15 30 40;
     --color-ink: 234 240 243;
@@ -84,7 +84,7 @@
   }
 
   .content a, .link {
-    @apply text-accent hover:text-accent/70 underline underline-offset-2 decoration-accent/30 hover:decoration-accent/60 transition-colors;
+    @apply text-ink underline underline-offset-[3px] decoration-ink/30 hover:decoration-marker hover:decoration-2 transition-colors;
   }
 
   /* Screen-reader hint for links that open in a new window */

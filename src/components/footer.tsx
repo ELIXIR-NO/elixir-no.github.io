@@ -36,7 +36,7 @@ const funders = [
 
 const Footer = () => {
     return (
-        <footer className="mt-24 border-t border-rule" aria-labelledby="footer-heading">
+        <footer className="mt-24 border-t border-rule bg-surface" aria-labelledby="footer-heading">
             <h2 id="footer-heading" className="sr-only">Footer</h2>
 
             {/* Main footer content */}
@@ -65,7 +65,7 @@ const Footer = () => {
                             ELIXIR Norway is the Norwegian Node of{' '}
                             <a
                                 href="https://elixir-europe.org"
-                                className="font-bold text-accent hover:underline"
+                                className="font-semibold text-ink underline decoration-marker decoration-2 underline-offset-4"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -80,7 +80,7 @@ const Footer = () => {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-2 rounded-lg text-body hover:text-ink hover:bg-gray-100 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                    className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     aria-label={name}
                                 >
                                     <Icon className="h-5 w-5" aria-hidden="true" />
@@ -91,13 +91,13 @@ const Footer = () => {
 
                     {/* Links column */}
                     <div className="lg:col-span-2">
-                        <h3 className="text-sm font-bold text-ink mb-4">Navigation</h3>
+                        <h3 className="text-sm font-semibold text-ink mb-4">Navigation</h3>
                         <ul className="space-y-2">
                             {footerLinks.map(({ href, label }) => (
                                 <li key={label}>
                                     <a
                                         href={href}
-                                        className="text-sm text-body hover:text-ink transition-colors"
+                                        className="text-sm text-body hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors"
                                     >
                                         {label}
                                     </a>
@@ -108,10 +108,10 @@ const Footer = () => {
 
                     {/* Contact column */}
                     <div className="lg:col-span-2">
-                        <h3 className="text-sm font-bold text-ink mb-4">Contact</h3>
+                        <h3 className="text-sm font-semibold text-ink mb-4">Contact</h3>
                         <ul className="space-y-2 text-sm text-body">
                             <li>
-                                <a href="mailto:support@elixir.no" className="hover:text-ink transition-colors">
+                                <a href="mailto:support@elixir.no" className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors">
                                     support@elixir.no
                                 </a>
                             </li>
@@ -120,7 +120,7 @@ const Footer = () => {
                                     href="https://elixir-europe.org/about-us/vacancies"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hover:text-ink transition-colors"
+                                    className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors"
                                 >
                                     Careers at ELIXIR
                                 </a>
@@ -130,7 +130,7 @@ const Footer = () => {
 
                     {/* Partners column */}
                     <div className="lg:col-span-4">
-                        <h3 className="text-sm font-bold text-ink mb-4">Partner institutions</h3>
+                        <h3 className="text-sm font-semibold text-ink mb-4">Partner institutions</h3>
                         <div className="flex flex-wrap items-center gap-4">
                             {partners.map(({ href, src, alt }) => (
                                 <a
@@ -148,7 +148,7 @@ const Footer = () => {
                                 </a>
                             ))}
                         </div>
-                        <h3 className="text-sm font-bold text-ink mt-6 mb-4">Funded by</h3>
+                        <h3 className="text-sm font-semibold text-ink mt-6 mb-4">Funded by</h3>
                         <div className="flex flex-wrap items-center gap-4">
                             {funders.map(({ href, src, alt }) => (
                                 <a
@@ -173,7 +173,7 @@ const Footer = () => {
             {/* Bottom bar */}
             <div className="border-t border-rule">
                 <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
-                    <p className="text-xs text-center text-muted">
+                    <p className="text-xs text-center lg:text-left text-muted">
                         Financed by the Research Council of Norway (grants 208481, 270068, 295932, 350529),
                         its partner institutions, NordForsk, and co-funded by the European Union.
                     </p>

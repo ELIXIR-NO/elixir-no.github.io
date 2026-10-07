@@ -15,35 +15,27 @@ const HERO_VIDEO: { poster?: string; sources: VideoSource[] } = {
     ],
 };
 
+// Stand-in footage for local development only; production builds never reference it.
+const SAMPLE_SOURCES: VideoSource[] = [];
+
+const SOURCES = import.meta.env.DEV && SAMPLE_SOURCES.length > 0 ? SAMPLE_SOURCES : HERO_VIDEO.sources;
+
 type NetworkInformation = { saveData?: boolean };
 
-function Placeholder() {
-    return (
-        <div
-            className="absolute inset-0 grid place-items-center bg-surface"
-            style={{
-                backgroundImage:
-                    'linear-gradient(rgb(var(--color-rule) / 0.6) 1px, transparent 1px),' +
-                    'linear-gradient(90deg, rgb(var(--color-rule) / 0.6) 1px, transparent 1px)',
-                backgroundSize: '48px 48px',
-                backgroundPosition: 'center',
-            }}
-        >
-            <span className="inline-flex items-center gap-2 rounded-chip border border-rule bg-surface px-2.5 py-1 font-mono text-xs text-muted before:h-1.5 before:w-1.5 before:rounded-marker before:bg-marker before:content-['']">
-                Video coming soon
-            </span>
-        </div>
-    );
-}
-
-/** Decorative hero film. Never autoplays under reduced motion, Save-Data, or when paused; the hero's pause button is the accessible control. */
+/**
+ * Decorative full-bleed hero film under a paper tint. The <video> is only added after mount and
+ * never under reduced motion, Save-Data or without sources, so the server HTML is the poster (or
+ * plain paper) and nothing downloads for those visitors. The hero's pause button is the control.
+ */
 export default function HeroVideo({ playing }: { playing: boolean }) {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [allowVideo, setAllowVideo] = useState(false);
     const [inView, setInView] = useState(false);
-    const [saveData, setSaveData] = useState(false);
 
     useEffect(() => {
-        setSaveData(Boolean((navigator as Navigator & { connection?: NetworkInformation }).connection?.saveData));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const saveData = Boolean((navigator as Navigator & { connection?: NetworkInformation }).connection?.saveData);
+        setAllowVideo(SOURCES.length > 0 && !reduceMotion && !saveData);
     }, []);
 
     useEffect(() => {
@@ -52,40 +44,44 @@ export default function HeroVideo({ playing }: { playing: boolean }) {
         const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting));
         observer.observe(video);
         return () => observer.disconnect();
-    }, []);
+    }, [allowVideo]);
 
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
-        if (playing && inView && !saveData) {
+        if (playing && inView) {
             video.play().catch(() => {});
         } else {
             video.pause();
         }
-    }, [playing, inView, saveData]);
+    }, [playing, inView, allowVideo]);
 
-    const { poster, sources } = HERO_VIDEO;
-
-    if (sources.length === 0) {
-        return poster
-            ? <img src={poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
-            : <Placeholder />;
-    }
+    const { poster } = HERO_VIDEO;
+    if (!allowVideo && !poster) return null;
 
     return (
-        <video
-            ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover"
-            poster={poster}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-        >
-            {sources.map(source => (
-                <source key={source.src} src={source.src} type={source.type} media={source.media} />
-            ))}
-        </video>
+        <div className="absolute inset-0" aria-hidden="true">
+            {allowVideo ? (
+                <video
+                    ref={videoRef}
+                    className="h-full w-full object-cover saturate-[.8]"
+                    poster={poster}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                >
+                    {SOURCES.map(source => (
+                        <source key={source.src} src={source.src} type={source.type} media={source.media} />
+                    ))}
+                </video>
+            ) : (
+                <img src={poster} alt="" className="h-full w-full object-cover saturate-[.8]" />
+            )}
+            {/* Tint keeps the hero copy at AA contrast over any frame; calmest behind the text. */}
+            <div className="absolute inset-0 bg-paper/[0.82] dark:bg-paper/80" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_50%,rgb(var(--color-paper)/0.7),transparent)]" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-paper" />
+        </div>
     );
 }

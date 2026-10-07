@@ -52,7 +52,9 @@ export function Hero() {
     return (
         <MotionConfig reducedMotion="user">
             <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
-                <div className="relative flex items-center pt-[calc(var(--nav-offset)+3rem)] lg:pt-[calc(var(--nav-offset)+4rem)] z-10">
+                <HeroVideo playing={playing} />
+
+                <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
                         <div className="max-w-3xl mx-auto">
                             <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
@@ -113,27 +115,17 @@ export function Hero() {
                     </div>
                 </div>
 
-                <div className="relative mx-auto max-w-7xl px-6 sm:px-8 pt-12 sm:pt-14 pb-16 lg:pb-20">
-                    <div className="relative aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-photo border border-rule bg-surface">
-                        <HeroVideo playing={playing} />
-                    </div>
-                    <div className="mt-3 flex items-center justify-between gap-4">
-                        <p className="font-mono text-xs text-muted">
-                            ELIXIR Norway across Bergen, Oslo, Tromsø, Trondheim and Ås
-                        </p>
-                        {/* Hidden by CSS rather than by useReducedMotion so server and client markup match. */}
-                        <button
-                            type="button"
-                            onClick={() => setPaused(p => !p)}
-                            className="motion-reduce:hidden inline-flex min-h-11 shrink-0 items-center gap-2 rounded-control px-2 -mr-2 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                        >
-                            {paused
-                                ? <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
-                                : <PauseIcon className="h-3.5 w-3.5" aria-hidden="true" />}
-                            <span className="sr-only sm:not-sr-only">{paused ? 'Play animation' : 'Pause animation'}</span>
-                        </button>
-                    </div>
-                </div>
+                {/* Hidden by CSS rather than by useReducedMotion so server and client markup match. */}
+                <button
+                    type="button"
+                    onClick={() => setPaused(p => !p)}
+                    className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-10 motion-reduce:hidden inline-flex min-h-9 items-center gap-2 rounded-control border border-rule bg-paper/90 px-2.5 text-xs font-medium text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                    {paused
+                        ? <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                        : <PauseIcon className="h-3.5 w-3.5" aria-hidden="true" />}
+                    <span className="sr-only sm:not-sr-only">{paused ? 'Play animation' : 'Pause animation'}</span>
+                </button>
             </section>
         </MotionConfig>
     );

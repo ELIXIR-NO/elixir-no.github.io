@@ -51,10 +51,12 @@ export function Hero() {
 
     return (
         <MotionConfig reducedMotion="user">
-            <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
+            {/* Exactly one screen tall (svh, with vh as the fallback) so the next section never peeks;
+                min-height lets it grow when the content needs more room. */}
+            <section className="relative -mt-[var(--nav-offset)] flex min-h-screen min-h-svh flex-col overflow-hidden">
                 <HeroVideo playing={playing} />
 
-                <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
+                <div className="relative z-10 flex flex-1 items-center pt-[calc(var(--nav-offset)+clamp(1rem,5vh,4rem))] pb-[clamp(4.5rem,10vh,7rem)]">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
                         <div className="max-w-3xl mx-auto">
                             <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>

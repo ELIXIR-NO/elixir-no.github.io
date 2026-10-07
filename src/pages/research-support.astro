@@ -12,8 +12,8 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
 
     <!-- Hero -->
     <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-accent tracking-wide uppercase">Research Support</p>
-        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.15]">
+        <p class="flex items-center gap-2 text-sm font-semibold text-marker-text tracking-wide uppercase"><span class="h-2 w-2 bg-marker" aria-hidden="true" />Research Support</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.15]">
             Expert bioinformatics help for your research
         </h1>
         <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
@@ -23,7 +23,7 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
         <div class="mt-8 flex flex-wrap items-center gap-4">
             <a
                 href="mailto:support@elixir.no"
-                class="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                class="inline-flex items-center gap-2 rounded-control bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
                 <EnvelopeIcon className="h-4 w-4" aria-hidden="true" />
                 support@elixir.no
@@ -50,15 +50,15 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
     </div>
 
     <!-- What we offer -->
-    <section class="mt-20">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink">What we offer</h2>
+    <section class="mt-16 lg:mt-20">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">What we offer</h2>
         <p class="mt-3 text-base text-body max-w-2xl">Expertise across bioinformatics, data management, and life science research.</p>
 
         <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Support types -->
-            <div class="group rounded-xl border border-rule p-6 transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.04]">
-                <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4">
-                    <QuestionMarkCircleIcon className="h-5 w-5 text-blue-500" aria-hidden="true" />
+            <div class="rounded-card border border-rule bg-surface p-6">
+                <div class="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-4">
+                    <QuestionMarkCircleIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                 </div>
                 <h3 class="text-sm font-semibold text-ink">Support types</h3>
                 <ul class="mt-3 space-y-2">
@@ -72,9 +72,9 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
             </div>
 
             <!-- Data types -->
-            <div class="group rounded-xl border border-rule p-6 transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.04]">
-                <div class="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center mb-4">
-                    <CircleStackIcon className="h-5 w-5 text-green-500" aria-hidden="true" />
+            <div class="rounded-card border border-rule bg-surface p-6">
+                <div class="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-4">
+                    <CircleStackIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                 </div>
                 <h3 class="text-sm font-semibold text-ink">Data types</h3>
                 <ul class="mt-3 space-y-2">
@@ -88,9 +88,9 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
             </div>
 
             <!-- Fields -->
-            <div class="group rounded-xl border border-rule p-6 transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.04]">
-                <div class="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center mb-4">
-                    <AcademicCapIcon className="h-5 w-5 text-purple-500" aria-hidden="true" />
+            <div class="rounded-card border border-rule bg-surface p-6">
+                <div class="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-4">
+                    <AcademicCapIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                 </div>
                 <h3 class="text-sm font-semibold text-ink">Fields of expertise</h3>
                 <ul class="mt-3 space-y-2">
@@ -106,8 +106,8 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
     </section>
 
     <!-- Support model -->
-    <section class="mt-20">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink">Support model</h2>
+    <section class="mt-16 lg:mt-20">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Support model</h2>
         <div class="mt-6 max-w-3xl space-y-4 text-base leading-relaxed text-body">
             <p>
                 Projects that can be solved within a working day are <strong class="font-semibold text-ink">free of charge</strong>,
@@ -121,9 +121,9 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
         </div>
 
         <!-- Service agreement -->
-        <div class="mt-8 rounded-xl border border-rule p-6 max-w-3xl">
+        <div class="mt-8 rounded-card border border-rule bg-surface p-6 max-w-3xl">
             <div class="flex items-center gap-3 mb-3">
-                <DocumentTextIcon className="h-5 w-5 text-accent shrink-0" aria-hidden="true" />
+                <DocumentTextIcon className="h-5 w-5 text-ink shrink-0" aria-hidden="true" />
                 <h3 class="text-base font-semibold text-ink">The Service Agreement</h3>
             </div>
             <p class="text-sm leading-relaxed text-body">
@@ -132,14 +132,14 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
                 <em class="font-medium text-ink not-italic">publication</em> and
                 <em class="font-medium text-ink not-italic">co-authorship</em>.
                 Regardless of contribution type, we expect to be included in the
-                <strong class="font-semibold">acknowledgements</strong> of resulting publications.
+                <strong class="font-semibold text-ink">acknowledgements</strong> of resulting publications.
             </p>
         </div>
     </section>
 
     <!-- Pricing -->
-    <section class="mt-20">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink">Pricing</h2>
+    <section class="mt-16 lg:mt-20">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Pricing</h2>
         <p class="mt-3 text-base text-body max-w-2xl">Transparent pricing based on project scope and duration.</p>
 
         <Pricing

@@ -8,10 +8,10 @@ interface Props {
 const { figSrc, figCaption, imageLeft = false } = Astro.props;
 ---
 
-<div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
+<div class="max-w-5xl grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
     <div class:list={[
         "lg:col-span-3 content text-sm leading-relaxed text-body",
-        "[&_strong]:text-brand-primary [&_strong]:dark:text-white",
+        "[&_strong]:text-ink",
         "[&_ul]:mt-5 [&_ul]:space-y-3 [&_li]:pl-1",
         "[&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-accent/70",
         imageLeft ? "lg:order-last" : "",
@@ -26,7 +26,7 @@ const { figSrc, figCaption, imageLeft = false } = Astro.props;
         <img
             alt={figCaption || "Feature illustration"}
             src={figSrc}
-            class="w-full rounded-2xl"
+            class="w-full rounded-photo"
             loading="lazy"
         />
         {figCaption && (

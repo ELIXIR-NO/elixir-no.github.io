@@ -56,7 +56,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
             className="relative w-full max-w-5xl mx-auto group"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}>
-            <div className="overflow-hidden rounded-lg shadow-lg relative">
+            <div className="overflow-hidden rounded-photo border border-rule relative">
                 <div className="relative h-80 sm:h-80 md:h-96">
                     {images.map((image, index) => (
                         <Transition
@@ -78,7 +78,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                                 onClick={handleImageClick}
                             />
                             {image.caption && (
-                                <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-75 text-white text-sm p-2">
+                                <div className="absolute bottom-0 left-0 w-full bg-ink/80 text-paper text-sm p-2">
                                     {image.caption}
                                 </div>
                             )}
@@ -91,14 +91,14 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
             <div className="absolute inset-0 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                     onClick={prevSlide}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-black bg-opacity-50 group-hover:bg-opacity-75 rounded-full p-2"
+                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-surface/80 group-hover:bg-surface border border-rule text-ink rounded-control p-2"
                     aria-label="Previous slide"
                 >
                     <ChevronLeftIcon className="h-6 w-6" aria-hidden="true"/>
                 </button>
                 <button
                     onClick={nextSlide}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-black bg-opacity-50 group-hover:bg-opacity-75 rounded-full p-2"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-surface/80 group-hover:bg-surface border border-rule text-ink rounded-control p-2"
                     aria-label="Next slide"
                 >
                     <ChevronRightIcon className="h-6 w-6" aria-hidden="true"/>
@@ -114,7 +114,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                         aria-label={`Go to slide ${index + 1} of ${images.length}`}
                         aria-current={index === currentIndex ? 'true' : undefined}
                         className={`w-3 h-3 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-                            index === currentIndex ? 'bg-brand-primary' : 'bg-gray-300'
+                            index === currentIndex ? 'bg-marker' : 'bg-surface/70'
                         }`}
                     />
                 ))}
@@ -122,7 +122,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
 
             <button
                 onClick={() => setIsPaused(!isPaused)}
-                className="absolute top-4 right-4 bg-black bg-opacity-50 text-white text-sm px-3 py-1 rounded-full hover:bg-opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="absolute top-4 right-4 bg-ink/70 text-paper text-sm px-3 py-1 rounded-control hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-label={isPaused ? 'Resume auto-play' : 'Pause auto-play'}
             >
                 {isPaused ? '▶ Play' : '⏸ Pause'}
@@ -142,7 +142,7 @@ const Carousel = ({ images, autoSlideInterval = 3000 }) => {
                         />
                         <button
                             onClick={closeZoom}
-                            className="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none"
+                            className="absolute top-4 right-4 text-white hover:text-white/70 focus:outline-none"
                             aria-label="Close fullscreen view"
                         >
                             <XMarkIcon className="h-8 w-8" aria-hidden="true" />

@@ -92,20 +92,21 @@ function getElixirRole(person: any): string {
     {isSummary ? (
         <a
             href={`${BASE}/about/everyone`}
-            class="group block rounded-2xl border border-rule bg-gradient-to-br from-brand-primary/[0.03] to-transparent dark:from-white/[0.03] p-8 sm:p-10 text-center transition-all duration-200 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent mt-6"
+            class="group block rounded-card border border-rule bg-surface p-8 sm:p-10 !no-underline transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent mt-6"
         >
-            <p class="text-sm font-semibold uppercase tracking-wider text-muted">
+            <p class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-muted">
+                <span class="h-2 w-2 bg-marker" aria-hidden="true" />
                 Our team
             </p>
-            <p class="mt-2 text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+            <p class="mt-2 text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
                 70+ researchers, engineers & scientists
             </p>
             <p class="mt-2 text-sm text-body">
                 Across five Norwegian universities
             </p>
-            <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent">
+            <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ink">
                 Meet the team
-                <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
             </span>
         </a>
     ) : (
@@ -119,9 +120,9 @@ function getElixirRole(person: any): string {
                                 href={person["profile-url"]}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="group flex flex-col items-center text-center rounded-xl border border-rule bg-surface p-5 sm:p-6 shadow-sm ring-1 ring-rule transition-all duration-200 hover:border-accent/30 hover:shadow-lg hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                class="group flex flex-col items-start text-left rounded-card border border-rule bg-surface p-5 sm:p-6 !no-underline transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             >
-                                <div class="h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-full border-2 border-rule shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                <div class="h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-full border border-rule">
                                     <img
                                         alt={person.name}
                                         src={`${BASE}${person.photo}`}
@@ -130,10 +131,10 @@ function getElixirRole(person: any): string {
                                     />
                                 </div>
                                 <div class="mt-4 w-full">
-                                    <div class="inline-block rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-semibold text-accent">
+                                    <div class="inline-block rounded-control border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {role}
                                     </div>
-                                    <div class="mt-2 text-sm sm:text-base font-semibold text-ink group-hover:text-accent transition-colors">
+                                    <div class="mt-2 text-sm sm:text-base font-semibold text-ink">
                                         {person.name}
                                     </div>
                                     <div class="mt-1 text-xs text-body leading-relaxed">
@@ -149,10 +150,10 @@ function getElixirRole(person: any): string {
                                 href={person["profile-url"]}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-rule bg-surface p-3 shadow-sm ring-1 ring-rule transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3 !no-underline transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             >
                                 {!hidePicture && (
-                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
                                         <img
                                             alt={person.name}
                                             src={`${BASE}${person.photo}`}
@@ -162,7 +163,7 @@ function getElixirRole(person: any): string {
                                     </div>
                                 )}
                                 <div class="min-w-0">
-                                    <div class="truncate text-sm font-semibold text-ink group-hover:text-accent transition-colors">
+                                    <div class="truncate text-sm font-semibold text-ink">
                                         {person.name}
                                     </div>
                                     <div class="truncate text-xs text-body mt-0.5">

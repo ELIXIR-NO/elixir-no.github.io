@@ -6,10 +6,10 @@ export default function Pricing({ tiers }) {
             {tiers.map((tier) => (
                 <div
                     key={tier.id}
-                    className={`relative flex flex-col rounded-xl border p-6 transition-all duration-200 ${
+                    className={`relative flex flex-col rounded-card border bg-surface p-6 ${
                         tier.mostPopular
-                            ? 'border-accent/40 bg-accent/[0.03] dark:bg-brand-secondary/[0.05] shadow-sm shadow-accent/10'
-                            : 'border-rule bg-surface hover:border-ink'
+                            ? 'border-ink'
+                            : 'border-rule'
                     }`}
                 >
                     <div className="flex items-center justify-between gap-2">
@@ -17,7 +17,8 @@ export default function Pricing({ tiers }) {
                             {tier.name}
                         </h3>
                         {tier.mostPopular && (
-                            <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[11px] font-semibold text-accent">
+                            <span className="inline-flex items-center gap-1.5 rounded-control border border-rule px-2 py-0.5 text-[11px] font-medium text-ink">
+                                <span className="h-1.5 w-1.5 bg-marker" aria-hidden="true" />
                                 Most frequently selected 
                             </span>
                         )}
@@ -28,7 +29,7 @@ export default function Pricing({ tiers }) {
                     </p>
 
                     <p className="mt-4 flex items-baseline gap-x-1">
-                        <span className="text-2xl font-bold tracking-tight text-ink">
+                        <span className="text-2xl font-semibold tracking-tight text-ink">
                             {tier.price}
                         </span>
                         {tier.period && (
@@ -49,10 +50,10 @@ export default function Pricing({ tiers }) {
 
                     <a
                         href="mailto:support@elixir.no"
-                        className={`mt-6 block rounded-lg px-4 py-2.5 text-center text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                        className={`mt-6 block rounded-control px-4 py-2.5 text-center text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                             tier.mostPopular
-                                ? 'bg-brand-primary text-white hover:bg-brand-primary/90'
-                                : 'border border-rule text-ink hover:bg-gray-50 dark:hover:bg-white/5'
+                                ? 'border border-ink bg-ink text-paper hover:bg-ink/90'
+                                : 'border border-rule text-ink hover:border-ink'
                         }`}
                     >
                         Contact us

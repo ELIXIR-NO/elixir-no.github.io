@@ -7,10 +7,9 @@ interface Props {
     logo: string;
     coverImage: string;
     subtitle: string;
-    color: string;
 }
 
-const { nodeName, university, logo, coverImage, subtitle, color } = Astro.props;
+const { nodeName, university, logo, coverImage, subtitle } = Astro.props;
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -25,17 +24,11 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <div class="absolute inset-0 bg-gradient-to-t from-[#023452] via-[#023452]/70 to-[#023452]/30" aria-hidden="true" />
 
-    <div
-        class="absolute inset-0 opacity-[0.03]"
-        style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"
-        aria-hidden="true"
-    />
-
     <div class="relative w-full pt-[calc(84px+3rem)] pb-10 sm:pb-14">
         <div class="mx-auto max-w-7xl px-6 sm:px-8">
             <a
                 href={`${BASE}/about`}
-                class="org-hero-fade inline-flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded"
+                class="org-hero-fade inline-flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-control"
             >
                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                 About ELIXIR Norway
@@ -50,7 +43,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
                 />
             </div>
 
-            <h1 class="org-hero-fade mt-5 text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight" style="animation-delay: 0.2s">
+            <h1 class="org-hero-fade mt-5 text-3xl sm:text-4xl md:text-5xl font-semibold text-white tracking-tight" style="animation-delay: 0.2s">
                 {nodeName}
             </h1>
 
@@ -59,8 +52,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
             </p>
 
             <div
-                class="org-hero-fade mt-6 h-1 w-16 rounded-full"
-                style={`background-color: ${color}; animation-delay: 0.4s`}
+                class="org-hero-fade mt-6 h-0.5 w-16 bg-marker"
+                style="animation-delay: 0.4s"
                 aria-hidden="true"
             />
         </div>

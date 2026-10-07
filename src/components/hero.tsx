@@ -1,10 +1,8 @@
 import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
-import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { ArrowRightIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
+import React, { useState, useEffect } from 'react';
+import { ArrowRightIcon, ArrowTopRightOnSquareIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
 
-const ParticleField = lazy(() => import('./particle-field'));
-const MotionChevronDown = motion.create(ChevronDownIcon);
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -41,41 +39,6 @@ function RotatingWord({ playing }: { playing: boolean }) {
     );
 }
 
-function ScrollCue({ shouldReduceMotion, bounce }: { shouldReduceMotion: boolean | null; bounce: boolean }) {
-    const [visible, setVisible] = useState(true);
-
-    useEffect(() => {
-        const onScroll = () => setVisible(window.scrollY < 100);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
-
-    const handleClick = () => {
-        const hero = document.querySelector('section');
-        if (hero?.nextElementSibling) {
-            hero.nextElementSibling.scrollIntoView({ behavior: shouldReduceMotion ? 'auto' : 'smooth' });
-        }
-    };
-
-    return (
-        <motion.button
-            onClick={handleClick}
-            aria-label="Scroll to content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: visible ? 1 : 0 }}
-            transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 1 }}
-            className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 p-2 text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-control"
-        >
-            <MotionChevronDown
-                className="h-6 w-6"
-                aria-hidden="true"
-                animate={bounce ? { y: [0, 6, 0] } : { y: 0 }}
-                transition={bounce ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.2 }}
-            />
-        </motion.button>
-    );
-}
-
 export function Hero() {
     const shouldReduceMotion = useReducedMotion();
     const [paused, setPaused] = useState(false);
@@ -88,15 +51,6 @@ export function Hero() {
     return (
         <MotionConfig reducedMotion="user">
             <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
-                <div
-                    className="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] via-transparent to-brand-secondary/[0.03] dark:from-brand-primary/20 dark:via-dark-background dark:to-brand-secondary/10"
-                    aria-hidden="true"
-                />
-
-                <Suspense fallback={null}>
-                    <ParticleField playing={playing} />
-                </Suspense>
-
                 <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
                         <div className="max-w-3xl mx-auto">
@@ -157,8 +111,6 @@ export function Hero() {
                         </div>
                     </div>
                 </div>
-
-                <ScrollCue shouldReduceMotion={shouldReduceMotion} bounce={playing} />
 
                 {/* Hidden by CSS rather than by useReducedMotion so server and client markup match. */}
                 <button

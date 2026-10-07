@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import { MotionConfig, motion } from 'framer-motion';
 import {
     ArrowRightIcon,
     LifebuoyIcon,
@@ -32,13 +32,13 @@ const services: Service[] = [
     },
     {
         title: 'e-Infrastructure',
-        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
+        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/e-infrastructure`,
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">SAFE</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">SAFE</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/sensitive-data`,
     },
@@ -55,69 +55,72 @@ const item = {
 };
 
 export default function ServicesOverview() {
-    const shouldReduceMotion = useReducedMotion();
-
     return (
-        <section className="py-16 lg:py-20">
-            <div className="max-w-7xl mx-auto px-6 lg:px-12">
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-                    {/* Left — heading */}
-                    <motion.div
-                        className="lg:col-span-2 lg:sticky lg:top-32"
-                        initial={shouldReduceMotion ? {} : { y: 20 }}
-                        whileInView={{ y: 0 }}
-                        viewport={{ once: true, margin: '-60px' }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-                            Unlock the Power of Your Data
-                        </h2>
-                        <p className="mt-4 text-lg text-body leading-relaxed">
-                            From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
-                        </p>
-                        <a
-                            href={`${BASE}/services`}
-                            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        <MotionConfig reducedMotion="user">
+            <section className="py-16 lg:py-20">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+                        {/* Left — heading */}
+                        <motion.div
+                            className="lg:col-span-2 lg:sticky lg:top-32"
+                            initial={{ y: 20 }}
+                            whileInView={{ y: 0 }}
+                            viewport={{ once: true, margin: '-60px' }}
+                            transition={{ duration: 0.5 }}
                         >
-                            Explore all services
-                            <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-                        </a>
-                    </motion.div>
-
-                    {/* Right — cards */}
-                    <motion.div
-                        className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-5"
-                        variants={shouldReduceMotion ? undefined : container}
-                        initial="hidden"
-                        whileInView="show"
-                        viewport={{ once: true, margin: '-60px' }}
-                    >
-                        {services.map((svc) => (
-                            <motion.a
-                                key={svc.title}
-                                href={svc.href}
-                                variants={shouldReduceMotion ? undefined : item}
-                                transition={{ duration: 0.5, ease: 'easeOut' }}
-                                className="group relative flex flex-col px-5 py-5 rounded-card border border-rule bg-surface transition-colors duration-200 hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+                                Unlock the Power of Your Data
+                            </h2>
+                            <p className="mt-4 text-lg text-body leading-relaxed">
+                                From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
+                            </p>
+                            <a
+                                href={`${BASE}/services`}
+                                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             >
-                                <div className="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-5 text-ink">
-                                    {svc.icon}
-                                </div>
-                                <h3 className="text-base font-semibold text-ink mb-2">
-                                    {svc.title}
-                                </h3>
-                                <p className="text-sm leading-relaxed text-body">
-                                    {svc.description}
-                                </p>
-                                <span className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
-                                    Learn more
-                                    <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
-                                </span>
-                            </motion.a>
-                        ))}
-                    </motion.div>
+                                Explore all services
+                                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                            </a>
+                        </motion.div>
+
+                        {/* Right — cards */}
+                        <motion.div
+                            className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-5"
+                            variants={container}
+                            initial="hidden"
+                            whileInView="show"
+                            viewport={{ once: true, margin: '-60px' }}
+                        >
+                            {services.map((svc) => (
+                                // A div with a stretched title link, not one big <a>: descriptions
+                                // carry their own links and nested anchors break server rendering.
+                                <motion.div
+                                    key={svc.title}
+                                    variants={item}
+                                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                                    className="group relative flex flex-col px-5 py-5 rounded-card border border-rule bg-surface transition-colors duration-200 hover:border-ink has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent"
+                                >
+                                    <div className="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-5 text-ink">
+                                        {svc.icon}
+                                    </div>
+                                    <h3 className="text-base font-semibold text-ink mb-2">
+                                        <a href={svc.href} className="after:absolute after:inset-0 after:rounded-card focus:outline-none">
+                                            {svc.title}
+                                        </a>
+                                    </h3>
+                                    <p className="text-sm leading-relaxed text-body">
+                                        {svc.description}
+                                    </p>
+                                    <span className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink" aria-hidden="true">
+                                        Learn more
+                                        <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                    </span>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </MotionConfig>
     );
 }

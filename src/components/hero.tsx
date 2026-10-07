@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
@@ -61,7 +61,7 @@ function ScrollCue({ shouldReduceMotion, bounce }: { shouldReduceMotion: boolean
         <motion.button
             onClick={handleClick}
             aria-label="Scroll to content"
-            initial={shouldReduceMotion ? {} : { opacity: 0 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: visible ? 1 : 0 }}
             transition={{ duration: 0.4, delay: shouldReduceMotion ? 0 : 1 }}
             className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 p-2 text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-control"
@@ -81,101 +81,98 @@ export function Hero() {
     const [paused, setPaused] = useState(false);
     const playing = !paused && !shouldReduceMotion;
 
-    const fadeUp = shouldReduceMotion
-        ? {}
-        : { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
+    // Transform only, so the server-rendered hero is readable before hydration. The same
+    // props render on server and client; MotionConfig skips the movement for reduced motion.
+    const fadeUp = { initial: { y: 12 }, animate: { y: 0 } };
 
     return (
-        <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
-            <div
-                className="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] via-transparent to-brand-secondary/[0.03] dark:from-brand-primary/20 dark:via-dark-background dark:to-brand-secondary/10"
-                aria-hidden="true"
-            />
+        <MotionConfig reducedMotion="user">
+            <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
+                <div
+                    className="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] via-transparent to-brand-secondary/[0.03] dark:from-brand-primary/20 dark:via-dark-background dark:to-brand-secondary/10"
+                    aria-hidden="true"
+                />
 
-            {!shouldReduceMotion && (
                 <Suspense fallback={null}>
-                    <ParticleField playing={!paused} />
+                    <ParticleField playing={playing} />
                 </Suspense>
-            )}
 
-            <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
-                <div className="w-full px-6 sm:px-8 mx-auto text-center">
-                    <div className="max-w-3xl mx-auto">
-                        <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
-                            <a
-                                href="https://elixir-europe.org"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
+                <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
+                    <div className="w-full px-6 sm:px-8 mx-auto text-center">
+                        <div className="max-w-3xl mx-auto">
+                            <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
+                                <a
+                                    href="https://elixir-europe.org"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
+                                >
+                                    Part of the European ELIXIR infrastructure
+                                    <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
+                                </a>
+                            </motion.div>
+
+                            <motion.h1
+                                {...fadeUp}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-semibold tracking-[-0.035em] text-ink leading-[1.05] text-balance"
                             >
-                                Part of the European ELIXIR infrastructure
-                                <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
-                            </a>
-                        </motion.div>
+                                <span className="sr-only">Research infrastructure for life science</span>
+                                <span aria-hidden="true">Research infrastructure for</span>
+                                <span className="block">
+                                    <RotatingWord playing={playing} />
+                                </span>
+                            </motion.h1>
 
-                        <motion.h1
-                            {...fadeUp}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-semibold tracking-[-0.035em] text-ink leading-[1.05]"
-                        >
-                            <span className="sr-only">Research infrastructure for life science</span>
-                            <span aria-hidden="true">Research infrastructure for</span>
-                            <span className="block">
-                                {shouldReduceMotion
-                                    ? <span aria-hidden="true">{WORDS[0]}</span>
-                                    : <RotatingWord playing={playing} />}
-                            </span>
-                        </motion.h1>
-
-                        <motion.p
-                            {...fadeUp}
-                            transition={{ duration: 0.6, delay: 0.3 }}
-                            className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-body max-w-2xl mx-auto"
-                        >
-                            ELIXIR Norway supports life science researchers with bioinformatics
-                            services, data management tools, and secure e-infrastructure.
-                            Part of Europe's leading bioinformatics network.
-                        </motion.p>
-
-                        <motion.div
-                            {...fadeUp}
-                            transition={{ duration: 0.6, delay: 0.4 }}
-                            className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4"
-                        >
-                            <a
-                                href={`${BASE}/services`}
-                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control bg-ink text-paper font-semibold text-sm transition-colors duration-200 ease-out hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                            <motion.p
+                                {...fadeUp}
+                                transition={{ duration: 0.6, delay: 0.3 }}
+                                className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-body max-w-2xl mx-auto"
                             >
-                                Explore services
-                                <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true" />
-                            </a>
-                            <a
-                                href={`${BASE}/research-support`}
-                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control border border-rule bg-surface text-ink font-semibold text-sm transition-colors duration-200 ease-out hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                ELIXIR Norway supports life science researchers with bioinformatics
+                                services, data management tools, and secure e-infrastructure.
+                                Part of Europe's leading bioinformatics network.
+                            </motion.p>
+
+                            <motion.div
+                                {...fadeUp}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                                className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4"
                             >
-                                <LifebuoyIcon className="h-4 w-4 text-ink" aria-hidden="true" />
-                                Get support
-                            </a>
-                        </motion.div>
+                                <a
+                                    href={`${BASE}/services`}
+                                    className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control bg-ink text-paper font-semibold text-sm transition-colors duration-200 ease-out hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                >
+                                    Explore services
+                                    <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true" />
+                                </a>
+                                <a
+                                    href={`${BASE}/research-support`}
+                                    className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control border border-rule bg-surface text-ink font-semibold text-sm transition-colors duration-200 ease-out hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                >
+                                    <LifebuoyIcon className="h-4 w-4 text-ink" aria-hidden="true" />
+                                    Get support
+                                </a>
+                            </motion.div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <ScrollCue shouldReduceMotion={shouldReduceMotion} bounce={playing} />
+                <ScrollCue shouldReduceMotion={shouldReduceMotion} bounce={playing} />
 
-            {!shouldReduceMotion && (
+                {/* Hidden by CSS rather than by useReducedMotion so server and client markup match. */}
                 <button
                     type="button"
                     onClick={() => setPaused(p => !p)}
-                    className="absolute bottom-6 sm:bottom-8 right-4 sm:right-8 z-10 inline-flex min-h-11 items-center gap-2 rounded-control px-2 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                    className="absolute bottom-6 sm:bottom-8 right-4 sm:right-8 z-10 motion-reduce:hidden inline-flex min-h-11 items-center gap-2 rounded-control px-2 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                     {paused
                         ? <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
                         : <PauseIcon className="h-3.5 w-3.5" aria-hidden="true" />}
                     <span className="sr-only sm:not-sr-only">{paused ? 'Play animation' : 'Pause animation'}</span>
                 </button>
-            )}
-        </section>
+            </section>
+        </MotionConfig>
     );
 }
 

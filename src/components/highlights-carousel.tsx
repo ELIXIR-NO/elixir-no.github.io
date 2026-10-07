@@ -118,7 +118,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
             {/* Caption + thumbnails + progress row */}
             <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-5 lg:gap-10 items-start">
                 {/* Caption */}
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="wait" initial={false}>
                     <motion.p
                         key={current}
                         initial={shouldReduceMotion ? {} : { opacity: 0 }}

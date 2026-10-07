@@ -59,10 +59,10 @@ export function Hero() {
                 <div className="relative z-10 flex flex-1 items-center pt-[calc(var(--nav-offset)+clamp(1rem,5vh,4rem))] pb-[clamp(4.5rem,10vh,7rem)]">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
                         <div className="relative max-w-3xl mx-auto">
-                            {/* Soft paper glow sized to the copy block, so the copy keeps AA over any frame while the
-                                global tint stays light. A gradient, not a box: it fades out well before its edges. */}
+                            {/* A faint, wide paper glow behind the copy that eases out over many stops, so it lifts
+                                contrast without reading as a shape. */}
                             <div
-                                className="pointer-events-none absolute -inset-x-32 -inset-y-24 -z-10 bg-[radial-gradient(closest-side,rgb(var(--color-paper)/0.94),rgb(var(--color-paper)/0.86)_55%,rgb(var(--color-paper)/0.45)_82%,transparent)]"
+                                className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[160%] w-[170%] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(closest-side,rgb(var(--color-paper)/0.5),rgb(var(--color-paper)/0.44)_25%,rgb(var(--color-paper)/0.32)_45%,rgb(var(--color-paper)/0.18)_65%,rgb(var(--color-paper)/0.07)_82%,transparent)]"
                                 aria-hidden="true"
                             />
                             <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
@@ -70,7 +70,7 @@ export function Hero() {
                                     href="https://elixir-europe.org"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
+                                    className="hero-legible inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
                                 >
                                     Part of the European ELIXIR infrastructure
                                     <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
@@ -80,7 +80,7 @@ export function Hero() {
                             <motion.h1
                                 {...fadeUp}
                                 transition={{ duration: 0.6, delay: 0.2 }}
-                                className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-semibold tracking-[-0.035em] text-ink leading-[1.05] text-balance"
+                                className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-semibold tracking-[-0.035em] text-ink leading-[1.05] text-balance hero-legible"
                             >
                                 <span className="sr-only">Research infrastructure for life science</span>
                                 <span aria-hidden="true">Research infrastructure for</span>
@@ -92,7 +92,7 @@ export function Hero() {
                             <motion.p
                                 {...fadeUp}
                                 transition={{ duration: 0.6, delay: 0.3 }}
-                                className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-body max-w-2xl mx-auto"
+                                className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-body max-w-2xl mx-auto hero-legible"
                             >
                                 ELIXIR Norway supports life science researchers with bioinformatics
                                 services, data management tools, and secure e-infrastructure.
@@ -115,7 +115,7 @@ export function Hero() {
                                 </a>
                                 <a
                                     href={`${BASE}/research-support`}
-                                    className="group inline-flex h-12 items-center gap-1.5 rounded-control px-1 text-[15px] font-semibold text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                    className="hero-legible group inline-flex h-12 items-center gap-1.5 rounded-control px-1 text-[15px] font-semibold text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                                 >
                                     <span className="relative">
                                         Get support

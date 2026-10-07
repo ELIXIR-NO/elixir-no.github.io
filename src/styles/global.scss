@@ -143,6 +143,14 @@
     }
   }
 
+  /* Soft paper halo that keeps hero copy legible over the video without a box behind it. */
+  .hero-legible {
+    text-shadow:
+      0 0 2px rgb(var(--color-paper) / 0.7),
+      0 0 10px rgb(var(--color-paper) / 0.65),
+      0 0 30px rgb(var(--color-paper) / 0.55);
+  }
+
   @keyframes rotor-in {
     from { transform: rotateX(90deg); opacity: 0.25; }
     to { transform: rotateX(0); opacity: 1; }

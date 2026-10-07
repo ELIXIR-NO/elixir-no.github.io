@@ -13,9 +13,9 @@ import {
 } from '../lib/tess';
 
 const ITEM = 'py-4 first:pt-0 last:pb-0';
-const ITEM_LINK = 'group -m-2 block rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
-const ITEM_TITLE = 'font-semibold text-ink transition-colors group-hover:text-accent';
-const LIST = 'divide-y divide-gray-200/60 dark:divide-gray-700/30';
+const ITEM_LINK = 'group -m-2 block rounded-control p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+const ITEM_TITLE = 'font-display font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline';
+const LIST = 'divide-y divide-rule';
 
 /** Null while TESS is still being asked. */
 function useTess<T>(load: () => Promise<TessResult<T>>): TessResult<T> | null {
@@ -33,8 +33,8 @@ function Loading({ label }: { label: string }) {
             <div className={LIST} aria-hidden="true">
                 {[0, 1, 2].map(row => (
                     <div key={row} className={`${ITEM} motion-safe:animate-pulse`}>
-                        <div className="h-4 w-2/3 rounded bg-gray-200 dark:bg-white/10" />
-                        <div className="mt-2 h-3 w-1/3 rounded bg-gray-100 dark:bg-white/5" />
+                        <div className="h-4 w-2/3 rounded-control bg-rule" />
+                        <div className="mt-2 h-3 w-1/3 rounded-control bg-paper" />
                     </div>
                 ))}
             </div>
@@ -59,7 +59,7 @@ function Unavailable({ href }: { href: string }) {
                 This listing could not be loaded from TeSS right now.
             </p>
             <a href={href} target="_blank" rel="noopener noreferrer"
-               className="rounded text-sm font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+               className="rounded-control text-sm font-medium text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 Browse it on TeSS instead
             </a>
         </div>
@@ -85,7 +85,7 @@ export function TessEvents({ when }: { when: 'upcoming' | 'past' }) {
                 <li key={event.id} className={ITEM}>
                     <a href={eventLink(event)} target="_blank" rel="noopener noreferrer" className={ITEM_LINK}>
                         <p className={ITEM_TITLE}>{event.title}</p>
-                        <p className="mt-1 text-sm text-muted">
+                        <p className="mt-1 text-sm text-muted tabular-nums">
                             {[eventDates(event), eventPlace(event)].filter(Boolean).join(' · ')}
                         </p>
                     </a>
@@ -110,11 +110,11 @@ export function TessMaterials() {
         <>
             <label htmlFor="material-filter" className="sr-only">Filter training materials</label>
             <div className="relative">
-                <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+                <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
                 <input id="material-filter" type="search" autoComplete="off"
                        placeholder="Filter materials by title"
                        value={filter} onChange={e => setFilter(e.target.value)}
-                       className="w-full rounded-lg border border-rule bg-surface py-2 pl-9 pr-3 text-sm text-brand-grey dark:text-gray-200 placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+                       className="w-full rounded-control border border-rule bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
             </div>
             <ul className={`mt-4 ${LIST}`}>
                 {shown.map(material => (

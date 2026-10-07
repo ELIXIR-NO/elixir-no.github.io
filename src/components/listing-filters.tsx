@@ -102,10 +102,10 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                                             });
                                         }
                                     }}
-                                    className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                    className={`rounded-control border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                         isAllSelected
-                                            ? 'bg-accent text-white'
-                                            : 'border border-rule text-body hover:border-ink'
+                                            ? 'border-ink bg-ink text-paper'
+                                            : 'border-rule bg-surface text-body hover:border-ink'
                                     }`}
                                     aria-pressed={isAllSelected}
                                 >
@@ -118,15 +118,15 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                                     <button
                                         key={opt.id}
                                         onClick={() => toggle(group, opt.id)}
-                                        className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                                        className={`rounded-control border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                             isActive
-                                                ? 'bg-accent text-white'
-                                                : 'border border-rule text-body hover:border-ink'
+                                                ? 'border-ink bg-ink text-paper'
+                                                : 'border-rule bg-surface text-body hover:border-ink'
                                         }`}
                                         aria-pressed={isActive}
                                     >
                                         {opt.label}
-                                        <span className={`ml-1.5 text-xs ${isActive ? 'text-white/70' : 'text-muted'}`}>
+                                        <span className={`ml-1.5 text-xs tabular-nums ${isActive ? 'text-paper/70' : 'text-muted'}`}>
                                             {opt.count}
                                         </span>
                                     </button>
@@ -139,7 +139,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
             {hasFilters && (
                 <button
                     onClick={clearAll}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded-control"
                 >
                     <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     Clear filters ({activeCount})
@@ -153,13 +153,13 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
             {/* Mobile: collapsible toggle */}
             <button
                 onClick={() => setMobileOpen(prev => !prev)}
-                className="sm:hidden flex items-center gap-2 rounded-lg border border-rule bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent/30 w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="sm:hidden flex items-center gap-2 rounded-control border border-rule bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-ink w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-expanded={mobileOpen}
             >
                 <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
                 Filters
                 {hasFilters && (
-                    <span className="rounded-full bg-accent text-white text-xs px-1.5 py-0.5 leading-none">
+                    <span className="rounded-control bg-ink text-paper text-xs tabular-nums px-1.5 py-0.5 leading-none">
                         {activeCount}
                     </span>
                 )}
@@ -167,7 +167,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
 
             {/* Mobile: expanded panel */}
             {mobileOpen && (
-                <div className="sm:hidden mt-3 rounded-xl border border-rule bg-surface p-4">
+                <div className="sm:hidden mt-3 rounded-card border border-rule bg-surface p-4">
                     {filterContent}
                 </div>
             )}

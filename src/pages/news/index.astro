@@ -53,8 +53,8 @@ const INITIAL_COUNT = 18;
 
     <!-- Hero -->
     <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-accent tracking-wide uppercase">News</p>
-        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.15]">
+        <p class="text-sm font-semibold text-marker-text tracking-wide uppercase">News</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.15]">
             Latest from ELIXIR&nbsp;Norway
         </h1>
         <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
@@ -87,13 +87,13 @@ const INITIAL_COUNT = 18;
             return (
                 <a
                     href={`${BASE}/news/${slug}`}
-                    class={`news-card group flex flex-col rounded-xl border border-rule bg-surface overflow-hidden transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isHidden ? 'hidden' : ''}`}
+                    class={`news-card group flex flex-col rounded-card border border-rule bg-surface overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isHidden ? 'hidden' : ''}`}
                     data-index={i}
                     data-year={getYear(entry.data.date)}
                     data-tags={(entry.data.tags ?? []).join(',')}
                 >
                     {cover ? (
-                        <div class="h-40 bg-gray-50 dark:bg-white/5 overflow-hidden">
+                        <div class="h-40 bg-paper border-b border-rule overflow-hidden">
                             <img
                                 src={cover}
                                 alt={entry.data.title}
@@ -102,15 +102,15 @@ const INITIAL_COUNT = 18;
                             />
                         </div>
                     ) : (
-                        <div class="h-40 bg-gradient-to-br from-brand-primary/5 to-brand-secondary/10 dark:from-brand-primary/10 dark:to-brand-secondary/5 flex items-center justify-center">
-                            <NewspaperIcon className="h-10 w-10 text-brand-secondary/20" aria-hidden="true" />
+                        <div class="h-40 bg-paper border-b border-rule flex items-center justify-center">
+                            <NewspaperIcon className="h-10 w-10 text-rule" aria-hidden="true" />
                         </div>
                     )}
                     <div class="flex flex-col flex-1 p-5">
-                        <time class="text-xs font-medium text-muted">
+                        <time class="text-xs font-medium text-muted tabular-nums">
                             {formatDate(entry.data.date)}
                         </time>
-                        <h2 class="mt-2 text-base font-semibold text-ink group-hover:text-accent transition-colors line-clamp-2">
+                        <h2 class="mt-2 font-display text-base font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                             {entry.data.title}
                         </h2>
                         <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 flex-1">
@@ -119,13 +119,13 @@ const INITIAL_COUNT = 18;
                         {(entry.data.tags ?? []).length > 0 && (
                             <div class="mt-3 flex flex-wrap gap-1.5">
                                 {(entry.data.tags ?? []).map((tag: string) => (
-                                    <span class="rounded-full bg-gray-100 dark:bg-white/5 px-2.5 py-0.5 text-xs font-medium text-muted">
+                                    <span class="rounded-control border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(tag)}
                                     </span>
                                 ))}
                             </div>
                         )}
-                        <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-accent transition-colors">
+                        <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-ink transition-colors">
                             Read more
                             <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                         </div>
@@ -140,7 +140,7 @@ const INITIAL_COUNT = 18;
         <div class="mt-10 text-center" id="load-more-container">
             <button
                 id="load-more-btn"
-                class="inline-flex items-center gap-2 rounded-lg border border-rule bg-surface px-6 py-3 text-sm font-semibold text-ink transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                class="inline-flex items-center gap-2 rounded-control border border-rule bg-surface px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
                 Show older articles
                 <span class="text-muted" id="remaining-count">

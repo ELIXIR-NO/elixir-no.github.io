@@ -20,8 +20,8 @@ import { browseLinks } from "../../lib/tess";
 
     <!-- Hero -->
     <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-accent tracking-wide uppercase">Training</p>
-        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.15]">
+        <p class="text-sm font-semibold text-marker-text tracking-wide uppercase">Training</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.15]">
             Bioinformatics training for&nbsp;every&nbsp;level
         </h1>
         <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
@@ -32,14 +32,14 @@ import { browseLinks } from "../../lib/tess";
 
     <!-- Training types grid -->
     <section class="mt-20">
-        <h2 class="text-2xl font-bold text-ink">Types of training</h2>
+        <h2 class="text-2xl font-semibold text-ink">Types of training</h2>
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <!-- RDM -->
-            <div class="rounded-xl border border-rule bg-surface p-6">
+            <div class="rounded-card border border-rule bg-surface p-6">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/20">
-                        <CircleStackIcon className="h-5 w-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+                    <div class="flex h-9 w-9 items-center justify-center rounded-control border border-rule">
+                        <CircleStackIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                     </div>
                     <h3 class="text-base font-semibold text-ink">Research Data Management</h3>
                 </div>
@@ -49,10 +49,10 @@ import { browseLinks } from "../../lib/tess";
             </div>
 
             <!-- Tool-specific -->
-            <div class="rounded-xl border border-rule bg-surface p-6">
+            <div class="rounded-card border border-rule bg-surface p-6">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
-                        <WrenchScrewdriverIcon className="h-5 w-5 text-accent" aria-hidden="true" />
+                    <div class="flex h-9 w-9 items-center justify-center rounded-control border border-rule">
+                        <WrenchScrewdriverIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                     </div>
                     <h3 class="text-base font-semibold text-ink">Tool-Specific Courses</h3>
                 </div>
@@ -62,10 +62,10 @@ import { browseLinks } from "../../lib/tess";
             </div>
 
             <!-- Domain-specific -->
-            <div class="rounded-xl border border-rule bg-surface p-6">
+            <div class="rounded-card border border-rule bg-surface p-6">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/20">
-                        <BeakerIcon className="h-5 w-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+                    <div class="flex h-9 w-9 items-center justify-center rounded-control border border-rule">
+                        <BeakerIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                     </div>
                     <h3 class="text-base font-semibold text-ink">Domain-Specific Courses</h3>
                 </div>
@@ -75,10 +75,10 @@ import { browseLinks } from "../../lib/tess";
             </div>
 
             <!-- Train-the-Trainer -->
-            <div class="rounded-xl border border-rule bg-surface p-6">
+            <div class="rounded-card border border-rule bg-surface p-6">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/20">
-                        <AcademicCapIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+                    <div class="flex h-9 w-9 items-center justify-center rounded-control border border-rule">
+                        <AcademicCapIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                     </div>
                     <h3 class="text-base font-semibold text-ink">Train-the-Trainer</h3>
                 </div>
@@ -92,43 +92,43 @@ import { browseLinks } from "../../lib/tess";
 
     <!-- Resources -->
     <section class="mt-20">
-        <h2 class="text-2xl font-bold text-ink">Find courses and materials</h2>
+        <h2 class="text-2xl font-semibold text-ink">Find courses and materials</h2>
         <p class="mt-3 text-sm leading-relaxed text-body max-w-2xl">
             Browse our catalogue of available courses, categorised by topic and proficiency level.
             All training materials are open-access.
         </p>
         <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <a href="https://tess.elixir-europe.org/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-xl border border-rule bg-surface p-4 transition-all duration-200 hover:border-accent/30 hover:shadow-md">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-primary/5 dark:bg-brand-primary/10">
-                    <MagnifyingGlassIcon className="h-5 w-5 text-accent" aria-hidden="true" />
+            <a href="https://tess.elixir-europe.org/" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-card border border-rule bg-surface p-4 transition-colors hover:border-ink">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-rule">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                 </div>
                 <div class="min-w-0">
-                    <p class="text-sm font-semibold text-ink group-hover:text-accent transition-colors">ELIXIR TeSS</p>
+                    <p class="text-sm font-semibold text-ink">ELIXIR TeSS</p>
                     <p class="text-xs text-muted">Course catalogue</p>
                 </div>
-                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-accent transition-colors" aria-hidden="true" />
+                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-ink transition-colors" aria-hidden="true" />
             </a>
-            <a href="https://github.com/ELIXIR-Norway-Training" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-xl border border-rule bg-surface p-4 transition-all duration-200 hover:border-accent/30 hover:shadow-md">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-primary/5 dark:bg-brand-primary/10">
-                    <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <a href="https://github.com/ELIXIR-Norway-Training" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-card border border-rule bg-surface p-4 transition-colors hover:border-ink">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-rule">
+                    <svg class="h-5 w-5 text-ink" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                     </svg>
                 </div>
                 <div class="min-w-0">
-                    <p class="text-sm font-semibold text-ink group-hover:text-accent transition-colors">GitHub</p>
+                    <p class="text-sm font-semibold text-ink">GitHub</p>
                     <p class="text-xs text-muted">Training materials</p>
                 </div>
-                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-accent transition-colors" aria-hidden="true" />
+                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-ink transition-colors" aria-hidden="true" />
             </a>
-            <a href="https://zenodo.org/communities/elixir-no/records?q=&f=resource_type%3Alesson&f=resource_type%3Apresentation&l=list&p=1&s=10&sort=newest" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-xl border border-rule bg-surface p-4 transition-all duration-200 hover:border-accent/30 hover:shadow-md">
-                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-primary/5 dark:bg-brand-primary/10">
-                    <BookOpenIcon className="h-5 w-5 text-accent" aria-hidden="true" />
+            <a href="https://zenodo.org/communities/elixir-no/records?q=&f=resource_type%3Alesson&f=resource_type%3Apresentation&l=list&p=1&s=10&sort=newest" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 rounded-card border border-rule bg-surface p-4 transition-colors hover:border-ink">
+                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-control border border-rule">
+                    <BookOpenIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                 </div>
                 <div class="min-w-0">
-                    <p class="text-sm font-semibold text-ink group-hover:text-accent transition-colors">Zenodo</p>
+                    <p class="text-sm font-semibold text-ink">Zenodo</p>
                     <p class="text-xs text-muted">Archived materials</p>
                 </div>
-                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-accent transition-colors" aria-hidden="true" />
+                <ArrowTopRightOnSquareIcon className="ml-auto h-4 w-4 shrink-0 text-muted group-hover:text-ink transition-colors" aria-hidden="true" />
             </a>
         </div>
     </section>
@@ -136,14 +136,14 @@ import { browseLinks } from "../../lib/tess";
     <!-- Upcoming training -->
     <section class="mt-20" id="upcoming-events">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <h2 class="text-2xl font-bold text-ink">Upcoming training</h2>
+            <h2 class="text-2xl font-semibold text-ink">Upcoming training</h2>
             <a href={browseLinks.upcoming}
                target="_blank" rel="noopener noreferrer"
-               class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+               class="text-sm font-medium text-accent hover:underline rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 Browse all on TeSS
             </a>
         </div>
-        <div class="rounded-xl border border-rule bg-surface p-6">
+        <div class="rounded-card border border-rule bg-surface p-6">
             <TessEvents client:idle when="upcoming" />
         </div>
     </section>
@@ -151,22 +151,22 @@ import { browseLinks } from "../../lib/tess";
     <!-- Training material -->
     <section class="mt-16" id="training-material">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <h2 class="text-2xl font-bold text-ink">Training materials</h2>
+            <h2 class="text-2xl font-semibold text-ink">Training materials</h2>
             <a href={browseLinks.materials}
                target="_blank" rel="noopener noreferrer"
-               class="text-sm font-medium text-accent hover:underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
+               class="text-sm font-medium text-accent hover:underline rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                 Browse all on TeSS
             </a>
         </div>
-        <div class="rounded-xl border border-rule bg-surface p-6">
+        <div class="rounded-card border border-rule bg-surface p-6">
             <TessMaterials client:idle />
         </div>
     </section>
 
     <!-- Past events -->
     <section class="mt-16" id="past-events">
-        <h2 class="text-2xl font-bold text-ink mb-6">Past training events</h2>
-        <div class="rounded-xl border border-rule bg-surface p-6">
+        <h2 class="text-2xl font-semibold text-ink mb-6">Past training events</h2>
+        <div class="rounded-card border border-rule bg-surface p-6">
             <TessEvents client:idle when="past" />
         </div>
     </section>

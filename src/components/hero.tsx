@@ -1,6 +1,6 @@
 import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
-import { ArrowRightIcon, ArrowTopRightOnSquareIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
+import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
 import HeroVideo from './hero-video';
 
@@ -94,21 +94,26 @@ export function Hero() {
                             <motion.div
                                 {...fadeUp}
                                 transition={{ duration: 0.6, delay: 0.4 }}
-                                className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3 sm:gap-4"
+                                className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
                             >
                                 <a
                                     href={`${BASE}/services`}
-                                    className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control bg-ink text-paper font-semibold text-sm transition-colors duration-200 ease-out hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                    className="group inline-flex h-12 items-center gap-3 rounded-full bg-ink pl-[22px] pr-2.5 text-[15px] font-semibold text-paper transition-[filter] duration-200 ease-out hover:brightness-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                                 >
                                     Explore services
-                                    <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true" />
+                                    <span className="grid h-7 w-7 place-items-center rounded-full bg-marker text-brand-primary" aria-hidden="true">
+                                        <ArrowRightIcon className="h-3.5 w-3.5 -rotate-45 stroke-2 transition-transform duration-200 ease-out group-hover:rotate-0" />
+                                    </span>
                                 </a>
                                 <a
                                     href={`${BASE}/research-support`}
-                                    className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control border border-rule bg-surface text-ink font-semibold text-sm transition-colors duration-200 ease-out hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                    className="group inline-flex h-12 items-center gap-1.5 rounded-control px-1 text-[15px] font-semibold text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                                 >
-                                    <LifebuoyIcon className="h-4 w-4 text-ink" aria-hidden="true" />
-                                    Get support
+                                    <span className="relative">
+                                        Get support
+                                        <span className="absolute inset-x-0 -bottom-1.5 h-0.5 origin-left scale-x-0 rounded-marker bg-marker transition-transform duration-200 ease-out group-hover:scale-x-100" aria-hidden="true" />
+                                    </span>
+                                    <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5" aria-hidden="true" />
                                 </a>
                             </motion.div>
                         </div>

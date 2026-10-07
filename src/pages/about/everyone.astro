@@ -74,11 +74,11 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
         description: `Meet the ${totalPeople}+ researchers, engineers, and scientists powering Norway's bioinformatics infrastructure across five universities.`,
     }}
 >
-    <div class="h-[84px]" aria-hidden="true" />
+    <div class="h-[var(--nav-offset)]" aria-hidden="true" />
 
     <!-- Hero -->
-    <section class="relative bg-paper border-b border-rule overflow-hidden -mt-[84px]">
-        <div class="relative pt-[calc(84px+3rem)] pb-12 sm:pb-16">
+    <section class="relative bg-paper border-b border-rule overflow-hidden -mt-[var(--nav-offset)]">
+        <div class="relative pt-[calc(var(--nav-offset)+3rem)] pb-12 sm:pb-16">
             <div class="mx-auto max-w-7xl px-6 sm:px-8">
                 <a
                     href={`${BASE}/about`}

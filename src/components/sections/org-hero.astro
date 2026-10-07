@@ -14,7 +14,7 @@ const { nodeName, university, logo, coverImage, subtitle, color } = Astro.props;
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<section class="org-hero relative min-h-[50vh] flex items-end overflow-hidden -mt-[84px]">
+<section class="org-hero relative min-h-[50vh] flex items-end overflow-hidden -mt-[var(--nav-offset)]">
     <img
         src={`${BASE}${coverImage}`}
         alt=""
@@ -25,7 +25,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <div class="absolute inset-0 bg-gradient-to-t from-[#023452] via-[#023452]/70 to-[#023452]/30" aria-hidden="true" />
 
-    <div class="relative w-full pt-[calc(84px+3rem)] pb-10 sm:pb-14">
+    <div class="relative w-full pt-[calc(var(--nav-offset)+3rem)] pb-10 sm:pb-14">
         <div class="mx-auto max-w-7xl px-6 sm:px-8">
             <a
                 href={`${BASE}/about`}

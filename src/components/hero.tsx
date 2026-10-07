@@ -109,7 +109,7 @@ export function Hero() {
         : { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 } };
 
     return (
-        <section className="relative -mt-[84px] overflow-hidden">
+        <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
             <div
                 className="absolute inset-0 bg-gradient-to-br from-brand-primary/[0.03] via-transparent to-brand-secondary/[0.03] dark:from-brand-primary/20 dark:via-dark-background dark:to-brand-secondary/10"
                 aria-hidden="true"
@@ -121,7 +121,7 @@ export function Hero() {
                 </Suspense>
             )}
 
-            <div className="relative flex items-center pt-[calc(84px+4rem)] pb-24 lg:pt-[calc(84px+5rem)] lg:pb-28 z-10">
+            <div className="relative flex items-center pt-[calc(var(--nav-offset)+4rem)] pb-24 lg:pt-[calc(var(--nav-offset)+5rem)] lg:pb-28 z-10">
                 <div className="w-full px-6 sm:px-8 mx-auto text-center">
                     <div className="max-w-3xl mx-auto">
                         <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>

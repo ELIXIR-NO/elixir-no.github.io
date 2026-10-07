@@ -28,7 +28,7 @@ export default function ThemeToggle() {
     return (
         <motion.button
             onClick={toggle}
-            className="relative h-9 w-9 flex items-center justify-center rounded-control text-body hover:bg-ink/5 hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="relative h-9 w-9 flex items-center justify-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             whileHover={undefined}
             whileTap={undefined}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

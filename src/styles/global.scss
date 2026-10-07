@@ -33,6 +33,15 @@
     @apply bg-paper text-body;
   }
 
+  /* Height of the floating nav at rest: top inset + pill padding + logo + 2px border. */
+  :root {
+    --nav-offset: calc(5.25rem + 2px);
+
+    @media (min-width: 1024px) {
+      --nav-offset: calc(6rem + 2px);
+    }
+  }
+
   html {
     font-size: 16px;
 

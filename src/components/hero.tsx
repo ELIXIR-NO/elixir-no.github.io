@@ -1,5 +1,5 @@
-import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
-import React, { useState, useEffect } from 'react';
+import { MotionConfig, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
 import HeroVideo from './hero-video';
@@ -45,14 +45,31 @@ export function Hero() {
     const [paused, setPaused] = useState(false);
     const playing = !paused && !shouldReduceMotion;
 
+    // Scroll-linked styles attach only after mount, so the server HTML is the resting state
+    // and matches the first client render; reduced motion never gets them.
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+    const parallax = mounted && !shouldReduceMotion;
+
+    const sectionRef = useRef<HTMLElement>(null);
+    const frameRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress: heroProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
+    const { scrollYProgress: frameProgress } = useScroll({ target: frameRef, offset: ['start end', 'center center'] });
+    const textY = useTransform(heroProgress, [0, 0.6], [0, -60]);
+    const textOpacity = useTransform(heroProgress, [0, 0.6], [1, 0.4]);
+    const frameScale = useTransform(frameProgress, [0, 1], [0.94, 1]);
+
     // Transform only, so the server-rendered hero is readable before hydration. The same
     // props render on server and client; MotionConfig skips the movement for reduced motion.
     const fadeUp = { initial: { y: 12 }, animate: { y: 0 } };
 
     return (
         <MotionConfig reducedMotion="user">
-            <section className="relative -mt-[var(--nav-offset)] overflow-hidden">
-                <div className="relative flex items-center pt-[calc(var(--nav-offset)+3rem)] lg:pt-[calc(var(--nav-offset)+4rem)] z-10">
+            <section ref={sectionRef} className="relative -mt-[var(--nav-offset)] overflow-hidden">
+                <motion.div
+                    className="relative flex items-center pt-[calc(var(--nav-offset)+3rem)] lg:pt-[calc(var(--nav-offset)+4rem)] z-10"
+                    style={parallax ? { y: textY, opacity: textOpacity } : undefined}
+                >
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
                         <div className="max-w-3xl mx-auto">
                             <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
@@ -111,12 +128,16 @@ export function Hero() {
                             </motion.div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 <div className="relative mx-auto max-w-7xl px-6 sm:px-8 pt-12 sm:pt-14 pb-16 lg:pb-20">
-                    <div className="relative aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-photo border border-rule bg-surface">
+                    <motion.div
+                        ref={frameRef}
+                        className="relative aspect-[16/9] lg:aspect-[21/9] overflow-hidden rounded-photo border border-rule bg-surface"
+                        style={parallax ? { scale: frameScale } : undefined}
+                    >
                         <HeroVideo playing={playing} />
-                    </div>
+                    </motion.div>
                     <div className="mt-3 flex items-center justify-between gap-4">
                         <p className="font-mono text-xs text-muted">
                             ELIXIR Norway across Bergen, Oslo, Tromsø, Trondheim and Ås

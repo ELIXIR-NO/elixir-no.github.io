@@ -9,13 +9,13 @@ function renderInlineMarkdown(md: string): string {
     return md
         .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="underline underline-offset-2 hover:text-white/70 transition-colors">$1</a>');
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="underline underline-offset-2 hover:text-paper/70 transition-colors">$1</a>');
 }
 ---
 
 <div
     id="site-banner"
-    class="sticky top-0 z-[60] bg-accent text-sm [&_*]:!text-white shadow-md shadow-black/10 banner-slide-down"
+    class="sticky top-0 z-[60] bg-ink text-sm [&_*]:!text-paper banner-slide-down"
     role="status"
 >
     <div class="mx-auto max-w-7xl px-6 py-2 flex items-center justify-center gap-3 relative">
@@ -28,7 +28,7 @@ function renderInlineMarkdown(md: string): string {
         <p set:html={renderInlineMarkdown(message)} />
         <button
             onclick="document.getElementById('site-banner').remove(); sessionStorage.setItem('banner-dismissed','1')"
-            class="fixed right-3 top-1 p-1 rounded-md !text-white/60 hover:!text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 z-[61]"
+            class="fixed right-3 top-1 p-1 rounded-control !text-paper/60 hover:!text-paper hover:bg-paper/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-paper/50 z-[61]"
             aria-label="Dismiss announcement"
         >
             <XMarkIcon className="h-4 w-4" aria-hidden="true" />

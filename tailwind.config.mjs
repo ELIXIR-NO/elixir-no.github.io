@@ -12,6 +12,7 @@ export default {
             fontFamily: {
                 sans: ['var(--font-body, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
                 display: ['var(--font-display, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
+                mono: ['var(--font-mono, ui-monospace)', ...defaultTheme.fontFamily.mono],
             },
             colors: {
                 accent: token('accent'),

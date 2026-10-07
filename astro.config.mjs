@@ -13,7 +13,8 @@ export default defineConfig({
     // Self-vendored, preloaded web fonts (files live in src/assets/fonts, so the
     // build has no network dependency and visitors never hit Google; CLS-safe).
     // Body drives UI + MDX prose; display drives headings only. Both are variable
-    // fonts, so one file per family covers its weight range.
+    // fonts, so one file per family covers its weight range. Mono is a single
+    // weight for small data details (domains, counters) and is not preloaded.
     // Fonts API is experimental in Astro 5.x (Astro is pinned to ~5.18 for it).
     experimental: {
         fonts: [
@@ -30,12 +31,23 @@ export default defineConfig({
             },
             {
                 provider: fontProviders.local(),
-                name: 'Bricolage Grotesque',
+                name: 'Schibsted Grotesk',
                 cssVariable: '--font-display',
                 fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
                 options: {
                     variants: [
-                        { weight: '500 800', style: 'normal', src: ['./src/assets/fonts/bricolage-grotesque.woff2'] },
+                        { weight: '400 900', style: 'normal', src: ['./src/assets/fonts/schibsted-grotesk.woff2'] },
+                    ],
+                },
+            },
+            {
+                provider: fontProviders.local(),
+                name: 'IBM Plex Mono',
+                cssVariable: '--font-mono',
+                fallbacks: ['ui-monospace', 'SFMono-Regular', 'monospace'],
+                options: {
+                    variants: [
+                        { weight: '400', style: 'normal', src: ['./src/assets/fonts/ibm-plex-mono.woff2'] },
                     ],
                 },
             },

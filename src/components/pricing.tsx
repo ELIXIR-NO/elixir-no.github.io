@@ -1,4 +1,5 @@
 import { CheckIcon } from '@heroicons/react/24/outline';
+import Button from './button';
 
 export default function Pricing({ tiers }) {
     return (
@@ -48,16 +49,14 @@ export default function Pricing({ tiers }) {
                         ))}
                     </ul>
 
-                    <a
+                    <Button
                         href="mailto:support@elixir.no"
-                        className={`mt-6 block rounded-control px-4 py-2.5 text-center text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                            tier.mostPopular
-                                ? 'border border-ink bg-ink text-paper hover:bg-ink/90'
-                                : 'border border-rule text-ink hover:border-ink'
-                        }`}
+                        variant={tier.mostPopular ? 'primary' : 'link'}
+                        size="sm"
+                        className="mt-6 self-center"
                     >
                         Contact us
-                    </a>
+                    </Button>
                 </div>
             ))}
         </div>

@@ -10,6 +10,7 @@ import {
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { TessEvents, TessMaterials } from "../../components/tess-listings";
+import Button from "../../components/button.tsx";
 import { browseLinks } from "../../lib/tess";
 ---
 
@@ -137,11 +138,7 @@ import { browseLinks } from "../../lib/tess";
     <section class="mt-20" id="upcoming-events">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
             <h2 class="text-2xl font-semibold text-ink">Upcoming training</h2>
-            <a href={browseLinks.upcoming}
-               target="_blank" rel="noopener noreferrer"
-               class="text-sm font-medium text-accent hover:underline rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                Browse all on TeSS
-            </a>
+            <Button href={browseLinks.upcoming} variant="link" size="sm" external>Browse all on TeSS</Button>
         </div>
         <div class="rounded-card border border-rule bg-surface p-6">
             <TessEvents client:idle when="upcoming" />
@@ -152,11 +149,7 @@ import { browseLinks } from "../../lib/tess";
     <section class="mt-16" id="training-material">
         <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
             <h2 class="text-2xl font-semibold text-ink">Training materials</h2>
-            <a href={browseLinks.materials}
-               target="_blank" rel="noopener noreferrer"
-               class="text-sm font-medium text-accent hover:underline rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-                Browse all on TeSS
-            </a>
+            <Button href={browseLinks.materials} variant="link" size="sm" external>Browse all on TeSS</Button>
         </div>
         <div class="rounded-card border border-rule bg-surface p-6">
             <TessMaterials client:idle />

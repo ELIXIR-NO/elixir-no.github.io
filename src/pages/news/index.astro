@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Page from "../../layouts/page.astro";
 import ListingFilters from "../../components/listing-filters";
+import Button from "../../components/button.tsx";
 import { NewspaperIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { idToSlug, resolveContentAsset, slugToTitleCase } from "../../lib/utils";
 
@@ -138,15 +139,12 @@ const INITIAL_COUNT = 18;
     <!-- Show more button -->
     {news.length > INITIAL_COUNT && (
         <div class="mt-10 text-center" id="load-more-container">
-            <button
-                id="load-more-btn"
-                class="inline-flex items-center gap-2 rounded-control border border-rule bg-surface px-6 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
+            <Button id="load-more-btn" variant="link" arrow={false}>
                 Show older articles
                 <span class="text-muted" id="remaining-count">
                     ({news.length - INITIAL_COUNT} more)
                 </span>
-            </button>
+            </Button>
         </div>
     )}
 

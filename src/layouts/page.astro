@@ -2,6 +2,7 @@
 import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
+import Button from "../components/button.tsx";
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
@@ -366,15 +367,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Service external link */}
                         {contentType === 'services' && serviceUrl && (
-                            <a
-                                href={serviceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="mt-6 inline-flex items-center gap-2 rounded-control bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-                            >
-                                Visit service
-                                <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
-                            </a>
+                            <Button href={serviceUrl} external className="mt-6">Visit service</Button>
                         )}
 
                         {/* Project keywords */}

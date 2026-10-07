@@ -7,6 +7,7 @@ import {
     ServerStackIcon,
     ShieldCheckIcon,
 } from '@heroicons/react/24/outline';
+import Button from '../button';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -74,13 +75,7 @@ export default function ServicesOverview() {
                             <p className="mt-4 text-lg text-body leading-relaxed">
                                 From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
                             </p>
-                            <a
-                                href={`${BASE}/services`}
-                                className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                            >
-                                Explore all services
-                                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-                            </a>
+                            <Button href={`${BASE}/services`} variant="link" size="sm" className="mt-6">Explore all services</Button>
                         </motion.div>
 
                         {/* Right — cards */}

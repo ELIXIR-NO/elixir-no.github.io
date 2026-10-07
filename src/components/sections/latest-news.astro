@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import Button from "../button.tsx";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -42,13 +43,7 @@ const featuredCover = featured?.data.cover?.source
                     Stay updated with the latest from ELIXIR Norway.
                 </p>
             </div>
-            <a
-                href={`${BASE}/news`}
-                class="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-                View all news
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </a>
+            <Button href={`${BASE}/news`} variant="link" size="sm" className="hidden sm:inline-flex">View all news</Button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] gap-10 lg:gap-9 items-start">
@@ -125,13 +120,7 @@ const featuredCover = featured?.data.cover?.source
         </div>
 
         <div class="mt-8 sm:hidden">
-            <a
-                href={`${BASE}/news`}
-                class="inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-marker decoration-2 underline-offset-[5px]"
-            >
-                View all news
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </a>
+            <Button href={`${BASE}/news`} variant="link" size="sm">View all news</Button>
         </div>
     </div>
 </section>

@@ -2,7 +2,8 @@
 import Page from "../layouts/page.astro";
 import Pricing from "../components/pricing.tsx";
 import Callout from "../components/callout.tsx";
-import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTextIcon, EnvelopeIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import Button from "../components/button.tsx";
+import { AcademicCapIcon, CheckIcon, CircleStackIcon, DocumentTextIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 ---
 
 <Page variant="wide" seo={{
@@ -20,23 +21,9 @@ import { AcademicCapIcon, ArrowRightIcon, CheckIcon, CircleStackIcon, DocumentTe
             From quick consultations to long-term collaborations — our team across five universities
             helps you design experiments, analyse data, and manage your research outputs.
         </p>
-        <div class="mt-8 flex flex-wrap items-center gap-4">
-            <a
-                href="mailto:support@elixir.no"
-                class="inline-flex items-center gap-2 rounded-control bg-ink px-5 py-2.5 text-sm font-semibold text-paper transition-colors hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            >
-                <EnvelopeIcon className="h-4 w-4" aria-hidden="true" />
-                support@elixir.no
-            </a>
-            <a
-                href="https://nels-docs.readthedocs.io/en/latest/"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-2 text-sm font-semibold text-accent hover:underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-                NeLS user documentation
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </a>
+        <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+            <Button href="mailto:support@elixir.no">support@elixir.no</Button>
+            <Button href="https://nels-docs.readthedocs.io/en/latest/" variant="link" external>NeLS user documentation</Button>
         </div>
     </div>
 

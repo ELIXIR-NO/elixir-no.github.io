@@ -1,7 +1,8 @@
 import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
-import { ArrowRightIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
+import Button from './button';
 import HeroVideo from './hero-video';
 
 
@@ -104,25 +105,8 @@ export function Hero({ devSample = false }: { devSample?: boolean }) {
                                 transition={{ duration: 0.6, delay: 0.4 }}
                                 className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8"
                             >
-                                <a
-                                    href={`${BASE}/services`}
-                                    className="group inline-flex h-12 items-center gap-3 rounded-full bg-ink pl-[22px] pr-2.5 text-[15px] font-semibold text-paper transition-[filter] duration-200 ease-out hover:brightness-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-                                >
-                                    Explore services
-                                    <span className="grid h-7 w-7 place-items-center rounded-full bg-marker text-brand-primary" aria-hidden="true">
-                                        <ArrowRightIcon className="h-3.5 w-3.5 -rotate-45 stroke-2 transition-transform duration-200 ease-out group-hover:rotate-0" />
-                                    </span>
-                                </a>
-                                <a
-                                    href={`${BASE}/research-support`}
-                                    className="hero-legible group inline-flex h-12 items-center gap-1.5 rounded-control px-1 text-[15px] font-semibold text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-                                >
-                                    <span className="relative">
-                                        Get support
-                                        <span className="absolute inset-x-0 -bottom-1.5 h-0.5 origin-left scale-x-0 rounded-marker bg-marker transition-transform duration-200 ease-out group-hover:scale-x-100" aria-hidden="true" />
-                                    </span>
-                                    <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-0.5" aria-hidden="true" />
-                                </a>
+                                <Button href={`${BASE}/services`}>Explore services</Button>
+                                <Button href={`${BASE}/research-support`} variant="link" className="hero-legible">Get support</Button>
                             </motion.div>
                         </div>
                     </div>

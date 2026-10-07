@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { ArrowRightIcon, ArrowTopRightOnSquareIcon, ChevronDownIcon, LifebuoyIcon } from '@heroicons/react/24/outline';
+import { PauseIcon, PlayIcon } from '@heroicons/react/20/solid';
 
 const ParticleField = lazy(() => import('./particle-field'));
 const MotionChevronDown = motion.create(ChevronDownIcon);
@@ -8,65 +9,39 @@ const MotionChevronDown = motion.create(ChevronDownIcon);
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const WORDS = ['life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics'];
-const TYPE_SPEED = 70;
-const DELETE_SPEED = 40;
-const PAUSE_AFTER_TYPE = 2000;
-const PAUSE_AFTER_DELETE = 400;
+const FLIP_MS = 600;
+const DWELL_MS = 2300;
 
-function TypingWord({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) {
-    const [wordIndex, setWordIndex] = useState(0);
-    const [displayed, setDisplayed] = useState('');
-    const [isDeleting, setIsDeleting] = useState(false);
+function RotatingWord({ playing }: { playing: boolean }) {
+    const [{ current, leaving }, setFlip] = useState<{ current: number; leaving: number | null }>({ current: 0, leaving: null });
 
     useEffect(() => {
-        if (shouldReduceMotion) {
-            setDisplayed(WORDS[0]);
-            return;
-        }
+        if (!playing) return;
+        const id = setInterval(() => {
+            setFlip(({ current }) => ({ current: (current + 1) % WORDS.length, leaving: current }));
+        }, FLIP_MS + DWELL_MS);
+        return () => clearInterval(id);
+    }, [playing]);
 
-        const word = WORDS[wordIndex];
-
-        if (!isDeleting && displayed === word) {
-            const id = setTimeout(() => setIsDeleting(true), PAUSE_AFTER_TYPE);
-            return () => clearTimeout(id);
-        }
-
-        if (isDeleting && displayed === '') {
-            const id = setTimeout(() => {
-                setWordIndex(i => (i + 1) % WORDS.length);
-                setIsDeleting(false);
-            }, PAUSE_AFTER_DELETE);
-            return () => clearTimeout(id);
-        }
-
-        const speed = isDeleting ? DELETE_SPEED : TYPE_SPEED;
-        const id = setTimeout(() => {
-            setDisplayed(isDeleting
-                ? word.slice(0, displayed.length - 1)
-                : word.slice(0, displayed.length + 1)
-            );
-        }, speed);
+    useEffect(() => {
+        if (leaving === null) return;
+        const id = setTimeout(() => setFlip(flip => ({ ...flip, leaving: null })), FLIP_MS);
         return () => clearTimeout(id);
-    }, [displayed, isDeleting, wordIndex, shouldReduceMotion]);
-
-    if (shouldReduceMotion) {
-        return <span>{WORDS[0]}</span>;
-    }
+    }, [leaving]);
 
     return (
-        <span>
-            {displayed}
-            <motion.span
-                className="inline-block w-[0.38em] h-[0.1em] bg-marker ml-[0.08em]"
-                animate={{ opacity: [1, 0] }}
-                transition={{ duration: 0.6, repeat: Infinity, repeatType: 'reverse' }}
-                aria-hidden="true"
-            />
+        <span className="rotor" aria-hidden="true">
+            {WORDS.map((word, i) => {
+                const state = i === current
+                    ? (leaving === null ? 'is-on' : 'is-on is-in')
+                    : i === leaving ? 'is-out' : '';
+                return <span key={word} className={`rotor-word ${state}`}>{word}</span>;
+            })}
         </span>
     );
 }
 
-function ScrollCue({ shouldReduceMotion }: { shouldReduceMotion: boolean | null }) {
+function ScrollCue({ shouldReduceMotion, bounce }: { shouldReduceMotion: boolean | null; bounce: boolean }) {
     const [visible, setVisible] = useState(true);
 
     useEffect(() => {
@@ -94,8 +69,8 @@ function ScrollCue({ shouldReduceMotion }: { shouldReduceMotion: boolean | null 
             <MotionChevronDown
                 className="h-6 w-6"
                 aria-hidden="true"
-                animate={shouldReduceMotion ? {} : { y: [0, 6, 0] }}
-                transition={shouldReduceMotion ? {} : { duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                animate={bounce ? { y: [0, 6, 0] } : { y: 0 }}
+                transition={bounce ? { duration: 2, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.2 }}
             />
         </motion.button>
     );
@@ -103,6 +78,8 @@ function ScrollCue({ shouldReduceMotion }: { shouldReduceMotion: boolean | null 
 
 export function Hero() {
     const shouldReduceMotion = useReducedMotion();
+    const [paused, setPaused] = useState(false);
+    const playing = !paused && !shouldReduceMotion;
 
     const fadeUp = shouldReduceMotion
         ? {}
@@ -117,7 +94,7 @@ export function Hero() {
 
             {!shouldReduceMotion && (
                 <Suspense fallback={null}>
-                    <ParticleField playing={true} />
+                    <ParticleField playing={!paused} />
                 </Suspense>
             )}
 
@@ -141,8 +118,13 @@ export function Hero() {
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="mt-4 sm:mt-5 text-3xl sm:text-4xl md:text-5xl xl:text-6xl font-semibold tracking-[-0.035em] text-ink leading-[1.05]"
                         >
-                            Research infrastructure<br />
-                            <span className="whitespace-nowrap">for <TypingWord shouldReduceMotion={shouldReduceMotion} /></span>
+                            <span className="sr-only">Research infrastructure for life science</span>
+                            <span aria-hidden="true">Research infrastructure for</span>
+                            <span className="block">
+                                {shouldReduceMotion
+                                    ? <span aria-hidden="true">{WORDS[0]}</span>
+                                    : <RotatingWord playing={playing} />}
+                            </span>
                         </motion.h1>
 
                         <motion.p
@@ -179,7 +161,20 @@ export function Hero() {
                 </div>
             </div>
 
-            <ScrollCue shouldReduceMotion={shouldReduceMotion} />
+            <ScrollCue shouldReduceMotion={shouldReduceMotion} bounce={playing} />
+
+            {!shouldReduceMotion && (
+                <button
+                    type="button"
+                    onClick={() => setPaused(p => !p)}
+                    className="absolute bottom-6 sm:bottom-8 right-4 sm:right-8 z-10 inline-flex min-h-11 items-center gap-2 rounded-control px-2 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                    {paused
+                        ? <PlayIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                        : <PauseIcon className="h-3.5 w-3.5" aria-hidden="true" />}
+                    <span className="sr-only sm:not-sr-only">{paused ? 'Play animation' : 'Pause animation'}</span>
+                </button>
+            )}
         </section>
     );
 }

@@ -108,6 +108,40 @@
 }
 
 @layer components {
+  /* Every word sits in the same grid cell, so the line keeps the longest
+     word's box and a swap never reflows the text around it. */
+  .rotor {
+    display: inline-grid;
+    justify-items: center;
+    perspective: 6em;
+  }
+
+  .rotor-word {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    white-space: pre;
+    transform-origin: 50% 50% -0.5em;
+    backface-visibility: hidden;
+
+    &.is-on, &.is-out { visibility: visible; }
+    &.is-in { animation: rotor-in 0.6s cubic-bezier(0.22, 0.8, 0.26, 1) both; }
+    &.is-out { animation: rotor-out 0.6s cubic-bezier(0.22, 0.8, 0.26, 1) both; }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+    }
+  }
+
+  @keyframes rotor-in {
+    from { transform: rotateX(90deg); opacity: 0.25; }
+    to { transform: rotateX(0); opacity: 1; }
+  }
+
+  @keyframes rotor-out {
+    from { transform: rotateX(0); opacity: 1; }
+    to { transform: rotateX(-90deg); opacity: 0.25; }
+  }
+
   .content {
     & :first-child {
       @apply mt-0;

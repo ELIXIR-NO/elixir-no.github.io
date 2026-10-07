@@ -15,8 +15,11 @@ const HERO_VIDEO: { poster?: string; sources: VideoSource[] } = {
     ],
 };
 
-// Stand-in footage for local development only; production builds never reference it.
-const SAMPLE_SOURCES: VideoSource[] = [];
+// Dev-only stand-in, never referenced by production builds: CC0 drone footage of ice climbing near Tromsø,
+// https://commons.wikimedia.org/wiki/File:Drone_Footage_of_People_Climbing_Ice_Formation.webm
+const SAMPLE_SOURCES: VideoSource[] = [
+    { src: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Drone_Footage_of_People_Climbing_Ice_Formation.webm', type: 'video/webm' },
+];
 
 const SOURCES = import.meta.env.DEV && SAMPLE_SOURCES.length > 0 ? SAMPLE_SOURCES : HERO_VIDEO.sources;
 

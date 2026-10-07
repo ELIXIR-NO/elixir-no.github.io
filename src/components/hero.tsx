@@ -93,7 +93,7 @@ export function Hero({ devSample = false }: { devSample?: boolean }) {
                             <motion.p
                                 {...fadeUp}
                                 transition={{ duration: 0.6, delay: 0.3 }}
-                                className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-body max-w-2xl mx-auto hero-legible"
+                                className="mt-6 sm:mt-8 text-base sm:text-lg leading-relaxed text-ink max-w-2xl mx-auto hero-legible"
                             >
                                 ELIXIR Norway supports life science researchers with bioinformatics
                                 services, data management tools, and secure e-infrastructure.

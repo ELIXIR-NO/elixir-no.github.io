@@ -40,3 +40,18 @@ export const resolveContentAsset = (entryId: string, assetPath: string): string 
     const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     return `${base}/content/${dir}/${cleanPath.slice(2)}`;
 };
+
+const relativeLuminance = (hex: string): number => {
+    const [r, g, b] = [1, 3, 5]
+        .map(i => parseInt(hex.slice(i, i + 2), 16) / 255)
+        .map(c => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+/**
+ * True when a brand colour falls under the 3:1 non-text contrast minimum
+ * against the dark-mode paper (#0A161E), so it needs an outline to stay
+ * visible there. Expects a #rrggbb hex.
+ */
+export const needsDarkOutline = (hex: string): boolean =>
+    (0.05 + relativeLuminance(hex)) / (0.05 + relativeLuminance('#0a161e')) < 3;

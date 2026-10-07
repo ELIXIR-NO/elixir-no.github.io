@@ -1,14 +1,16 @@
 import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { organizations } from "../data/organizations";
+import { needsDarkOutline } from "../lib/utils";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const universities = [
-    { name: 'University of Bergen', location: 'Bergen', logo: `${BASE}/assets/logos/orgs/uib.svg`, href: `${BASE}/about/bergen` },
-    { name: 'University of Oslo', location: 'Oslo', logo: `${BASE}/assets/logos/orgs/uio.svg`, href: `${BASE}/about/oslo` },
-    { name: 'UiT The Arctic University of Norway', location: 'Troms\u00f8', logo: `${BASE}/assets/logos/orgs/uit.svg`, href: `${BASE}/about/tromso` },
-    { name: 'Norwegian University of Life Sciences', location: '\u00c5s', logo: `${BASE}/assets/logos/orgs/nmbu.svg`, href: `${BASE}/about/aas` },
-    { name: 'Norwegian University of Science and Technology', location: 'Trondheim', logo: `${BASE}/assets/logos/orgs/ntnu.svg`, href: `${BASE}/about/trondheim` },
+    { name: 'University of Bergen', location: 'Bergen', logo: `${BASE}/assets/logos/orgs/uib.svg`, href: `${BASE}/about/bergen`, color: organizations.bergen.color },
+    { name: 'University of Oslo', location: 'Oslo', logo: `${BASE}/assets/logos/orgs/uio.svg`, href: `${BASE}/about/oslo`, color: organizations.oslo.color },
+    { name: 'UiT The Arctic University of Norway', location: 'Troms\u00f8', logo: `${BASE}/assets/logos/orgs/uit.svg`, href: `${BASE}/about/tromso`, color: organizations.tromso.color },
+    { name: 'Norwegian University of Life Sciences', location: '\u00c5s', logo: `${BASE}/assets/logos/orgs/nmbu.svg`, href: `${BASE}/about/aas`, color: organizations.aas.color },
+    { name: 'Norwegian University of Science and Technology', location: 'Trondheim', logo: `${BASE}/assets/logos/orgs/ntnu.svg`, href: `${BASE}/about/trondheim`, color: organizations.trondheim.color },
 ];
 
 const container = {
@@ -49,7 +51,8 @@ export default function Universities() {
                     <span className="relative text-sm font-semibold text-muted transition-colors duration-200 group-hover:text-ink pb-1">
                         {uni.location}
                         <span
-                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-marker scale-x-0 transition-transform duration-200 origin-left group-hover:scale-x-100"
+                            className={`absolute bottom-0 left-0 right-0 h-0.5 scale-x-0 transition-transform duration-200 origin-left group-hover:scale-x-100 ${needsDarkOutline(uni.color) ? 'dark:ring-1 dark:ring-ink/50' : ''}`}
+                            style={{ backgroundColor: uni.color }}
                             aria-hidden="true"
                         />
                     </span>

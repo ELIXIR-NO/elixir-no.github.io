@@ -7,9 +7,10 @@ interface Props {
     logo: string;
     coverImage: string;
     subtitle: string;
+    color: string;
 }
 
-const { nodeName, university, logo, coverImage, subtitle } = Astro.props;
+const { nodeName, university, logo, coverImage, subtitle, color } = Astro.props;
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
@@ -52,8 +53,8 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
             </p>
 
             <div
-                class="org-hero-fade mt-6 h-0.5 w-16 bg-marker"
-                style="animation-delay: 0.4s"
+                class="org-hero-fade mt-6 h-1 w-16 rounded-marker ring-1 ring-white/40"
+                style={`background-color: ${color}; animation-delay: 0.4s`}
                 aria-hidden="true"
             />
         </div>

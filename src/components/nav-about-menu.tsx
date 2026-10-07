@@ -1,4 +1,5 @@
 import { aboutNodes, aboutOverviewHref } from '../data/nav-menu';
+import { needsDarkOutline } from '../lib/utils';
 import { ArrowRightIcon } from '@heroicons/react/24/outline';
 
 const isActive = (pathname: string, href: string) =>
@@ -33,7 +34,7 @@ export default function NavAboutMenu({ pathname, variant, onNavigate }: Props) {
                         aria-current={active ? 'page' : undefined}
                         className={`${rowBase} ${rowState(active)}`}
                     >
-                        <span className="h-2 w-2 rounded-marker shrink-0 dark:ring-1 dark:ring-ink/50" style={{ backgroundColor: node.color }} aria-hidden="true" />
+                        <span className={`h-2 w-2 rounded-marker shrink-0 ${needsDarkOutline(node.color) ? 'dark:ring-1 dark:ring-ink/50' : ''}`} style={{ backgroundColor: node.color }} aria-hidden="true" />
                         <span className="min-w-0">
                             <span className="block truncate text-sm font-semibold text-ink">{node.nodeName}</span>
                             <span className="block truncate text-xs text-muted">{node.universityShort}</span>

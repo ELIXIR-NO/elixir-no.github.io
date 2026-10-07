@@ -1,16 +1,18 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { organizations } from '../data/organizations';
+import { needsDarkOutline } from '../lib/utils';
 
 /** Pure abstract network constellation — no text, no logos.
  *  Five primary nodes (representing the 5 orgs) connected by lines,
  *  with smaller satellite dots and a subtle pulse. */
 
-interface Node { cx: number; cy: number; r: number }
+interface Node { cx: number; cy: number; r: number; color: string }
 const NODES: Node[] = [
-    { cx: 32, cy: 22, r: 6 },    // UiB
-    { cx: 72, cy: 14, r: 5 },    // UiO
-    { cx: 16, cy: 56, r: 5 },    // UiT
-    { cx: 58, cy: 76, r: 5.5 },  // NTNU
-    { cx: 80, cy: 50, r: 5 },    // NMBU
+    { cx: 32, cy: 22, r: 6, color: organizations.bergen.color },
+    { cx: 72, cy: 14, r: 5, color: organizations.oslo.color },
+    { cx: 16, cy: 56, r: 5, color: organizations.tromso.color },
+    { cx: 58, cy: 76, r: 5.5, color: organizations.trondheim.color },
+    { cx: 80, cy: 50, r: 5, color: organizations.aas.color },
 ];
 
 // Hub-and-spoke + cross-links
@@ -114,7 +116,7 @@ export default function AboutHeroVisual() {
                     </motion.text>
                 ))}
 
-                {/* Primary nodes */}
+                {/* Primary nodes, one per partner institution */}
                 {NODES.map((node, i) => (
                     <motion.g key={`n${i}`}>
                         {/* Pulse ring */}
@@ -122,7 +124,7 @@ export default function AboutHeroVisual() {
                             cx={node.cx} cy={node.cy}
                             r={node.r + 2}
                             fill="none"
-                            className="stroke-ink"
+                            stroke={node.color}
                             strokeWidth="0.5"
                             initial={{ opacity: 0 }}
                             animate={reduce
@@ -135,7 +137,9 @@ export default function AboutHeroVisual() {
                         <motion.circle
                             cx={node.cx} cy={node.cy}
                             r={node.r}
-                            className="fill-ink"
+                            fill={node.color}
+                            className={needsDarkOutline(node.color) ? 'dark:stroke-ink/60' : undefined}
+                            strokeWidth="0.4"
                             initial={reduce ? {} : { scale: 0, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.15 + i * 0.08, type: 'spring', stiffness: 200 }}

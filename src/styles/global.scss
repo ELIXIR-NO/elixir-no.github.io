@@ -33,6 +33,17 @@
     @apply bg-paper text-body;
   }
 
+  /* Share of paper washed over the hero video; the radial wash behind the copy carries contrast. */
+  :root {
+    --hero-tint-light: 0.45;
+    --hero-tint-dark: 0.45;
+    --hero-tint: var(--hero-tint-light);
+  }
+
+  .dark {
+    --hero-tint: var(--hero-tint-dark);
+  }
+
   /* Height of the floating nav at rest: top inset + pill padding + logo + 2px border. */
   :root {
     --nav-offset: calc(5.25rem + 2px);

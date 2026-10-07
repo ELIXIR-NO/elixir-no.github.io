@@ -58,7 +58,13 @@ export function Hero() {
 
                 <div className="relative z-10 flex flex-1 items-center pt-[calc(var(--nav-offset)+clamp(1rem,5vh,4rem))] pb-[clamp(4.5rem,10vh,7rem)]">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">
-                        <div className="max-w-3xl mx-auto">
+                        <div className="relative max-w-3xl mx-auto">
+                            {/* Soft paper glow sized to the copy block, so the copy keeps AA over any frame while the
+                                global tint stays light. A gradient, not a box: it fades out well before its edges. */}
+                            <div
+                                className="pointer-events-none absolute -inset-x-32 -inset-y-24 -z-10 bg-[radial-gradient(closest-side,rgb(var(--color-paper)/0.94),rgb(var(--color-paper)/0.86)_55%,rgb(var(--color-paper)/0.45)_82%,transparent)]"
+                                aria-hidden="true"
+                            />
                             <motion.div {...fadeUp} transition={{ duration: 0.6, delay: 0.1 }}>
                                 <a
                                     href="https://elixir-europe.org"

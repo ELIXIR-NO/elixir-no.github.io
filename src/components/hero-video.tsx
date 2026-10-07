@@ -67,7 +67,7 @@ export default function HeroVideo({ playing }: { playing: boolean }) {
             {allowVideo ? (
                 <video
                     ref={videoRef}
-                    className="h-full w-full object-cover saturate-[.8]"
+                    className="h-full w-full object-cover saturate-[.9]"
                     poster={poster}
                     muted
                     loop
@@ -79,11 +79,10 @@ export default function HeroVideo({ playing }: { playing: boolean }) {
                     ))}
                 </video>
             ) : (
-                <img src={poster} alt="" className="h-full w-full object-cover saturate-[.8]" />
+                <img src={poster} alt="" className="h-full w-full object-cover saturate-[.9]" />
             )}
-            {/* Tint keeps the hero copy at AA contrast over any frame; calmest behind the text. */}
-            <div className="absolute inset-0 bg-paper/[0.82] dark:bg-paper/80" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_55%_at_50%_50%,rgb(var(--color-paper)/0.7),transparent)]" />
+            {/* A light global tint; the hero copy carries its own glow for contrast. */}
+            <div className="absolute inset-0 bg-[rgb(var(--color-paper)/var(--hero-tint))]" />
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-paper" />
         </div>
     );

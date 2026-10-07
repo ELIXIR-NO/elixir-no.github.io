@@ -186,7 +186,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                 >
                     <div class="flex items-center gap-4 mb-8">
                         {orgMeta && (
-                            <div class="shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.04] shadow-sm">
+                            <div class="shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-rule bg-surface shadow-sm">
                                 <img
                                     src={`${BASE}${orgMeta.logo}`}
                                     alt=""
@@ -197,10 +197,10 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             </div>
                         )}
                         <div>
-                            <h2 class="text-xl sm:text-2xl font-bold text-brand-primary dark:text-white tracking-tight">
+                            <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                                 {orgData.name}
                             </h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <p class="text-sm text-muted">
                                 {orgData.people.length} members
                                 {orgMeta ? ` — ${orgMeta.nodeName}` : ""}
                             </p>
@@ -208,7 +208,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                         {orgMeta && (
                             <a
                                 href={`${BASE}/about/${orgMeta.slug}`}
-                                class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                                class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
                             >
                                 View node
                                 <ArrowRightIcon className="h-3 w-3" aria-hidden="true" />
@@ -224,24 +224,24 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                                         href={person["profile-url"]}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03] transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                        class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-rule bg-surface p-3 shadow-sm ring-1 ring-rule transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
-                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule shadow-sm transition-transform duration-200 group-hover:scale-105">
                                             <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="truncate text-sm font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors">{person.name}</div>
-                                            <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
+                                            <div class="truncate text-sm font-semibold text-ink group-hover:text-accent transition-colors">{person.name}</div>
+                                            <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
                                         </div>
                                     </a>
                                 ) : (
-                                    <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03]">
-                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm">
+                                    <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-rule bg-surface p-3 shadow-sm ring-1 ring-rule">
+                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule shadow-sm">
                                             <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="truncate text-sm font-semibold text-brand-primary dark:text-white">{person.name}</div>
-                                            <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
+                                            <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                            <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
                                         </div>
                                     </div>
                                 )}
@@ -256,13 +256,13 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
         {externalPeople.length > 0 && (
             <section
                 id="org-external"
-                class="mt-16 pt-16 border-t border-gray-200/60 dark:border-gray-700/30 scroll-mt-24"
+                class="mt-16 pt-16 border-t border-rule scroll-mt-24"
             >
                 <div class="mb-8">
-                    <h2 class="text-xl sm:text-2xl font-bold text-brand-primary dark:text-white tracking-tight">
+                    <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                         Advisory & External Collaborators
                     </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-sm text-muted mt-1">
                         International experts serving on our Scientific Advisory Committee and Stakeholder Panel.
                     </p>
                 </div>
@@ -275,26 +275,26 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                                     href={person["profile-url"]}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03] transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                    class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-rule bg-surface p-3 shadow-sm ring-1 ring-rule transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
-                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule shadow-sm transition-transform duration-200 group-hover:scale-105">
                                         <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="truncate text-sm font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors">{person.name}</div>
-                                        <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
-                                        <div class="truncate text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{person.orgName}</div>
+                                        <div class="truncate text-sm font-semibold text-ink group-hover:text-accent transition-colors">{person.name}</div>
+                                        <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
+                                        <div class="truncate text-[11px] text-muted mt-0.5">{person.orgName}</div>
                                     </div>
                                 </a>
                             ) : (
-                                <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03]">
-                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm">
+                                <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-rule bg-surface p-3 shadow-sm ring-1 ring-rule">
+                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule shadow-sm">
                                         <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="truncate text-sm font-semibold text-brand-primary dark:text-white">{person.name}</div>
-                                        <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
-                                        <div class="truncate text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{person.orgName}</div>
+                                        <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                        <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
+                                        <div class="truncate text-[11px] text-muted mt-0.5">{person.orgName}</div>
                                     </div>
                                 </div>
                             )}

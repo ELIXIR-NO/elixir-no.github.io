@@ -144,7 +144,7 @@ const statusColors: Record<string, { bg: string; text: string; dot: string }> = 
     },
     completed: {
         bg: 'bg-gray-100 dark:bg-gray-800/40',
-        text: 'text-gray-600 dark:text-gray-400',
+        text: 'text-muted',
         dot: 'bg-gray-400 dark:bg-gray-500',
     },
 };
@@ -240,7 +240,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType && (
                             <a
                                 href={`${BASE}/${contentType === 'projects' ? 'funding-and-projects' : contentType}`}
-                                class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors mb-6"
+                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6"
                             >
                                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                                 {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
@@ -270,7 +270,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     );
                                 })()}
                                 {category && category !== 'unknown' && (
-                                    <span class={`rounded-full px-3 py-1 text-xs font-semibold ${categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-gray-600 dark:text-gray-400'}`}>
+                                    <span class={`rounded-full px-3 py-1 text-xs font-semibold ${categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-muted'}`}>
                                         {slugToTitleCase(category)}
                                     </span>
                                 )}
@@ -278,7 +278,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {finalTitle && (
-                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-primary dark:text-white text-balance leading-[1.15]">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink text-balance leading-[1.15]">
                                 {finalTitle}
                             </h1>
                         )}
@@ -298,10 +298,10 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     ))}
                                 </div>
                                 <div class="text-sm">
-                                    <p class="font-medium text-brand-primary dark:text-white">
+                                    <p class="font-medium text-ink">
                                         {resolvedAuthors.map((author, i) => (
                                             <>
-                                                {i > 0 && <span class="text-gray-500 dark:text-gray-400">, </span>}
+                                                {i > 0 && <span class="text-muted">, </span>}
                                                 {author.url
                                                     ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">{author.name}</a>
                                                     : <span>{author.name}</span>
@@ -310,7 +310,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                         ))}
                                     </p>
                                     {dateObj && (
-                                        <p class="text-gray-500 dark:text-gray-400">
+                                        <p class="text-muted">
                                             <time datetime={dateObj.toISOString()}>{formattedDate}</time>
                                             <span class="mx-1">&middot;</span>
                                             <span>{relativeDate}</span>
@@ -322,7 +322,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Date row for non-news */}
                         {contentType !== 'news' && dateObj && (
-                            <div class="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div class="mt-4 flex items-center gap-2 text-sm text-muted">
                                 <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                 <time datetime={dateObj.toISOString()}>
                                     {formattedDate}
@@ -334,7 +334,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Project metadata row */}
                         {contentType === 'projects' && (period || funder?.name) && (
-                            <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
                                 {period && (
                                     <span class="inline-flex items-center gap-1.5" title={period}>
                                         <ClockIcon className="h-4 w-4" aria-hidden="true" />
@@ -345,13 +345,13 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     <span class="inline-flex items-center gap-1.5">
                                         <BuildingLibraryIcon className="h-4 w-4" aria-hidden="true" />
                                         {funder.link
-                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-brand-primary dark:hover:text-white transition-colors">{funder.name}</a>
+                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">{funder.name}</a>
                                             : funder.name
                                         }
                                     </span>
                                 )}
                                 {externalLink && (
-                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-brand-primary dark:hover:text-white transition-colors">
+                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-ink transition-colors">
                                         <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                                         Project website
                                     </a>
@@ -361,7 +361,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Summary / lead paragraph */}
                         {summary && contentType && (
-                            <p class="mt-5 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 text-balance">
+                            <p class="mt-5 text-base sm:text-lg leading-relaxed text-body text-balance">
                                 {summary}
                             </p>
                         )}
@@ -383,7 +383,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType === 'projects' && keywords.length > 0 && (
                             <div class="mt-5 flex flex-wrap gap-2">
                                 {keywords.map((kw: string) => (
-                                    <span class="rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-800/40 text-gray-600 dark:text-gray-400">
+                                    <span class="rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-800/40 text-muted">
                                         {slugToTitleCase(kw)}
                                     </span>
                                 ))}
@@ -391,7 +391,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {/* Divider before cover or content */}
-                        {!finalCover && <div class="mt-8 border-t border-gray-200/60 dark:border-gray-700/30" />}
+                        {!finalCover && <div class="mt-8 border-t border-rule" />}
 
                         {finalCover && (
                             <figure class="mt-8">
@@ -406,7 +406,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     loading="lazy"
                                 />
                                 {finalCover.caption && (
-                                    <figcaption class="text-sm text-gray-500 dark:text-gray-400 mt-3 text-center">
+                                    <figcaption class="text-sm text-muted mt-3 text-center">
                                         {finalCover.caption}
                                     </figcaption>
                                 )}

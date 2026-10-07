@@ -169,7 +169,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                     onChange={onInputChange}
                                     onKeyDown={onKeyDown}
                                     placeholder="Search pages, services, people..."
-                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-brand-primary dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none border-0 ring-0 focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none sm:text-sm"
+                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-ink placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none border-0 ring-0 focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none sm:text-sm"
                                     aria-label="Search"
                                     aria-autocomplete="list"
                                     aria-controls="search-results"
@@ -207,13 +207,13 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                                 <div className="min-w-0 flex-1">
                                                     <p className={`text-sm font-medium truncate ${
                                                         i === activeIndex
-                                                            ? 'text-brand-primary dark:text-white'
+                                                            ? 'text-ink'
                                                             : 'text-gray-700 dark:text-gray-300'
                                                     }`}>
                                                         {item.title}
                                                     </p>
                                                     <p
-                                                        className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-1 [&_mark]:bg-accent/20 [&_mark]:text-brand-primary dark:[&_mark]:text-white [&_mark]:rounded-sm [&_mark]:px-0.5"
+                                                        className="mt-0.5 text-xs text-muted line-clamp-1 [&_mark]:bg-accent/20 [&_mark]:text-brand-primary dark:[&_mark]:text-white [&_mark]:rounded-sm [&_mark]:px-0.5"
                                                         dangerouslySetInnerHTML={{ __html: sanitized }}
                                                     />
                                                 </div>
@@ -232,32 +232,32 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                             {hasQuery && results.length === 0 && (
                                 <div className="px-6 py-14 text-center">
                                     <ExclamationCircleIcon className="mx-auto h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-                                    <p className="mt-4 text-sm font-medium text-brand-primary dark:text-white">No results found</p>
-                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Try a different search term</p>
+                                    <p className="mt-4 text-sm font-medium text-ink">No results found</p>
+                                    <p className="mt-1 text-xs text-muted">Try a different search term</p>
                                 </div>
                             )}
 
                             {/* Initial state */}
                             {!hasQuery && (
                                 <div className="px-6 py-10 text-center">
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm text-muted">
                                         Search across all pages, services, and content
                                     </p>
                                 </div>
                             )}
 
                             {/* Footer with keyboard hints */}
-                            <div className="flex items-center gap-4 px-4 py-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-white/[0.02]">
+                            <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted bg-gray-50/80 dark:bg-white/[0.02]">
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
                                     select
                                 </span>
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
                                     navigate
                                 </span>
                                 <span className="flex items-center gap-1.5 ml-auto">
-                                    <kbd className="inline-flex h-5 items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1.5 font-mono text-[10px] font-medium">esc</kbd>
+                                    <kbd className="inline-flex h-5 items-center justify-center rounded border border-rule bg-surface px-1.5 font-mono text-[10px] font-medium">esc</kbd>
                                     close
                                 </span>
                             </div>

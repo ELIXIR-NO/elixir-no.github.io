@@ -68,7 +68,7 @@ const statusColors: Record<string, { bg: string; text: string; dot: string }> = 
     },
     completed: {
         bg: 'bg-gray-100 dark:bg-gray-800/40',
-        text: 'text-gray-600 dark:text-gray-400',
+        text: 'text-muted',
         dot: 'bg-gray-400 dark:bg-gray-500',
     },
 };
@@ -89,10 +89,10 @@ const categoryColors: Record<string, string> = {
     <!-- Hero -->
     <div class="max-w-3xl">
         <p class="text-sm font-semibold text-accent tracking-wide uppercase">Funding & Projects</p>
-        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-primary dark:text-white leading-[1.15]">
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-ink leading-[1.15]">
             Research projects and&nbsp;funding initiatives
         </h1>
-        <p class="mt-6 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 max-w-2xl">
+        <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
             ELIXIR Norway participates in European and national research projects
             building infrastructure for life science data management, FAIR data, and genomics.
         </p>
@@ -107,12 +107,12 @@ const categoryColors: Record<string, string> = {
                 <!-- Search -->
                 <div class="mb-6">
                     <div class="relative">
-                        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 dark:text-gray-400" aria-hidden="true" />
+                        <MagnifyingGlassIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" aria-hidden="true" />
                         <input
                             type="text"
                             id="project-search"
                             placeholder="Search projects..."
-                            class="w-full rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] py-2 pl-9 pr-3 text-sm text-brand-primary dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-500 outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent"
+                            class="w-full rounded-lg border border-rule bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-gray-500 dark:placeholder:text-gray-500 outline-none transition-colors focus:border-accent focus:ring-1 focus:ring-accent"
                         />
                     </div>
                 </div>
@@ -123,7 +123,7 @@ const categoryColors: Record<string, string> = {
         <!-- Main content -->
         <div class="flex-1 min-w-0">
             <!-- Results count -->
-            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4" id="results-count" aria-live="polite">
+            <p class="text-sm text-muted mb-4" id="results-count" aria-live="polite">
                 {projects.length} projects
             </p>
 
@@ -135,12 +135,12 @@ const categoryColors: Record<string, string> = {
                     const category = project.data.category ?? 'unknown';
                     const keywords = project.data.keywords ?? [];
                     const sc = statusColors[status] ?? statusColors.completed;
-                    const cc = categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-gray-600 dark:text-gray-400';
+                    const cc = categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-muted';
 
                     return (
                         <a
                             href={`${BASE}/funding-and-projects/${slug}`}
-                            class="project-card group flex flex-col rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-5 transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            class="project-card group flex flex-col rounded-xl border border-rule bg-surface p-5 transition-[border-color,box-shadow] duration-200 hover:border-accent/40 hover:shadow-[0_0_0_3px_rgb(var(--color-accent)/0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             data-status={status}
                             data-category={category}
                             data-keywords={keywords.join(',')}
@@ -161,19 +161,19 @@ const categoryColors: Record<string, string> = {
                             </div>
 
                             {/* Title */}
-                            <h2 class="mt-3 text-base font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors leading-snug">
+                            <h2 class="mt-3 text-base font-semibold text-ink group-hover:text-accent transition-colors leading-snug">
                                 {project.data.title}
                             </h2>
 
                             {/* Summary */}
                             {project.data.summary && (
-                                <p class="mt-2 text-sm leading-relaxed text-brand-grey dark:text-gray-300 line-clamp-2 flex-1">
+                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 flex-1">
                                     {project.data.summary}
                                 </p>
                             )}
 
                             {/* Metadata row */}
-                            <div class="mt-4 flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
+                            <div class="mt-4 flex items-center gap-4 text-xs text-muted">
                                 {project.data.period && (
                                     <span class="inline-flex items-center gap-1" title={project.data.period}>
                                         <CalendarIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -189,7 +189,7 @@ const categoryColors: Record<string, string> = {
                             </div>
 
                             {/* Arrow */}
-                            <div class="mt-4 flex items-center gap-1 text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:text-accent transition-colors">
+                            <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-accent transition-colors">
                                 View project
                                 <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                             </div>
@@ -201,7 +201,7 @@ const categoryColors: Record<string, string> = {
             <!-- No results -->
             <div id="no-results" class="hidden text-center py-16">
                 <MagnifyingGlassIcon className="mx-auto h-12 w-12 text-brand-grey/20" aria-hidden="true" />
-                <p class="mt-4 text-brand-grey dark:text-gray-400">No projects match the selected filters.</p>
+                <p class="mt-4 text-body">No projects match the selected filters.</p>
             </div>
         </div>
     </div>

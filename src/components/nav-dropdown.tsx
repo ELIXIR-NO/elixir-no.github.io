@@ -7,7 +7,7 @@ const ChevronIcon = ({ className }: { className?: string }) => (
 );
 
 const linkColor = (active: boolean) =>
-    active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white';
+    active ? 'text-accent' : 'text-body hover:text-ink';
 
 type Props = {
     /** Visible text; also the trigger link. */

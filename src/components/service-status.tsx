@@ -32,8 +32,8 @@ const statusConfig: Record<Status, {
         ping: 'bg-yellow-400',
         label: 'Checking',
         labelClass: 'text-yellow-600 dark:text-yellow-400',
-        cardBorder: 'border-gray-200/60 dark:border-gray-700/30',
-        cardBg: 'bg-white dark:bg-white/[0.02]',
+        cardBorder: 'border-rule',
+        cardBg: 'bg-surface',
     },
     ok: {
         dot: 'bg-emerald-500',
@@ -106,7 +106,7 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
     const problems = degraded + errored + down;
 
     return (
-        <div className="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.02] p-6">
+        <div className="rounded-xl border border-rule bg-surface p-6">
             <div className="flex items-center gap-3">
                 {!allChecked ? (
                     <div className="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center shrink-0">
@@ -129,7 +129,7 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                     </div>
                 )}
                 <div>
-                    <p className="text-lg font-semibold text-brand-primary dark:text-white">
+                    <p className="text-lg font-semibold text-ink">
                         {!allChecked
                             ? 'Checking services...'
                             : allOk
@@ -139,7 +139,7 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                             : `${ok} confirmed operational`
                         }
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-muted">
                         {allChecked
                             ? [
                                 ok > 0 ? `${ok} operational` : null,
@@ -233,14 +233,14 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                         </div>
                                     )}
                                     <div className="min-w-0">
-                                        <p className="text-sm font-semibold text-brand-primary dark:text-white truncate">
+                                        <p className="text-sm font-semibold text-ink truncate">
                                             {service.title}
                                         </p>
                                         <a
                                             href={service.website}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xs text-gray-500 dark:text-gray-400 hover:text-accent transition-colors truncate block"
+                                            className="text-xs text-muted hover:text-accent transition-colors truncate block"
                                         >
                                             {new URL(service.website).hostname}
                                         </a>
@@ -271,14 +271,14 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                     )}
                                 </div>
                                 {state.latency !== null && state.status !== 'checking' && (
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
+                                    <span className="text-xs text-muted tabular-nums shrink-0">
                                         {state.latency}ms
                                     </span>
                                 )}
                             </div>
 
                             {state.detail && state.status !== 'checking' && (
-                                <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 truncate">
+                                <p className="mt-1.5 text-xs text-muted truncate">
                                     {state.detail}
                                 </p>
                             )}
@@ -287,7 +287,7 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                 })}
             </div>
 
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-xs text-muted text-center">
                 Checks HTTP status codes when CORS allows, falls back to reachability probes otherwise.
                 Results reflect your network. Refreshes every 60 seconds.
             </p>

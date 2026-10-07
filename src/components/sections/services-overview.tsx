@@ -35,14 +35,14 @@ const services: Service[] = [
     },
     {
         title: 'e-Infrastructure',
-        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-brand-primary dark:hover:text-white transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
+        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
         color: '#10b981',
         href: `${BASE}/e-infrastructure`,
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-brand-primary dark:hover:text-white transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-brand-primary dark:hover:text-white transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-brand-primary dark:hover:text-white transition-colors">SAFE</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-ink transition-colors">SAFE</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
         color: '#8b5cf6',
         href: `${BASE}/sensitive-data`,
@@ -74,10 +74,10 @@ export default function ServicesOverview() {
                         viewport={{ once: true, margin: '-60px' }}
                         transition={{ duration: 0.5 }}
                     >
-                        <h2 className="text-3xl font-bold tracking-tight text-brand-primary dark:text-white sm:text-4xl">
+                        <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
                             Unlock the Power of Your Data
                         </h2>
-                        <p className="mt-4 text-lg text-brand-grey dark:text-gray-300 leading-relaxed">
+                        <p className="mt-4 text-lg text-body leading-relaxed">
                             From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
                         </p>
                         <a
@@ -111,13 +111,13 @@ export default function ServicesOverview() {
                                 >
                                     <span style={{ color: svc.color }}>{svc.icon}</span>
                                 </div>
-                                <h3 className="text-base font-semibold text-brand-primary dark:text-white mb-2">
+                                <h3 className="text-base font-semibold text-ink mb-2">
                                     {svc.title}
                                 </h3>
-                                <p className="text-sm leading-relaxed text-brand-grey dark:text-gray-400">
+                                <p className="text-sm leading-relaxed text-body">
                                     {svc.description}
                                 </p>
-                                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 transition-colors group-hover:text-accent">
+                                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors group-hover:text-accent">
                                     Learn more
                                     <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                 </span>

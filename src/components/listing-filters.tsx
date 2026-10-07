@@ -84,7 +84,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                 return (
                     <div key={group.key}>
                         {groups.length > 1 && (
-                            <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                                 {group.label}
                             </p>
                         )}
@@ -105,7 +105,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                                     className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                         isAllSelected
                                             ? 'bg-accent text-white'
-                                            : 'border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                                            : 'border border-rule text-body hover:border-ink'
                                     }`}
                                     aria-pressed={isAllSelected}
                                 >
@@ -121,12 +121,12 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                                         className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                                             isActive
                                                 ? 'bg-accent text-white'
-                                                : 'border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                                                : 'border border-rule text-body hover:border-ink'
                                         }`}
                                         aria-pressed={isActive}
                                     >
                                         {opt.label}
-                                        <span className={`ml-1.5 text-xs ${isActive ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        <span className={`ml-1.5 text-xs ${isActive ? 'text-white/70' : 'text-muted'}`}>
                                             {opt.count}
                                         </span>
                                     </button>
@@ -139,7 +139,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
             {hasFilters && (
                 <button
                     onClick={clearAll}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
                 >
                     <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     Clear filters ({activeCount})
@@ -153,7 +153,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
             {/* Mobile: collapsible toggle */}
             <button
                 onClick={() => setMobileOpen(prev => !prev)}
-                className="sm:hidden flex items-center gap-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-brand-primary dark:text-white transition-colors hover:border-accent/30 w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                className="sm:hidden flex items-center gap-2 rounded-lg border border-rule bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent/30 w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-expanded={mobileOpen}
             >
                 <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
@@ -167,7 +167,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
 
             {/* Mobile: expanded panel */}
             {mobileOpen && (
-                <div className="sm:hidden mt-3 rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-4">
+                <div className="sm:hidden mt-3 rounded-xl border border-rule bg-surface p-4">
                     {filterContent}
                 </div>
             )}

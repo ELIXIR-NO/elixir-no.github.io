@@ -106,7 +106,7 @@ export const Table: React.FC<React.TableHTMLAttributes<HTMLTableElement>> = ({ c
 
 export const Th: React.FC<React.ThHTMLAttributes<HTMLTableHeaderCellElement>> = (props) => (
     <th scope="col" {...props}
-        className="bg-slate-50 dark:bg-dark-surface border border-gray-300 px-4 py-2 text-left font-semibold"/>
+        className="bg-surface border border-gray-300 px-4 py-2 text-left font-semibold"/>
 );
 
 export const Td: React.FC<React.TdHTMLAttributes<HTMLTableDataCellElement>> = (props) => (

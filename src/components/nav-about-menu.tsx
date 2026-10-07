@@ -22,7 +22,7 @@ export default function NavAboutMenu({ pathname, variant, onNavigate }: Props) {
 
     return (
         <div>
-            <p className="px-2.5 pb-2 pt-1 text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-gray-400">Our nodes</p>
+            <p className="px-2.5 pb-2 pt-1 text-xs font-semibold uppercase tracking-wider text-muted">Our nodes</p>
             {aboutNodes.map((node) => {
                 const active = isActive(pathname, node.href);
                 return (
@@ -36,7 +36,7 @@ export default function NavAboutMenu({ pathname, variant, onNavigate }: Props) {
                         <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: node.color }} aria-hidden="true" />
                         <span className="min-w-0">
                             <span className="block truncate text-sm font-semibold text-accent">{node.nodeName}</span>
-                            <span className="block truncate text-xs text-gray-600 dark:text-gray-400">{node.universityShort}</span>
+                            <span className="block truncate text-xs text-muted">{node.universityShort}</span>
                         </span>
                     </a>
                 );

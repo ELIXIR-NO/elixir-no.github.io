@@ -29,7 +29,7 @@ const isActivePath = (pathname: string, href: string) =>
 
 const navLinkClass = (active: boolean) =>
     `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-        active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white'
+        active ? 'text-accent' : 'text-body hover:text-ink'
     }`;
 
 const useScrolled = (threshold = 20) => {
@@ -145,7 +145,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <ThemeToggle />
                             <button
                                 onClick={() => setSearchOpen(true)}
-                                className="h-9 w-9 flex items-center justify-center rounded-xl text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="h-9 w-9 flex items-center justify-center rounded-xl text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 aria-label="Search (Ctrl+K)"
                             >
                                 <SearchIcon className="h-5 w-5" />
@@ -158,7 +158,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <button
                                 type="button"
                                 onClick={() => setMobileMenuOpen(prev => !prev)}
-                                className="relative h-9 w-9 flex items-center justify-center rounded-xl text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="relative h-9 w-9 flex items-center justify-center rounded-xl text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={mobileMenuOpen}
                             >
@@ -200,7 +200,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <ul className="space-y-1">
                                 {navigation.map((item, i) => {
                                     const active = isActivePath(pathname, item.href);
-                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${active ? 'text-accent' : 'text-brand-primary dark:text-white hover:text-accent'}`;
+                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${active ? 'text-accent' : 'text-ink hover:text-accent'}`;
 
                                     return (
                                         <motion.li
@@ -232,14 +232,14 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         </nav>
 
                         <motion.div
-                            className="px-8 sm:px-12 pb-8 pt-4 border-t border-gray-200/60 dark:border-gray-700/30"
+                            className="px-8 sm:px-12 pb-8 pt-4 border-t border-rule"
                             initial={shouldReduceMotion ? {} : { opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.25 }}
                         >
                             <button
                                 onClick={() => { closeMobile(); setSearchOpen(true); }}
-                                className="flex items-center gap-3 text-base font-semibold text-gray-500 dark:text-gray-400 hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                                className="flex items-center gap-3 text-base font-semibold text-muted hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
                             >
                                 <SearchIcon className="h-5 w-5" />
                                 Search

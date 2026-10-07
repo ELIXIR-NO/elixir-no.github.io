@@ -10,7 +10,7 @@ const { figSrc, figCaption, imageLeft = false } = Astro.props;
 
 <div class="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
     <div class:list={[
-        "lg:col-span-3 content text-sm leading-relaxed text-brand-grey dark:text-gray-300",
+        "lg:col-span-3 content text-sm leading-relaxed text-body",
         "[&_strong]:text-brand-primary [&_strong]:dark:text-white",
         "[&_ul]:mt-5 [&_ul]:space-y-3 [&_li]:pl-1",
         "[&_a]:text-accent [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:text-accent/70",
@@ -30,7 +30,7 @@ const { figSrc, figCaption, imageLeft = false } = Astro.props;
             loading="lazy"
         />
         {figCaption && (
-            <figcaption class="mt-4 text-xs text-gray-500 dark:text-gray-400 leading-relaxed px-2">
+            <figcaption class="mt-4 text-xs text-muted leading-relaxed px-2">
                 {figCaption}
             </figcaption>
         )}

@@ -62,7 +62,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
         <div className="space-y-5">
             {groups.map(group => (
                 <div key={group.key}>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted mb-2">
                         {group.label}
                     </h3>
                     <div className="flex flex-col gap-0.5" role="group" aria-label={`Filter by ${group.label}`}>
@@ -75,7 +75,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                                     className={`flex items-center justify-between rounded-md px-2.5 py-1.5 text-sm transition-all duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent text-left ${
                                         isActive
                                             ? 'bg-accent/10 text-accent font-medium'
-                                            : 'text-brand-grey dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/[0.03]'
+                                            : 'text-body hover:bg-gray-50 dark:hover:bg-white/[0.03]'
                                     }`}
                                     aria-pressed={isActive}
                                 >
@@ -91,7 +91,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
                                         </span>
                                         {opt.label}
                                     </span>
-                                    <span className={`text-xs tabular-nums ${isActive ? 'text-accent/70' : 'text-gray-500 dark:text-gray-400'}`}>
+                                    <span className={`text-xs tabular-nums ${isActive ? 'text-accent/70' : 'text-muted'}`}>
                                         {opt.count}
                                     </span>
                                 </button>
@@ -103,7 +103,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
             {hasAnyFilter && (
                 <button
                     onClick={clearAll}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-muted hover:text-ink transition-colors"
                 >
                     <XMarkIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     Clear all filters ({activeCount})
@@ -117,7 +117,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
             {/* Mobile toggle button */}
             <button
                 onClick={() => setMobileOpen(prev => !prev)}
-                className="lg:hidden flex items-center gap-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] px-4 py-2.5 text-sm font-medium text-brand-primary dark:text-white transition-colors hover:border-accent/30 w-full justify-center"
+                className="lg:hidden flex items-center gap-2 rounded-lg border border-rule bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-accent/30 w-full justify-center"
                 aria-expanded={mobileOpen}
             >
                 <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
@@ -131,7 +131,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
 
             {/* Mobile filter panel */}
             {mobileOpen && (
-                <div className="lg:hidden mt-3 rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-5">
+                <div className="lg:hidden mt-3 rounded-xl border border-rule bg-surface p-5">
                     {filterContent}
                 </div>
             )}

@@ -27,9 +27,9 @@ const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${
 const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
 ---
 
-<section class="border-t border-gray-200/60 dark:border-gray-700/30 bg-gray-50/50 dark:bg-white/[0.02]">
+<section class="border-t border-rule bg-gray-50/50 dark:bg-white/[0.02]">
     <div class="mx-auto max-w-7xl px-6 sm:px-8 py-16 sm:py-20">
-        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-brand-primary dark:text-white">
+        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
             Get in Touch
         </h2>
 
@@ -38,20 +38,20 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
                 <div class="space-y-8">
                     {contacts.length > 0 && (
                         <div>
-                            <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+                            <h3 class="text-sm font-semibold uppercase tracking-wider text-muted mb-4">
                                 Contact
                             </h3>
                             <div class="space-y-3">
                                 {contacts.map((c) => (
                                     <a
                                         href={`mailto:${c.email}`}
-                                        class="group flex items-start gap-4 p-4 rounded-xl bg-white dark:bg-white/[0.04] border border-gray-200/60 dark:border-gray-700/30 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03] hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                        class="group flex items-start gap-4 p-4 rounded-xl bg-surface border border-rule shadow-sm ring-1 ring-rule hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
                                         <div class="shrink-0 mt-0.5 h-9 w-9 rounded-lg flex items-center justify-center bg-brand-primary/5 dark:bg-white/[0.06] group-hover:bg-accent/10 transition-colors">
                                             <EnvelopeIcon className="h-4 w-4 text-brand-primary dark:text-gray-300 group-hover:text-accent transition-colors" aria-hidden="true" />
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="text-sm font-semibold text-brand-primary dark:text-white">
+                                            <div class="text-sm font-semibold text-ink">
                                                 {c.reason}
                                             </div>
                                             <div class="text-sm text-accent mt-0.5 truncate">
@@ -66,7 +66,7 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
 
                     {links.length > 0 && (
                         <div>
-                            <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">
+                            <h3 class="text-sm font-semibold uppercase tracking-wider text-muted mb-4">
                                 Resources
                             </h3>
                             <div class="space-y-1">
@@ -77,8 +77,8 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
                                         rel="noopener noreferrer"
                                         class="group flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white dark:hover:bg-white/[0.04] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
-                                        <ArrowTopRightOnSquareIcon className="h-4 w-4 shrink-0 text-gray-500 dark:text-gray-400 group-hover:text-accent transition-colors" aria-hidden="true" />
-                                        <span class="text-sm font-medium text-brand-grey dark:text-gray-300 group-hover:text-brand-primary dark:group-hover:text-white transition-colors">
+                                        <ArrowTopRightOnSquareIcon className="h-4 w-4 shrink-0 text-muted group-hover:text-accent transition-colors" aria-hidden="true" />
+                                        <span class="text-sm font-medium text-body group-hover:text-ink transition-colors">
                                             {l.text}
                                         </span>
                                     </a>
@@ -116,7 +116,7 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
                         href={googleMapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors"
+                        class="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink transition-colors"
                     >
                         <MapPinIcon className="h-3.5 w-3.5" aria-hidden="true" />
                         {address}

@@ -138,7 +138,7 @@ const Footer = () => {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="opacity-60 dark:opacity-40 hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                                    className="opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                                 >
                                     <img
                                         src={src}
@@ -156,7 +156,7 @@ const Footer = () => {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="opacity-60 dark:opacity-40 hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                                    className="opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                                 >
                                     <img
                                         src={src}
@@ -173,7 +173,7 @@ const Footer = () => {
             {/* Bottom bar */}
             <div className="border-t border-gray-200 dark:border-gray-800">
                 <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
-                    <p className="text-xs text-center text-gray-500 dark:text-gray-500">
+                    <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                         Financed by the Research Council of Norway (grants 208481, 270068, 295932, 350529),
                         its partner institutions, NordForsk, and co-funded by the European Union.
                     </p>

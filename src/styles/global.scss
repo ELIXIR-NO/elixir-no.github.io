@@ -4,8 +4,34 @@
 
 @layer base {
 
-  :root { --color-accent: 2 52 82; }
-  .dark { --color-accent: 244 125 32; }
+  :root {
+    --color-accent: 2 52 82;
+    --color-paper: 245 247 248;
+    --color-surface: 255 255 255;
+    --color-ink: 2 52 82;
+    --color-body: 59 74 85;
+    --color-muted: 91 107 119;
+    --color-rule: 211 220 225;
+    --color-marker: 244 125 32;
+    /* Orange as text needs a darker shade: #F47D20 on white is under 3:1. */
+    --color-marker-text: 154 70 0;
+  }
+
+  .dark {
+    --color-accent: 244 125 32;
+    --color-paper: 10 22 30;
+    --color-surface: 15 30 40;
+    --color-ink: 234 240 243;
+    --color-body: 180 195 204;
+    --color-muted: 143 163 177;
+    --color-rule: 34 52 65;
+    --color-marker-text: 247 148 74;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-paper text-body;
+  }
 
   html {
     font-size: 16px;
@@ -46,15 +72,15 @@
   html.dark { scrollbar-color: rgba(255,255,255,0.2) transparent; }
 
   h1, h2, h3, h4, h5, h6, dt {
-    @apply font-display tracking-tight text-pretty text-slate-950 dark:text-slate-50;
+    @apply font-display tracking-tight text-pretty text-ink;
 
     #main-content &:first-child {
       @apply mt-0;
     }
   }
 
-  p, dd, button, li, th, td, span, figcaption {
-    @apply text-light-on-background dark:text-dark-on-background;
+  p, dd, button, li, th, td, figcaption {
+    @apply text-body;
   }
 
   .content a, .link {
@@ -67,12 +93,8 @@
     @apply sr-only;
   }
 
-  em, strong {
-    all: unset;
-  }
-
   time {
-    @apply text-slate-600 dark:text-slate-300;
+    @apply text-muted;
   }
 }
 
@@ -99,15 +121,15 @@
     }
 
     li {
-      @apply bg-light-surface dark:bg-dark-surface rounded-lg p-3 shadow-sm border border-gray-200 dark:border-gray-700;
+      @apply bg-surface rounded-card p-3 border border-rule;
     }
 
     li a {
-      @apply text-lg font-semibold text-blue-600 dark:text-blue-400 hover:underline;
+      @apply text-lg font-semibold text-ink hover:underline decoration-marker decoration-2 underline-offset-4;
     }
 
     li div {
-      @apply text-gray-600 dark:text-gray-300 text-sm mt-1;
+      @apply text-muted text-sm mt-1;
     }
   }
 

@@ -63,24 +63,24 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
             {/* Header row */}
             <div className="flex items-end justify-between mb-8">
                 <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-accent">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-marker-text">
                         Highlights
                     </span>
-                    <h2 className="mt-1 text-2xl sm:text-3xl font-bold tracking-tight text-brand-primary dark:text-white">
+                    <h2 className="mt-1 text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
                         From our network
                     </h2>
                 </div>
                 <div className="hidden sm:flex items-center gap-2">
                     <button
                         onClick={prev}
-                        className="p-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label="Previous slide"
                     >
                         <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
                     </button>
                     <button
                         onClick={next}
-                        className="p-2 rounded-lg border border-gray-200/60 dark:border-gray-700/30 text-brand-grey dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label="Next slide"
                     >
                         <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
@@ -88,8 +88,8 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                 </div>
             </div>
 
-            {/* Main image — fixed 16:9 crop */}
-            <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-gray-100 dark:bg-dark-surface">
+            {/* Screenshots vary in aspect, so they sit framed inside a fixed 16:9 plate instead of being cropped. */}
+            <div className="relative aspect-[16/9] rounded-card overflow-hidden border border-rule bg-paper">
                 <AnimatePresence initial={false} custom={direction} mode="popLayout">
                     <motion.div
                         key={current}
@@ -99,18 +99,18 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                         animate="center"
                         exit="exit"
                         transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
-                        className="absolute inset-0"
+                        className="absolute inset-0 p-3 sm:p-6"
                     >
                         <img
                             src={`${BASE}${slide.src}`}
                             alt={slide.alt}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain"
                         />
                     </motion.div>
                 </AnimatePresence>
 
                 {/* Slide counter badge */}
-                <div className="absolute top-4 right-4 rounded-full bg-black/50 backdrop-blur-sm px-3 py-1 text-xs font-mono text-white/80 tabular-nums">
+                <div className="absolute top-3 right-3 rounded-control border border-rule bg-surface px-2 py-0.5 text-xs font-mono text-muted tabular-nums">
                     {String(current + 1).padStart(2, '0')}/{String(slides.length).padStart(2, '0')}
                 </div>
             </div>
@@ -125,7 +125,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                         animate={{ opacity: 1 }}
                         exit={shouldReduceMotion ? {} : { opacity: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="text-sm sm:text-base leading-relaxed text-brand-grey dark:text-gray-300"
+                        className="text-sm sm:text-base leading-relaxed text-body"
                     >
                         {slide.caption || slide.alt}
                     </motion.p>
@@ -140,10 +140,10 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                             role="tab"
                             aria-selected={i === current}
                             aria-label={`Slide ${i + 1} of ${slides.length}`}
-                            className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-lg overflow-hidden transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                            className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-photo overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                                 i === current
-                                    ? 'ring-2 ring-accent opacity-100'
-                                    : 'opacity-40 hover:opacity-70 grayscale hover:grayscale-0'
+                                    ? 'border-ink'
+                                    : 'border-rule opacity-60 hover:opacity-100'
                             }`}
                         >
                             <img
@@ -157,7 +157,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                     ))}
                     <button
                         onClick={() => setPaused(p => !p)}
-                        className="w-10 h-10 sm:h-11 flex items-center justify-center rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        className="w-10 h-10 sm:h-11 flex items-center justify-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label={paused ? 'Resume auto-play' : 'Pause auto-play'}
                     >
                         {paused ? (
@@ -172,17 +172,17 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
             {/* Progress bar */}
             <div className="mt-4 flex gap-1" aria-hidden="true">
                 {slides.map((_, i) => (
-                    <div key={i} className="relative flex-1 h-0.5 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+                    <div key={i} className="relative flex-1 h-0.5 bg-rule overflow-hidden">
                         {i === current && !paused && !shouldReduceMotion ? (
                             <motion.div
-                                className="absolute inset-y-0 left-0 bg-accent rounded-full"
+                                className="absolute inset-y-0 left-0 bg-marker"
                                 initial={{ width: '0%' }}
                                 animate={{ width: '100%' }}
                                 transition={{ duration: INTERVAL / 1000, ease: 'linear' }}
                                 key={`progress-${current}`}
                             />
                         ) : (
-                            <div className={`absolute inset-0 rounded-full transition-colors ${i === current ? 'bg-accent' : ''}`} />
+                            <div className={`absolute inset-0 transition-colors ${i === current ? 'bg-marker' : ''}`} />
                         )}
                     </div>
                 ))}

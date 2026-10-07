@@ -3,7 +3,7 @@ import Universities from './universities';
 
 export default function OrganisationMarquee() {
     return (
-        <section className="py-20 lg:py-28">
+        <section className="py-16 lg:py-20">
             <div className="max-w-7xl mx-auto px-6 lg:px-12">
                 <div className="text-center mb-14">
                     <h2 className="text-3xl font-bold tracking-tight text-brand-primary dark:text-white sm:text-4xl">

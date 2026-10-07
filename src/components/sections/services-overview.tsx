@@ -55,22 +55,22 @@ const container = {
 };
 
 const item = {
-    hidden: { opacity: 0, y: 24 },
-    show: { opacity: 1, y: 0 },
+    hidden: { y: 24 },
+    show: { y: 0 },
 };
 
 export default function ServicesOverview() {
     const shouldReduceMotion = useReducedMotion();
 
     return (
-        <section className="py-20 lg:py-28">
+        <section className="py-16 lg:py-20">
             <div className="max-w-7xl mx-auto px-6 lg:px-12">
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
                     {/* Left — heading */}
                     <motion.div
                         className="lg:col-span-2 lg:sticky lg:top-32"
-                        initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={shouldReduceMotion ? {} : { y: 20 }}
+                        whileInView={{ y: 0 }}
                         viewport={{ once: true, margin: '-60px' }}
                         transition={{ duration: 0.5 }}
                     >

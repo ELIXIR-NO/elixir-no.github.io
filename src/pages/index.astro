@@ -29,11 +29,9 @@ import slides from "../data/slides.json";
         ],
     })} />
     <main id="main-content">
-        <div class="min-h-[calc(100vh-84px)]">
-            <Hero client:only="react" />
-        </div>
+        <Hero client:only="react" />
 
-        <section class="py-20 lg:py-28 bg-light-surface dark:bg-dark-surface">
+        <section class="py-16 lg:py-20 bg-surface border-y border-rule">
             <div class="max-w-7xl mx-auto px-6 sm:px-8">
                 <HighlightsCarousel slides={slides} client:visible />
             </div>

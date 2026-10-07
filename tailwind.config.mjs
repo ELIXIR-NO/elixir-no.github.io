@@ -1,6 +1,8 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
+const token = (name) => `rgb(var(--color-${name}) / <alpha-value>)`
+
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: 'selector',
@@ -12,25 +14,39 @@ export default {
                 display: ['var(--font-display, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                accent: 'rgb(var(--color-accent) / <alpha-value>)',
+                accent: token('accent'),
+                // Theme-aware: values flip under .dark in global.scss, so no dark: variant is needed.
+                paper: token('paper'),
+                surface: token('surface'),
+                ink: token('ink'),
+                body: token('body'),
+                muted: token('muted'),
+                rule: token('rule'),
+                marker: token('marker'),
+                'marker-text': token('marker-text'),
                 brand: {
                     "primary": "#023452",
                     "secondary": "#f47d20",
-                    "grey": "#4d4848",
+                    "grey": "#3b4a55",
                 },
                 light: {
-                    "background": colors.white,
-                    "surface": "#f8f9fa",
-                    "on-background": "#4d4848",
-                    "on-surface": "#4d4848",
+                    "background": "#f5f7f8",
+                    "surface": colors.white,
+                    "on-background": "#3b4a55",
+                    "on-surface": "#3b4a55",
                 },
                 dark: {
-                    "background": "#121212",
-                    "surface": "#202020",
-                    "on-background": colors.slate["100"],
-                    "on-surface": colors.slate["200"],
+                    "background": "#0a161e",
+                    "surface": "#0f1e28",
+                    "on-background": "#b4c3cc",
+                    "on-surface": "#b4c3cc",
                     "on-primary": colors.white,
                 },
+            },
+            borderRadius: {
+                control: '3px',
+                card: '2px',
+                photo: '2px',
             },
             invert: {
                 85: '.85',

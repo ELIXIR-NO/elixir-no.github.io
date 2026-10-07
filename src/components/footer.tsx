@@ -173,7 +173,7 @@ const Footer = () => {
             {/* Bottom bar */}
             <div className="border-t border-rule">
                 <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
-                    <p className="text-xs text-center lg:text-left text-muted">
+                    <p className="text-xs text-center text-balance text-muted">
                         Financed by the Research Council of Norway (grants 208481, 270068, 295932, 350529),
                         its partner institutions, NordForsk, and co-funded by the European Union.
                     </p>

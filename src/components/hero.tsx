@@ -129,7 +129,7 @@ export function Hero() {
                                 href="https://elixir-europe.org"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:bg-marker before:content-['']"
+                                className="inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
                             >
                                 Part of the European ELIXIR infrastructure
                                 <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />
@@ -162,7 +162,7 @@ export function Hero() {
                         >
                             <a
                                 href={`${BASE}/services`}
-                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control bg-ink text-paper font-semibold text-sm transition-shadow duration-200 ease-out hover:shadow-[inset_0_-3px_0_theme(colors.brand.secondary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                                className="group inline-flex items-center justify-center gap-2 px-6 py-3 rounded-control bg-ink text-paper font-semibold text-sm transition-colors duration-200 ease-out hover:bg-ink/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                             >
                                 Explore services
                                 <ArrowRightIcon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-x-1" aria-hidden="true" />

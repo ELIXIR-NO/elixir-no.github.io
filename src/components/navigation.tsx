@@ -28,7 +28,7 @@ const isActivePath = (pathname: string, href: string) =>
     pathname === href || pathname.startsWith(href + '/');
 
 const navLinkClass = (active: boolean) =>
-    `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+    `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-control transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         active ? 'text-accent' : 'text-body hover:text-ink'
     }`;
 
@@ -72,7 +72,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
             <CommandPalette open={searchOpen} setOpen={setSearchOpen} />
             <header className="fixed top-3 inset-x-3 sm:inset-x-5 lg:inset-x-8 z-50">
                 <div
-                    className={`rounded-2xl transition-all duration-300 ${
+                    className={`rounded-card transition-all duration-300 ${
                         scrolled
                             ? 'bg-white/80 dark:bg-dark-background/80 backdrop-blur-xl shadow-lg shadow-black/[0.08] dark:shadow-black/30 border border-gray-200/60 dark:border-gray-700/60'
                             : 'bg-white/40 dark:bg-dark-background/40 backdrop-blur-md border border-white/40 dark:border-white/10'
@@ -82,7 +82,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
 
                         {/* Logo */}
                         <div className="flex shrink-0">
-                            <a href={`${BASE}/`} className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg">
+                            <a href={`${BASE}/`} className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control">
                                 <span className="sr-only">ELIXIR Norway</span>
                                 <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className="hidden dark:block h-10 w-auto" width="120" height="48" />
                                 <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className="block dark:hidden h-10 w-auto" width="120" height="48" />
@@ -97,7 +97,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             {glider && (
                                 <motion.span
                                     aria-hidden="true"
-                                    className="pointer-events-none absolute rounded-lg bg-accent/10"
+                                    className="pointer-events-none absolute rounded-control bg-accent/10"
                                     initial={false}
                                     animate={{ left: glider.left, top: glider.top, width: glider.width, height: glider.height }}
                                     transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
@@ -145,7 +145,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <ThemeToggle />
                             <button
                                 onClick={() => setSearchOpen(true)}
-                                className="h-9 w-9 flex items-center justify-center rounded-xl text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="h-9 w-9 flex items-center justify-center rounded-control text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 aria-label="Search (Ctrl+K)"
                             >
                                 <SearchIcon className="h-5 w-5" />
@@ -158,7 +158,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <button
                                 type="button"
                                 onClick={() => setMobileMenuOpen(prev => !prev)}
-                                className="relative h-9 w-9 flex items-center justify-center rounded-xl text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className="relative h-9 w-9 flex items-center justify-center rounded-control text-body hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={mobileMenuOpen}
                             >
@@ -200,7 +200,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <ul className="space-y-1">
                                 {navigation.map((item, i) => {
                                     const active = isActivePath(pathname, item.href);
-                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${active ? 'text-accent' : 'text-ink hover:text-accent'}`;
+                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded-control ${active ? 'text-accent' : 'text-ink hover:text-accent'}`;
 
                                     return (
                                         <motion.li
@@ -239,7 +239,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         >
                             <button
                                 onClick={() => { closeMobile(); setSearchOpen(true); }}
-                                className="flex items-center gap-3 text-base font-semibold text-muted hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                                className="flex items-center gap-3 text-base font-semibold text-muted hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded-control"
                             >
                                 <SearchIcon className="h-5 w-5" />
                                 Search

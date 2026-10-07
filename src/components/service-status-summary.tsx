@@ -123,11 +123,11 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
             href={href}
             className="group mt-5 inline-flex items-center gap-2.5 rounded-control border border-rule bg-surface px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         >
-            <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+            <span className="relative flex h-2 w-2 rounded-marker shrink-0" aria-hidden="true">
                 {cfg.ping && !reduce && (
-                    <span className={`absolute inline-flex h-full w-full animate-ping ${cfg.ping} opacity-75`} />
+                    <span className={`absolute inline-flex h-full w-full rounded-marker animate-ping ${cfg.ping} opacity-75`} />
                 )}
-                <span className={`relative inline-flex h-2 w-2 ${cfg.dot}`} />
+                <span className={`relative inline-flex h-2 w-2 rounded-marker ${cfg.dot}`} />
             </span>
             <span className="text-inherit" aria-live="polite">
                 {label}

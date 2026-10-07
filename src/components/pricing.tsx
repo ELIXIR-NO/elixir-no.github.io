@@ -17,8 +17,8 @@ export default function Pricing({ tiers }) {
                             {tier.name}
                         </h3>
                         {tier.mostPopular && (
-                            <span className="inline-flex items-center gap-1.5 rounded-control border border-rule px-2 py-0.5 text-[11px] font-medium text-ink">
-                                <span className="h-1.5 w-1.5 bg-marker" aria-hidden="true" />
+                            <span className="inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-[11px] font-medium text-ink">
+                                <span className="h-1.5 w-1.5 rounded-marker bg-marker" aria-hidden="true" />
                                 Most frequently selected 
                             </span>
                         )}

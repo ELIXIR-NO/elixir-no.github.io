@@ -57,7 +57,7 @@ const statusConfig: Record<Status, {
 };
 
 function StatusDot({ status }: { status: Status }) {
-    return <span className={`block h-2 w-2 ${statusConfig[status].dot}`} />;
+    return <span className={`block h-2 w-2 rounded-marker ${statusConfig[status].dot}`} />;
 }
 
 function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
@@ -189,7 +189,7 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                             <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-center gap-3 min-w-0">
                                     {service.logo ? (
-                                        <div className="h-9 w-9 shrink-0 rounded-photo bg-white border border-rule flex items-center justify-center p-1 overflow-hidden">
+                                        <div className="h-9 w-9 shrink-0 rounded-control bg-white border border-rule flex items-center justify-center p-1 overflow-hidden">
                                             <img
                                                 src={service.logo}
                                                 alt=""
@@ -228,7 +228,7 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                         {cfg.label}
                                     </span>
                                     {state.httpStatus !== null && (
-                                        <span className={`text-xs font-mono px-1.5 py-0.5 rounded-control border border-rule ${
+                                        <span className={`text-xs font-mono px-1.5 py-0.5 rounded-chip border border-rule ${
                                             state.httpStatus >= 200 && state.httpStatus < 300
                                                 ? 'text-emerald-700 dark:text-emerald-400'
                                                 : state.httpStatus >= 300 && state.httpStatus < 400

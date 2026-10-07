@@ -45,9 +45,11 @@ export default {
                 },
             },
             borderRadius: {
-                control: '3px',
-                card: '2px',
-                photo: '2px',
+                control: '8px',
+                card: '12px',
+                photo: '12px',
+                chip: '6px',
+                marker: '2px',
             },
             invert: {
                 85: '.85',

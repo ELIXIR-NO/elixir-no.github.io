@@ -139,12 +139,12 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                         >
                             {/* Top row: badges */}
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class={`inline-flex items-center gap-1.5 rounded-control border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
-                                    <span class={`h-2 w-2 ${sc.dot}`} />
+                                <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
+                                    <span class={`h-2 w-2 rounded-marker ${sc.dot}`} />
                                     {slugToTitleCase(status)}
                                 </span>
                                 {category !== 'unknown' && (
-                                    <span class="rounded-control border border-rule px-2 py-0.5 text-xs font-medium text-muted">
+                                    <span class="rounded-chip border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(category)}
                                     </span>
                                 )}

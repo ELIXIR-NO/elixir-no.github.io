@@ -159,7 +159,7 @@ export default function ListingFilters({ groups, event = 'filters-changed' }: Pr
                 <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
                 Filters
                 {hasFilters && (
-                    <span className="rounded-control bg-ink text-paper text-xs tabular-nums px-1.5 py-0.5 leading-none">
+                    <span className="rounded-chip bg-ink text-paper text-xs tabular-nums px-1.5 py-0.5 leading-none">
                         {activeCount}
                     </span>
                 )}

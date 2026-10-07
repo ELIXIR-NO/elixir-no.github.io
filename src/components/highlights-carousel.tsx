@@ -110,7 +110,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                 </AnimatePresence>
 
                 {/* Slide counter badge */}
-                <div className="absolute top-3 right-3 rounded-control border border-rule bg-surface px-2 py-0.5 text-xs font-mono text-muted tabular-nums">
+                <div className="absolute top-3 right-3 rounded-chip border border-rule bg-surface px-2 py-0.5 text-xs font-mono text-muted tabular-nums">
                     {String(current + 1).padStart(2, '0')}/{String(slides.length).padStart(2, '0')}
                 </div>
             </div>
@@ -140,7 +140,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                             role="tab"
                             aria-selected={i === current}
                             aria-label={`Slide ${i + 1} of ${slides.length}`}
-                            className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-photo overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                            className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-control overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                                 i === current
                                     ? 'border-ink'
                                     : 'border-rule opacity-60 hover:opacity-100'

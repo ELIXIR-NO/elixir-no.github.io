@@ -249,15 +249,15 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                             {/* Footer with keyboard hints */}
                             <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted border-t border-rule bg-paper">
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-control border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-chip border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
                                     select
                                 </span>
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-control border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-chip border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
                                     navigate
                                 </span>
                                 <span className="flex items-center gap-1.5 ml-auto">
-                                    <kbd className="inline-flex h-5 items-center justify-center rounded-control border border-rule bg-surface px-1.5 font-mono text-[10px] font-medium">esc</kbd>
+                                    <kbd className="inline-flex h-5 items-center justify-center rounded-chip border border-rule bg-surface px-1.5 font-mono text-[10px] font-medium">esc</kbd>
                                     close
                                 </span>
                             </div>

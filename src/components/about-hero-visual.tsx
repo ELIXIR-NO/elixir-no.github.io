@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
-import { organizations } from '../data/organizations';
+import { organizations, type Organization } from '../data/organizations';
 import { needsDarkOutline } from '../lib/utils';
 
 /** The five ELIXIR Norway nodes on a dot-matrix Norway, linked by the network edges, with
@@ -60,16 +60,15 @@ const DOTS = MASK.flatMap((row, r) =>
     [...row].flatMap((cell, c) => (cell === '#' ? [{ x: c * PITCH, y: r * PITCH }] : [])),
 );
 
-type Side = 'start' | 'end';
-interface Node { cx: number; cy: number; r: number; color: string; label: string; side: Side }
-// Placed by hand on the grid, not to scale: Oslo and Ås are pulled apart so neither the circles
-// nor the labels touch, and Oslo sits east of the Trondheim to Ås edge so no line crosses it.
+interface Node { cx: number; cy: number; r: number; org: Organization; city: string }
+// Placed by hand on the grid, not to scale: Oslo and Ås are pulled apart so their circles never
+// touch, and Oslo sits east of the Trondheim to Ås edge so no line crosses it.
 const NODES: Node[] = [
-    { cx: 4, cy: 64, r: 5, color: organizations.bergen.color, label: 'Bergen', side: 'end' },
-    { cx: 30, cy: 61, r: 4.5, color: organizations.oslo.color, label: 'Oslo', side: 'start' },
-    { cx: 56, cy: 6, r: 4.5, color: organizations.tromso.color, label: 'Tromsø', side: 'start' },
-    { cx: 17, cy: 36, r: 4.5, color: organizations.trondheim.color, label: 'Trondheim', side: 'end' },
-    { cx: 26, cy: 76, r: 4.5, color: organizations.aas.color, label: 'Ås', side: 'start' },
+    { cx: 4, cy: 64, r: 5, org: organizations.bergen, city: 'Bergen' },
+    { cx: 30, cy: 61, r: 4.5, org: organizations.oslo, city: 'Oslo' },
+    { cx: 56, cy: 6, r: 4.5, org: organizations.tromso, city: 'Tromsø' },
+    { cx: 17, cy: 36, r: 4.5, org: organizations.trondheim, city: 'Trondheim' },
+    { cx: 26, cy: 76, r: 4.5, org: organizations.aas, city: 'Ås' },
 ];
 
 // Hub-and-spoke from Bergen, the coordinating node, plus cross-links
@@ -78,24 +77,41 @@ const EDGES: [number, number][] = [
     [1, 4], [2, 3], [3, 4],
 ];
 
-// Keywords sit in the sea to the west and south and the open land to the east, with room for the drift
-interface Keyword { label: string; x: number; y: number }
-const KEYWORDS: Keyword[] = [
-    { label: 'Open Science', x: 14, y: 3 },
-    { label: 'Sensitive Data', x: 6, y: 14 },
-    { label: 'Genomics', x: 2, y: 25 },
-    { label: 'Storage', x: -12, y: 48 },
-    { label: 'Proteomics', x: -10, y: 90 },
-    { label: 'Training', x: 34, y: 92 },
-    { label: 'Bioinformatics', x: 72, y: 20 },
-    { label: 'Workflows', x: 60, y: 32 },
-    { label: 'NeLS', x: 86, y: 40 },
-    { label: 'FAIR Data', x: 66, y: 48 },
-    { label: 'Helpdesk', x: 76, y: 64 },
-    { label: 'Cloud', x: 56, y: 78 },
-];
+// Smaller words sit fainter for depth; the smallest drop out on narrow screens where they would be unreadable
+const KEYWORD_SIZES = {
+    lg: { fontSize: 3.2, className: 'fill-muted/35' },
+    md: { fontSize: 2.7, className: 'fill-muted/30' },
+    sm: { fontSize: 2.3, className: 'fill-muted/25 max-sm:hidden' },
+};
 
-const LABEL_GAP = 3.5;
+// Keywords hug the coast in the sea to the west and south and the open land to the east, with room for the drift
+interface Keyword { label: string; x: number; y: number; size: keyof typeof KEYWORD_SIZES }
+const KEYWORDS: Keyword[] = [
+    { label: 'Open science', x: 18, y: 2, size: 'lg' },
+    { label: 'Metadata', x: 40, y: 0, size: 'sm' },
+    { label: 'Sensitive data', x: 14, y: 9, size: 'lg' },
+    { label: 'Ontologies', x: 25, y: 16, size: 'md' },
+    { label: 'Genomics', x: 8, y: 23, size: 'lg' },
+    { label: 'TeSS', x: 22, y: 24, size: 'sm' },
+    { label: 'Biobanks', x: -4, y: 32, size: 'md' },
+    { label: 'Storage', x: -6, y: 44, size: 'lg' },
+    { label: 'Galaxy', x: -8, y: 54, size: 'sm' },
+    { label: 'HPC', x: -10, y: 64, size: 'sm' },
+    { label: 'Proteomics', x: -11, y: 78, size: 'lg' },
+    { label: 'Metagenomics', x: -8, y: 89, size: 'md' },
+    { label: 'RDMkit', x: 6, y: 96, size: 'sm' },
+    { label: 'Training', x: 28, y: 94, size: 'lg' },
+    { label: 'Federated EGA', x: 50, y: 88, size: 'md' },
+    { label: 'Cloud', x: 44, y: 78, size: 'lg' },
+    { label: 'Helpdesk', x: 50, y: 68, size: 'md' },
+    { label: 'Interoperability', x: 54, y: 55, size: 'lg' },
+    { label: 'Data management', x: 48, y: 48.5, size: 'md' },
+    { label: 'FAIR data', x: 66, y: 42, size: 'lg' },
+    { label: 'Workflows', x: 48, y: 35, size: 'lg' },
+    { label: 'Machine learning', x: 62, y: 27, size: 'md' },
+    { label: 'Bioinformatics', x: 72, y: 19, size: 'lg' },
+    { label: 'NeLS', x: 80, y: 34, size: 'md' },
+];
 
 export default function AboutHeroVisual() {
     const reduce = useReducedMotion() ?? false;
@@ -107,13 +123,13 @@ export default function AboutHeroVisual() {
     return (
         <MotionConfig reducedMotion="user">
             <div
-                className="relative w-full max-w-lg mx-auto lg:max-w-none aspect-[6/5]"
+                className="relative w-full max-w-lg mx-auto lg:max-w-none aspect-[110/103]"
                 role="img"
                 aria-label="Map of Norway with the five ELIXIR Norway nodes: Tromsø, Trondheim, Bergen, Oslo and Ås"
             >
                 <svg
                     className="absolute inset-0 w-full h-full"
-                    viewBox="-24 -4 120 100"
+                    viewBox="-22 -4 110 103"
                     preserveAspectRatio="xMidYMid meet"
                     aria-hidden="true"
                 >
@@ -164,8 +180,8 @@ export default function AboutHeroVisual() {
                             <text
                                 x={kw.x} y={kw.y}
                                 textAnchor="middle"
-                                className="fill-muted/70 font-semibold uppercase select-none"
-                                style={{ fontSize: '3.2px', letterSpacing: '0.3px' }}
+                                className={`${KEYWORD_SIZES[kw.size].className} font-semibold select-none`}
+                                style={{ fontSize: `${KEYWORD_SIZES[kw.size].fontSize}px` }}
                             >
                                 {kw.label}
                             </text>
@@ -173,12 +189,13 @@ export default function AboutHeroVisual() {
                     ))}
 
                     {NODES.map((node, i) => (
-                        <g key={node.label}>
+                        <g key={node.city}>
+                            <title>{`${node.city}, ${node.org.university}`}</title>
                             <motion.circle
                                 cx={node.cx} cy={node.cy}
                                 r={node.r + 1.5}
                                 fill="none"
-                                stroke={node.color}
+                                stroke={node.org.color}
                                 strokeWidth="0.4"
                                 initial={{ opacity: 0.25, r: node.r + 1.5 }}
                                 animate={loop ? { opacity: [0.1, 0.35, 0.1], r: [node.r + 1.5, node.r + 3, node.r + 1.5] } : { opacity: 0.25 }}
@@ -187,20 +204,10 @@ export default function AboutHeroVisual() {
                             <circle
                                 cx={node.cx} cy={node.cy}
                                 r={node.r}
-                                fill={node.color}
-                                className={needsDarkOutline(node.color) ? 'dark:stroke-ink/60' : undefined}
+                                fill={node.org.color}
+                                className={needsDarkOutline(node.org.color) ? 'dark:stroke-ink/60' : undefined}
                                 strokeWidth="0.4"
                             />
-                            <text
-                                x={node.side === 'start' ? node.cx + node.r + LABEL_GAP : node.cx - node.r - LABEL_GAP}
-                                y={node.cy}
-                                dy="0.35em"
-                                textAnchor={node.side}
-                                className="fill-ink stroke-paper font-semibold select-none"
-                                style={{ fontSize: '4px', strokeWidth: '1.2px', paintOrder: 'stroke', strokeLinejoin: 'round' }}
-                            >
-                                {node.label}
-                            </text>
                         </g>
                     ))}
                 </svg>

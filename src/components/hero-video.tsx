@@ -15,13 +15,13 @@ const HERO_VIDEO: { poster?: string; sources: VideoSource[] } = {
     ],
 };
 
-// Dev-only stand-in, never referenced by production builds: CC0 drone footage of ice climbing near Tromsø,
+// Dev-only stand-in: a local 25s, 1280px trim of CC0 drone footage of ice climbing near Tromsø,
 // https://commons.wikimedia.org/wiki/File:Drone_Footage_of_People_Climbing_Ice_Formation.webm
+// The file is excluded via .git/info/exclude and never committed; index.astro only enables it under
+// `astro dev` when the file exists, so a fresh clone gets the empty state.
 const SAMPLE_SOURCES: VideoSource[] = [
-    { src: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/Drone_Footage_of_People_Climbing_Ice_Formation.webm', type: 'video/webm' },
+    { src: `${BASE}/videos/dev-sample.webm`, type: 'video/webm' },
 ];
-
-const SOURCES = import.meta.env.DEV && SAMPLE_SOURCES.length > 0 ? SAMPLE_SOURCES : HERO_VIDEO.sources;
 
 type NetworkInformation = { saveData?: boolean };
 
@@ -30,7 +30,8 @@ type NetworkInformation = { saveData?: boolean };
  * never under reduced motion, Save-Data or without sources, so the server HTML is the poster (or
  * plain paper) and nothing downloads for those visitors. The hero's pause button is the control.
  */
-export default function HeroVideo({ playing }: { playing: boolean }) {
+export default function HeroVideo({ playing, devSample = false }: { playing: boolean; devSample?: boolean }) {
+    const sources = import.meta.env.DEV && devSample ? SAMPLE_SOURCES : HERO_VIDEO.sources;
     const videoRef = useRef<HTMLVideoElement>(null);
     const [allowVideo, setAllowVideo] = useState(false);
     const [inView, setInView] = useState(false);
@@ -38,8 +39,8 @@ export default function HeroVideo({ playing }: { playing: boolean }) {
     useEffect(() => {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const saveData = Boolean((navigator as Navigator & { connection?: NetworkInformation }).connection?.saveData);
-        setAllowVideo(SOURCES.length > 0 && !reduceMotion && !saveData);
-    }, []);
+        setAllowVideo(sources.length > 0 && !reduceMotion && !saveData);
+    }, [sources]);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -74,8 +75,14 @@ export default function HeroVideo({ playing }: { playing: boolean }) {
                     playsInline
                     preload="metadata"
                 >
-                    {SOURCES.map(source => (
-                        <source key={source.src} src={source.src} type={source.type} media={source.media} />
+                    {sources.map((source, i) => (
+                        <source
+                            key={source.src}
+                            src={source.src}
+                            type={source.type}
+                            media={source.media}
+                            onError={i === sources.length - 1 ? () => setAllowVideo(false) : undefined}
+                        />
                     ))}
                 </video>
             ) : (

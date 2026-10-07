@@ -14,6 +14,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "postbuild": "pagefind --site dist",
+    "test": "vitest run",
     "test:slugs": "node scripts/check-slugs.mjs",
     "test:pages": "node scripts/test-pages.mjs"
   },
@@ -46,8 +47,10 @@
     "@types/dompurify": "^3.2.0",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "happy-dom": "^20.14.5",
     "npm-run-all2": "^9.0.2",
-    "pagefind": "^1.5.0"
+    "pagefind": "^1.5.0",
+    "vitest": "^5.0.3"
   },
   "engines": {
     "node": ">=24.0.0"

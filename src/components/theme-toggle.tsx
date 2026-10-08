@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
+export const circleButtonClass =
+    'h-11 w-11 flex items-center justify-center rounded-full border border-rule bg-surface/90 text-ink hover:border-ink transition-colors motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+
 export default function ThemeToggle() {
     const [isDark, setIsDark] = useState(false);
     const shouldReduceMotion = useReducedMotion();
@@ -28,7 +31,7 @@ export default function ThemeToggle() {
     return (
         <motion.button
             onClick={toggle}
-            className="relative h-9 w-9 flex items-center justify-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className={`relative ${circleButtonClass}`}
             whileHover={undefined}
             whileTap={undefined}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

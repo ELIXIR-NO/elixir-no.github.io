@@ -44,12 +44,12 @@
     --hero-tint: var(--hero-tint-dark);
   }
 
-  /* Height of the floating nav at rest: top inset + pill padding + logo + 2px border. */
+  /* Height of the floating nav at rest: top inset + logo tile (padding + logo). */
   :root {
-    --nav-offset: calc(5.25rem + 2px);
+    --nav-offset: 4.75rem;
 
     @media (min-width: 1024px) {
-      --nav-offset: calc(6rem + 2px);
+      --nav-offset: 6.5rem;
     }
   }
 

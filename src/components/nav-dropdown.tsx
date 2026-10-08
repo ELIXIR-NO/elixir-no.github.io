@@ -20,7 +20,7 @@ type Props = {
     panelId: string;
     /** Accessible name for the panel region. */
     panelLabel: string;
-    /** Extra classes for the floating panel (e.g. width). */
+    /** Extra classes for the floating panel (width, offset from the trigger). */
     panelClassName?: string;
     /** Ref registrar from useMagicPill so the glider can measure this item. */
     rootRef?: (el: HTMLElement | null) => void;
@@ -38,7 +38,7 @@ type Props = {
  * Composes with useMagicPill via `rootRef` + `onHover`.
  */
 export default function NavDropdown({
-    label, href, active, panelId, panelLabel, panelClassName = '', rootRef, onHover, children,
+    label, href, active, panelId, panelLabel, panelClassName = 'mt-3', rootRef, onHover, children,
 }: Props) {
     const [open, setOpen] = useState(false);
     const [hoverCapable, setHoverCapable] = useState(false);
@@ -115,7 +115,7 @@ export default function NavDropdown({
                         animate={{ opacity: 1, y: 0 }}
                         exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
                         transition={{ duration: 0.2 }}
-                        className={`absolute left-0 top-full mt-3 rounded-card border border-rule bg-surface p-3 shadow-lg shadow-black/5 ${panelClassName}`}
+                        className={`absolute left-0 top-full rounded-card border border-rule bg-surface p-3 shadow-lg shadow-black/5 ${panelClassName}`}
                         onMouseEnter={clearCloseTimer}
                         onMouseLeave={() => { if (hoverCapable) scheduleClose(); }}
                     >

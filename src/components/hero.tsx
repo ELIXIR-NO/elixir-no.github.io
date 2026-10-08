@@ -46,7 +46,7 @@ function RotatingWord({ playing }: { playing: boolean }) {
     );
 }
 
-export function Hero({ devSample = false }: { devSample?: boolean }) {
+export function Hero() {
     const shouldReduceMotion = useReducedMotion();
     const [paused, setPaused] = useState(false);
     const playing = !paused && !shouldReduceMotion;
@@ -60,7 +60,7 @@ export function Hero({ devSample = false }: { devSample?: boolean }) {
             {/* Exactly one screen tall (svh, with vh as the fallback) so the next section never peeks;
                 min-height lets it grow when the content needs more room. */}
             <section className="relative -mt-[var(--nav-offset)] flex min-h-screen min-h-svh flex-col overflow-hidden">
-                <HeroVideo playing={playing} devSample={devSample} />
+                <HeroVideo playing={playing} />
 
                 <div className="relative z-10 flex flex-1 items-center pt-[calc(var(--nav-offset)+clamp(1rem,5vh,4rem))] pb-[clamp(4.5rem,10vh,7rem)]">
                     <div className="w-full px-6 sm:px-8 mx-auto text-center">

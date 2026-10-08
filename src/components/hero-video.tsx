@@ -18,22 +18,15 @@ const HERO_VIDEO: { poster: string; sources: VideoSource[] } = {
     ],
 };
 
-// Dev-only stand-in: a local montage of ELIXIR Norway photos and clips. The file is excluded via
-// .git/info/exclude and never committed; index.astro only enables it under `astro dev` when the
-// file exists, so a fresh clone gets the empty state.
-const SAMPLE_SOURCES: VideoSource[] = [
-    { src: `${BASE}/videos/dev-sample.webm`, type: 'video/webm' },
-];
-
 type NetworkInformation = { saveData?: boolean };
 
 /**
  * Decorative full-bleed hero film under a paper tint. The <video> is only added after mount and
- * never under reduced motion, Save-Data or without sources, so the server HTML is the poster (or
- * plain paper) and nothing downloads for those visitors. The hero's pause button is the control.
+ * never under reduced motion or Save-Data, so the server HTML is the poster and no video downloads
+ * for those visitors. The hero's pause button is the control.
  */
-export default function HeroVideo({ playing, devSample = false }: { playing: boolean; devSample?: boolean }) {
-    const sources = import.meta.env.DEV && devSample ? SAMPLE_SOURCES : HERO_VIDEO.sources;
+export default function HeroVideo({ playing }: { playing: boolean }) {
+    const { poster, sources } = HERO_VIDEO;
     const videoRef = useRef<HTMLVideoElement>(null);
     const [allowVideo, setAllowVideo] = useState(false);
     const [inView, setInView] = useState(false);
@@ -41,8 +34,8 @@ export default function HeroVideo({ playing, devSample = false }: { playing: boo
     useEffect(() => {
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const saveData = Boolean((navigator as Navigator & { connection?: NetworkInformation }).connection?.saveData);
-        setAllowVideo(sources.length > 0 && !reduceMotion && !saveData);
-    }, [sources]);
+        setAllowVideo(!reduceMotion && !saveData);
+    }, []);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -61,9 +54,6 @@ export default function HeroVideo({ playing, devSample = false }: { playing: boo
             video.pause();
         }
     }, [playing, inView, allowVideo]);
-
-    const { poster } = HERO_VIDEO;
-    if (!allowVideo && !poster) return null;
 
     return (
         <div className="absolute inset-0" aria-hidden="true">

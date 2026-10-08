@@ -6,11 +6,6 @@ import LatestNews from "../components/sections/latest-news.astro";
 import HighlightsCarousel from "../components/highlights-carousel.tsx";
 import OrganisationMarquee from "../components/organisation-marquee.tsx";
 import slides from "../data/slides.json";
-import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-
-// The hero's local dev sample video is never committed, so only use it under `astro dev` when present.
-const devSample = import.meta.env.DEV && existsSync(fileURLToPath(new URL("../../public/videos/dev-sample.webm", import.meta.url)));
 ---
 
 <BaseLayout seo={{
@@ -34,7 +29,7 @@ const devSample = import.meta.env.DEV && existsSync(fileURLToPath(new URL("../..
         ],
     })} />
     <main id="main-content">
-        <Hero client:load devSample={devSample} />
+        <Hero client:load />
 
         <section class="py-16 lg:py-20 bg-surface border-y border-rule">
             <div class="max-w-7xl mx-auto px-6 sm:px-8">

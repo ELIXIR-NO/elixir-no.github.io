@@ -9,20 +9,24 @@ import HeroVideo from './hero-video';
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // The first phrase is also the static fallback and completes the sr-only heading.
-const WORDS = ['life science', 'every researcher', 'research that matters', 'data you can trust', 'understanding life', 'the next generation'];
+const WORDS = [
+    'life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics',
+    'scientists across Norway', 'discoveries that matter', 'data you can trust', 'understanding life', 'the next generation',
+];
 const FLIP_MS = 600;
-const DWELL_MS = 2600;
+// Multi-word phrases stay a little longer than single fields so they can be read.
+const dwellMs = (word: string) => (word.includes(' ') && word !== WORDS[0] ? 2600 : 2300);
 
 function RotatingWord({ playing }: { playing: boolean }) {
     const [{ current, leaving }, setFlip] = useState<{ current: number; leaving: number | null }>({ current: 0, leaving: null });
 
     useEffect(() => {
         if (!playing) return;
-        const id = setInterval(() => {
+        const id = setTimeout(() => {
             setFlip(({ current }) => ({ current: (current + 1) % WORDS.length, leaving: current }));
-        }, FLIP_MS + DWELL_MS);
-        return () => clearInterval(id);
-    }, [playing]);
+        }, FLIP_MS + dwellMs(WORDS[current]));
+        return () => clearTimeout(id);
+    }, [playing, current]);
 
     useEffect(() => {
         if (leaving === null) return;

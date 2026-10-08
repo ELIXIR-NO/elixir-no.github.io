@@ -77,25 +77,25 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
     const problems = degraded + errored + down;
 
     return (
-        <div className="rounded-card border border-rule bg-surface p-6">
+        <div className="rounded-card border border-rule bg-surface p-5">
             <div className="flex items-center gap-3">
                 {!allChecked ? (
-                    <div className="h-10 w-10 rounded-control border border-rule flex items-center justify-center shrink-0">
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
                         <svg className="h-5 w-5 text-muted animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
                     </div>
                 ) : allOk ? (
-                    <div className="h-10 w-10 rounded-control border border-rule flex items-center justify-center shrink-0">
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
                         <CheckIcon className="h-5 w-5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
                     </div>
                 ) : problems > 0 ? (
-                    <div className="h-10 w-10 rounded-control border border-rule flex items-center justify-center shrink-0">
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
                         <ExclamationTriangleIcon className="h-5 w-5 text-red-700 dark:text-red-400" aria-hidden="true" />
                     </div>
                 ) : (
-                    <div className="h-10 w-10 rounded-control border border-rule flex items-center justify-center shrink-0">
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
                         <InformationCircleIcon className="h-5 w-5 text-sky-700 dark:text-sky-400" aria-hidden="true" />
                     </div>
                 )}

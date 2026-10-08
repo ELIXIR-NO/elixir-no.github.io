@@ -28,17 +28,17 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
 ---
 
 <section class="border-t border-rule bg-paper">
-    <div class="mx-auto max-w-7xl px-6 sm:px-8 py-16 sm:py-20">
+    <div class="mx-auto max-w-7xl px-6 sm:px-8 py-16 lg:py-20">
         <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
             Get in Touch
         </h2>
 
-        <div class={`mt-10 grid gap-10 ${hasContactInfo ? 'lg:grid-cols-2 lg:gap-16' : ''}`}>
+        <div class={`mt-8 grid gap-10 ${hasContactInfo ? 'lg:grid-cols-2 lg:gap-16' : ''}`}>
             {hasContactInfo && (
                 <div class="space-y-8">
                     {contacts.length > 0 && (
                         <div>
-                            <h3 class="text-sm font-semibold uppercase tracking-wider text-muted mb-4">
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-muted mb-4">
                                 Contact
                             </h3>
                             <div class="space-y-3">
@@ -48,7 +48,7 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
                                         class="group flex items-start gap-4 p-4 rounded-card bg-surface border border-rule hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
                                         <div class="shrink-0 mt-0.5 h-9 w-9 rounded-control flex items-center justify-center border border-rule">
-                                            <EnvelopeIcon className="h-4 w-4 text-ink" aria-hidden="true" />
+                                            <EnvelopeIcon className="h-5 w-5 text-ink" aria-hidden="true" />
                                         </div>
                                         <div class="min-w-0">
                                             <div class="text-sm font-semibold text-ink">
@@ -66,7 +66,7 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
 
                     {links.length > 0 && (
                         <div>
-                            <h3 class="text-sm font-semibold uppercase tracking-wider text-muted mb-4">
+                            <h3 class="text-xs font-semibold uppercase tracking-wider text-muted mb-4">
                                 Resources
                             </h3>
                             <div class="space-y-1">
@@ -88,7 +88,7 @@ const hasContactInfo = contacts.length > 0 || links.length > 0 || callout;
                     )}
 
                     {callout && (
-                        <div class="rounded-card border border-rule bg-surface px-5 py-4">
+                        <div class="rounded-card border border-rule bg-surface p-5">
                             <div class="flex items-start gap-3">
                                 <InformationCircleIcon className="h-5 w-5 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
                                 <p class="text-sm text-body leading-relaxed">

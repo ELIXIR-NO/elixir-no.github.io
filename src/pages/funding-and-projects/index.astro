@@ -130,7 +130,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                     return (
                         <a
                             href={`${BASE}/funding-and-projects/${slug}`}
-                            class="project-card group flex flex-col rounded-card border border-rule bg-surface p-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            class="project-card group flex flex-col rounded-card border border-rule bg-surface p-5 transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             data-status={status}
                             data-category={category}
                             data-keywords={keywords.join(',')}
@@ -151,7 +151,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                             </div>
 
                             {/* Title */}
-                            <h2 class="mt-3 font-display text-base font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline leading-snug">
+                            <h2 class="mt-3 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline">
                                 {project.data.title}
                             </h2>
 
@@ -163,7 +163,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                             )}
 
                             {/* Metadata row */}
-                            <div class="mt-4 flex items-center gap-4 text-xs text-muted tabular-nums">
+                            <div class="mt-4 flex items-center gap-4 font-mono text-xs text-muted">
                                 {project.data.period && (
                                     <span class="inline-flex items-center gap-1" title={project.data.period}>
                                         <CalendarIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -179,9 +179,9 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                             </div>
 
                             {/* Arrow */}
-                            <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-ink transition-colors">
+                            <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">
                                 View project
-                                <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                             </div>
                         </a>
                     );

@@ -3,11 +3,11 @@ import Button from './button';
 
 export default function Pricing({ tiers }) {
     return (
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {tiers.map((tier) => (
                 <div
                     key={tier.id}
-                    className={`relative flex flex-col rounded-card border bg-surface p-6 ${
+                    className={`relative flex flex-col rounded-card border bg-surface p-5 ${
                         tier.mostPopular
                             ? 'border-ink'
                             : 'border-rule'
@@ -18,7 +18,7 @@ export default function Pricing({ tiers }) {
                             {tier.name}
                         </h3>
                         {tier.mostPopular && (
-                            <span className="inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-[11px] font-medium text-ink">
+                            <span className="inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-medium text-ink">
                                 <span className="h-1.5 w-1.5 rounded-marker bg-marker" aria-hidden="true" />
                                 Most frequently selected 
                             </span>

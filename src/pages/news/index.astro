@@ -88,7 +88,7 @@ const INITIAL_COUNT = 18;
             return (
                 <a
                     href={`${BASE}/news/${slug}`}
-                    class={`news-card group flex flex-col rounded-card border border-rule bg-surface overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isHidden ? 'hidden' : ''}`}
+                    class={`news-card group flex flex-col rounded-card border border-rule bg-surface overflow-hidden transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${isHidden ? 'hidden' : ''}`}
                     data-index={i}
                     data-year={getYear(entry.data.date)}
                     data-tags={(entry.data.tags ?? []).join(',')}
@@ -108,10 +108,10 @@ const INITIAL_COUNT = 18;
                         </div>
                     )}
                     <div class="flex flex-col flex-1 p-5">
-                        <time class="text-xs font-medium text-muted tabular-nums">
+                        <time class="font-mono text-xs text-muted">
                             {formatDate(entry.data.date)}
                         </time>
-                        <h2 class="mt-2 font-display text-base font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
+                        <h2 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                             {entry.data.title}
                         </h2>
                         <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 flex-1">
@@ -126,9 +126,9 @@ const INITIAL_COUNT = 18;
                                 ))}
                             </div>
                         )}
-                        <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-ink transition-colors">
+                        <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">
                             Read more
-                            <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                            <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                         </div>
                     </div>
                 </a>

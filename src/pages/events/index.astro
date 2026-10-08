@@ -61,7 +61,7 @@ function formatDate(dateString: string): string {
                     return (
                         <a
                             href={`${BASE}/events/${slug}`}
-                            class="group relative flex flex-col rounded-card border border-rule bg-surface overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            class="group relative flex flex-col rounded-card border border-rule bg-surface overflow-hidden transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         >
                             {cover ? (
                                 <div class="h-40 bg-paper border-b border-rule overflow-hidden">
@@ -78,18 +78,18 @@ function formatDate(dateString: string): string {
                                 </div>
                             )}
                             <div class="flex flex-col flex-1 p-5">
-                                <time class="text-xs font-medium text-muted tabular-nums">
+                                <time class="font-mono text-xs text-muted">
                                     {formatDate(event.data.date)}
                                 </time>
-                                <h3 class="mt-2 font-display text-base font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
+                                <h3 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                                     {event.data.title}
                                 </h3>
                                 <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 flex-1">
                                     {event.data.summary}
                                 </p>
-                                <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-ink transition-colors">
+                                <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">
                                     View details
-                                    <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                    <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                 </div>
                             </div>
                         </a>
@@ -112,7 +112,7 @@ function formatDate(dateString: string): string {
                     return (
                         <a
                             href={`${BASE}/events/${slug}`}
-                            class="group relative flex flex-col rounded-card border border-rule bg-surface overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            class="group relative flex flex-col rounded-card border border-rule bg-surface overflow-hidden transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         >
                             {cover ? (
                                 <div class="h-40 bg-paper border-b border-rule overflow-hidden">
@@ -129,18 +129,18 @@ function formatDate(dateString: string): string {
                                 </div>
                             )}
                             <div class="flex flex-col flex-1 p-5">
-                                <time class="text-xs font-medium text-muted tabular-nums">
+                                <time class="font-mono text-xs text-muted">
                                     {formatDate(event.data.date)}
                                 </time>
-                                <h3 class="mt-2 font-display text-base font-semibold text-ink decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
+                                <h3 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                                     {event.data.title}
                                 </h3>
                                 <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 flex-1">
                                     {event.data.summary}
                                 </p>
-                                <div class="mt-4 flex items-center gap-1 text-xs font-medium text-muted group-hover:text-ink transition-colors">
+                                <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">
                                     View details
-                                    <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                    <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                 </div>
                             </div>
                         </a>

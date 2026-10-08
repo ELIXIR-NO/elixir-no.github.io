@@ -45,7 +45,7 @@ function domainOf(website?: string): string | null {
 
     <!-- Hero -->
     <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-marker-text tracking-wide uppercase">Services</p>
+        <p class="flex items-center gap-2 text-sm font-semibold text-marker-text tracking-wide uppercase"><span class="h-2 w-2 rounded-marker bg-marker" aria-hidden="true" />Services</p>
         <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.1]">
             Tools and infrastructure for life science research
         </h1>
@@ -57,7 +57,7 @@ function domainOf(website?: string): string | null {
     </div>
 
     <!-- Filter -->
-    <div class="mt-10">
+    <div class="mt-12">
         <ListingFilters client:load groups={[{ key: 'tags', label: 'Tags', options: tags, mode: 'multi' }]} event="tags-changed" />
     </div>
 

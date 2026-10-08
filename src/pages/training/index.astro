@@ -21,8 +21,8 @@ import { browseLinks } from "../../lib/tess";
 
     <!-- Hero -->
     <div class="max-w-3xl">
-        <p class="text-sm font-semibold text-marker-text tracking-wide uppercase">Training</p>
-        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.15]">
+        <p class="flex items-center gap-2 text-sm font-semibold text-marker-text tracking-wide uppercase"><span class="h-2 w-2 rounded-marker bg-marker" aria-hidden="true" />Training</p>
+        <h1 class="mt-3 text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.1]">
             Bioinformatics training for&nbsp;every&nbsp;level
         </h1>
         <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
@@ -32,8 +32,8 @@ import { browseLinks } from "../../lib/tess";
     </div>
 
     <!-- Training types grid -->
-    <section class="mt-20">
-        <h2 class="text-2xl font-semibold text-ink">Types of training</h2>
+    <section class="mt-16 lg:mt-20">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Types of training</h2>
         <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <!-- RDM -->
@@ -92,9 +92,9 @@ import { browseLinks } from "../../lib/tess";
     </section>
 
     <!-- Resources -->
-    <section class="mt-20">
-        <h2 class="text-2xl font-semibold text-ink">Find courses and materials</h2>
-        <p class="mt-3 text-sm leading-relaxed text-body max-w-2xl">
+    <section class="mt-16 lg:mt-20">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Find courses and materials</h2>
+        <p class="mt-3 text-base leading-relaxed text-body max-w-2xl">
             Browse our catalogue of available courses, categorised by topic and proficiency level.
             All training materials are open-access.
         </p>
@@ -135,9 +135,9 @@ import { browseLinks } from "../../lib/tess";
     </section>
 
     <!-- Upcoming training -->
-    <section class="mt-20" id="upcoming-events">
-        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <h2 class="text-2xl font-semibold text-ink">Upcoming training</h2>
+    <section class="mt-16 lg:mt-20" id="upcoming-events">
+        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-8">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Upcoming training</h2>
             <Button href={browseLinks.upcoming} variant="link" size="sm" external>Browse all on TeSS</Button>
         </div>
         <div class="rounded-card border border-rule bg-surface p-6">
@@ -146,9 +146,9 @@ import { browseLinks } from "../../lib/tess";
     </section>
 
     <!-- Training material -->
-    <section class="mt-16" id="training-material">
-        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-6">
-            <h2 class="text-2xl font-semibold text-ink">Training materials</h2>
+    <section class="mt-16 lg:mt-20" id="training-material">
+        <div class="flex flex-wrap items-baseline justify-between gap-3 mb-8">
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Training materials</h2>
             <Button href={browseLinks.materials} variant="link" size="sm" external>Browse all on TeSS</Button>
         </div>
         <div class="rounded-card border border-rule bg-surface p-6">
@@ -157,8 +157,8 @@ import { browseLinks } from "../../lib/tess";
     </section>
 
     <!-- Past events -->
-    <section class="mt-16" id="past-events">
-        <h2 class="text-2xl font-semibold text-ink mb-6">Past training events</h2>
+    <section class="mt-16 lg:mt-20" id="past-events">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink mb-8">Past training events</h2>
         <div class="rounded-card border border-rule bg-surface p-6">
             <TessEvents client:idle when="past" />
         </div>

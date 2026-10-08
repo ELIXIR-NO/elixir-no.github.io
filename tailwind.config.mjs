@@ -1,5 +1,4 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
 
 const token = (name) => `rgb(var(--color-${name}) / <alpha-value>)`
 
@@ -28,20 +27,10 @@ export default {
                 brand: {
                     "primary": "#023452",
                     "secondary": "#f47d20",
-                    "grey": "#3b4a55",
-                },
-                light: {
-                    "background": "#f5f7f8",
-                    "surface": colors.white,
-                    "on-background": "#3b4a55",
-                    "on-surface": "#3b4a55",
                 },
                 dark: {
                     "background": "#0a161e",
                     "surface": "#0f1e28",
-                    "on-background": "#b4c3cc",
-                    "on-surface": "#b4c3cc",
-                    "on-primary": colors.white,
                 },
             },
             borderRadius: {

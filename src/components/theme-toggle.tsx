@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
+// Inside the merged nav bar (group data-merged) the circles drop their own
+// surface so the bar reads as one piece; the colour transition rides the morph.
 export const circleButtonClass =
-    'h-11 w-11 flex items-center justify-center rounded-full border border-rule bg-surface/90 text-ink hover:border-ink transition-colors motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent';
+    'h-10 w-10 flex items-center justify-center rounded-full border border-rule bg-surface/90 text-ink hover:border-ink group-data-[merged=true]:border-transparent group-data-[merged=true]:bg-transparent group-data-[merged=true]:hover:border-ink transition-[border-color,background-color,color] duration-300 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent';
 
 export default function ThemeToggle() {
     const [isDark, setIsDark] = useState(false);
@@ -50,7 +52,7 @@ export default function ThemeToggle() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="h-5 w-5"
+                        className="h-[22px] w-[22px]"
                         aria-hidden="true"
                     >
                         <path
@@ -72,7 +74,7 @@ export default function ThemeToggle() {
                         viewBox="0 0 24 24"
                         strokeWidth={1.5}
                         stroke="currentColor"
-                        className="h-5 w-5"
+                        className="h-[22px] w-[22px]"
                         aria-hidden="true"
                     >
                         <path

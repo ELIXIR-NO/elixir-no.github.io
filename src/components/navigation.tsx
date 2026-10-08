@@ -113,13 +113,14 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
     return (
         <MotionConfig reducedMotion="user">
             <CommandPalette open={searchOpen} setOpen={setSearchOpen} />
-            <header className="fixed top-3 inset-x-3 sm:inset-x-5 lg:inset-x-8 z-50">
+            <header className="pointer-events-none fixed top-3 inset-x-3 sm:inset-x-5 lg:inset-x-8 z-50">
                 <motion.div
                     layout
                     initial={false}
                     transition={layoutTransition}
                     style={{ borderRadius: PILL_RADIUS }}
-                    className={`relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'px-4 py-2 lg:px-5' : ''}`}
+                    data-merged={scrolled}
+                    className={`group relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'pointer-events-auto px-4 py-2 lg:px-5' : ''}`}
                 >
                     <Skin visible={scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="shadow-lg shadow-black/[0.08] dark:shadow-black/30" />
 
@@ -129,7 +130,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout
                             initial={false}
                             transition={layoutTransition}
-                            className={`relative z-10 justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
+                            className={`pointer-events-auto relative z-10 justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
                         >
                             <a href={`${BASE}/`} className="relative flex focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control">
                                 <span className="sr-only">ELIXIR Norway</span>
@@ -144,7 +145,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout="position"
                             initial={false}
                             transition={layoutTransition}
-                            className="relative z-10 hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
+                            className="pointer-events-auto relative z-10 hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
                             <Skin visible={!scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="border border-rule" />
@@ -199,7 +200,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout="position"
                             initial={false}
                             transition={layoutTransition}
-                            className="relative z-10 col-start-3 justify-self-end flex items-center gap-x-2"
+                            className="pointer-events-auto relative z-10 col-start-3 justify-self-end flex items-center gap-x-2"
                         >
                             <ThemeToggle />
                             <button
@@ -207,7 +208,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                 className={`hidden lg:flex ${circleButtonClass}`}
                                 aria-label="Search (Ctrl+K)"
                             >
-                                <SearchIcon className="h-5 w-5" />
+                                <SearchIcon className="h-[22px] w-[22px]" />
                             </button>
                             <button
                                 type="button"

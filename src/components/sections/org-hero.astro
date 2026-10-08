@@ -14,6 +14,7 @@ const { nodeName, university, logo, coverImage, subtitle, color } = Astro.props;
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
+<!-- Pulled up under the floating nav so the cover runs behind it; the padding puts the content where inner pages start theirs. -->
 <section class="org-hero relative min-h-[50vh] flex items-end overflow-hidden -mt-[var(--nav-offset)]">
     <img
         src={`${BASE}${coverImage}`}
@@ -25,7 +26,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <div class="absolute inset-0 bg-gradient-to-t from-[#023452] via-[#023452]/70 to-[#023452]/30" aria-hidden="true" />
 
-    <div class="relative w-full pt-[calc(var(--nav-offset)+1.5rem)] pb-12 sm:pb-16">
+    <div class="relative w-full pt-[calc(var(--nav-offset)+6rem)] sm:pt-[calc(var(--nav-offset)+7rem)] pb-12 sm:pb-16">
         <div class="mx-auto max-w-7xl px-6 sm:px-8">
             <a
                 href={`${BASE}/about`}

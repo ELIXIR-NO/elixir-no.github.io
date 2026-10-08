@@ -14,11 +14,14 @@ interface Slide {
 export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
     const [current, setCurrent] = useState(0);
     const [paused, setPaused] = useState(false);
+    const [hovering, setHovering] = useState(false);
     const [direction, setDirection] = useState(1);
     const shouldReduceMotion = useReducedMotion();
     const timerRef = useRef<ReturnType<typeof setTimeout>>();
 
     const INTERVAL = 6000;
+    // Hovering only holds the timer; the button owns the pause, so a click is never undone by the pointer leaving.
+    const autoplay = !paused && !hovering && !shouldReduceMotion;
 
     const go = useCallback((idx: number) => {
         setDirection(idx > current ? 1 : -1);
@@ -36,10 +39,10 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
     }, [slides.length]);
 
     useEffect(() => {
-        if (paused || shouldReduceMotion) return;
+        if (!autoplay) return;
         timerRef.current = setTimeout(next, INTERVAL);
         return () => clearTimeout(timerRef.current);
-    }, [current, paused, shouldReduceMotion, next]);
+    }, [current, autoplay, next]);
 
     const slide = slides[current];
 
@@ -54,8 +57,8 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
     return (
         <div
             className="relative w-full"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
+            onMouseEnter={() => setHovering(true)}
+            onMouseLeave={() => setHovering(false)}
             role="region"
             aria-label="Highlights carousel"
             aria-roledescription="carousel"
@@ -173,7 +176,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
             <div className="mt-4 flex gap-1" aria-hidden="true">
                 {slides.map((_, i) => (
                     <div key={i} className="relative flex-1 h-0.5 bg-rule overflow-hidden">
-                        {i === current && !paused && !shouldReduceMotion ? (
+                        {i === current && autoplay ? (
                             <motion.div
                                 className="absolute inset-y-0 left-0 bg-marker"
                                 initial={{ width: '0%' }}

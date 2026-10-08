@@ -227,7 +227,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
 <BaseLayout seo={mergedSeo}>
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
-    <div class="isolate px-6 sm:px-8 pb-12 pt-24 sm:pt-28 flex-1">
+    <div class="isolate px-6 sm:px-8 pb-16 lg:pb-20 pt-24 sm:pt-28 flex-1">
         <div class={`mx-auto ${containerClasses[finalVariant]}`}>
             <!-- Breadcrumbs -->
             {breadcrumbs && <Breadcrumbs crumbs={breadcrumbs} />}

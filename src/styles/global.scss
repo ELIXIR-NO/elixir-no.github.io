@@ -44,12 +44,12 @@
     --hero-tint: var(--hero-tint-dark);
   }
 
-  /* Height of the floating nav at rest: top inset + logo tile (padding + logo). */
+  /* Height of the floating nav at rest: top inset + logo (padding + artwork). */
   :root {
-    --nav-offset: 4.75rem;
+    --nav-offset: 4rem;
 
     @media (min-width: 1024px) {
-      --nav-offset: 6.5rem;
+      --nav-offset: 5.5rem;
     }
   }
 

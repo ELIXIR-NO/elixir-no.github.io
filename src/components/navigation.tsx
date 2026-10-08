@@ -55,9 +55,7 @@ const useScrolled = (merge = 48, split = 16) => {
     return { scrolled, settled };
 };
 
-const RELAXED_TILE_RADIUS = 20;
-const MERGED_RADIUS = 16;
-const STRIP_RADIUS = 14;
+const PILL_RADIUS = 9999;
 
 const morphTransition = { layout: { duration: 0.35, ease: 'easeOut' as const } };
 const instantTransition = { layout: { duration: 0 } };
@@ -108,7 +106,9 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
     }, [mobileMenuOpen, closeMobile]);
 
     const layoutTransition = settled ? morphTransition : instantTransition;
-    const logoClass = `w-auto ${scrolled ? 'h-9 lg:h-10' : 'h-11 lg:h-[60px]'}`;
+    const logoClass = `w-auto transition-[filter] duration-300 motion-reduce:transition-none ${
+        scrolled ? 'h-9 lg:h-10' : 'h-11 lg:h-[60px] [filter:drop-shadow(0_0_14px_rgb(var(--color-paper)/0.9))]'
+    }`;
 
     return (
         <MotionConfig reducedMotion="user">
@@ -118,21 +118,19 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                     layout
                     initial={false}
                     transition={layoutTransition}
-                    style={{ borderRadius: MERGED_RADIUS }}
-                    className={`relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'px-3 py-2 lg:px-4' : ''}`}
+                    style={{ borderRadius: PILL_RADIUS }}
+                    className={`relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'px-4 py-2 lg:px-5' : ''}`}
                 >
-                    <Skin visible={scrolled} radius={MERGED_RADIUS} transition={layoutTransition} shadow />
+                    <Skin visible={scrolled} radius={PILL_RADIUS} transition={layoutTransition} shadow />
 
                     <nav aria-label="Main navigation" className="contents">
-                        {/* Logo: its own tile at the top, bare wordmark once merged */}
+                        {/* Logo: floats large on its own at the top, shrinks into the bar once merged */}
                         <motion.div
                             layout
                             initial={false}
                             transition={layoutTransition}
-                            style={{ borderRadius: scrolled ? 8 : RELAXED_TILE_RADIUS }}
-                            className={`relative justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-2.5 lg:p-4'}`}
+                            className={`relative justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
                         >
-                            <Skin visible={!scrolled} radius={RELAXED_TILE_RADIUS} transition={layoutTransition} />
                             <a href={`${BASE}/`} className="relative flex focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control">
                                 <span className="sr-only">ELIXIR Norway</span>
                                 {/* elixir-no-light.svg is the white wordmark for dark backgrounds. */}
@@ -149,7 +147,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             className="relative hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
-                            <Skin visible={!scrolled} radius={STRIP_RADIUS} transition={layoutTransition} />
+                            <Skin visible={!scrolled} radius={PILL_RADIUS} transition={layoutTransition} />
                             {glider && (
                                 <motion.span
                                     aria-hidden="true"

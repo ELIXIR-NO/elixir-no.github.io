@@ -40,7 +40,7 @@ const Footer = () => {
             <h2 id="footer-heading" className="sr-only">Footer</h2>
 
             {/* Main footer content */}
-            <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
 
                     {/* Brand column */}
@@ -80,7 +80,7 @@ const Footer = () => {
                                     href={href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                    className="grid h-10 w-10 place-items-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     aria-label={name}
                                 >
                                     <Icon className="h-5 w-5" aria-hidden="true" />
@@ -172,7 +172,7 @@ const Footer = () => {
 
             {/* Bottom bar */}
             <div className="border-t border-rule">
-                <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8">
+                <div className="mx-auto max-w-7xl px-6 sm:px-8 py-6">
                     <p className="text-xs text-center text-balance text-muted">
                         Financed by the Research Council of Norway (grants 208481, 270068, 295932, 350529),
                         its partner institutions, NordForsk, and co-funded by the European Union.

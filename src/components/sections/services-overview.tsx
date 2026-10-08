@@ -59,7 +59,7 @@ export default function ServicesOverview() {
     return (
         <MotionConfig reducedMotion="user">
             <section className="py-16 lg:py-20">
-                <div className="max-w-7xl mx-auto px-6 lg:px-12">
+                <div className="max-w-7xl mx-auto px-6 sm:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
                         {/* Left — heading */}
                         <motion.div
@@ -72,7 +72,7 @@ export default function ServicesOverview() {
                             <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                                 Unlock the Power of Your Data
                             </h2>
-                            <p className="mt-4 text-lg text-body leading-relaxed">
+                            <p className="mt-3 text-lg text-body leading-relaxed">
                                 From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
                             </p>
                             <Button href={`${BASE}/services`} variant="link" size="sm" className="mt-6">Explore all services</Button>
@@ -93,9 +93,9 @@ export default function ServicesOverview() {
                                     key={svc.title}
                                     variants={item}
                                     transition={{ duration: 0.5, ease: 'easeOut' }}
-                                    className="group relative flex flex-col px-5 py-5 rounded-card border border-rule bg-surface transition-colors duration-200 hover:border-ink has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent"
+                                    className="group relative flex flex-col p-5 rounded-card border border-rule bg-surface transition-colors duration-200 hover:border-ink has-[a:focus-visible]:ring-2 has-[a:focus-visible]:ring-accent"
                                 >
-                                    <div className="w-9 h-9 rounded-control border border-rule flex items-center justify-center mb-5 text-ink">
+                                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center mb-4 text-ink">
                                         {svc.icon}
                                     </div>
                                     <h3 className="text-base font-semibold text-ink mb-2">
@@ -108,7 +108,7 @@ export default function ServicesOverview() {
                                     </p>
                                     <span className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink" aria-hidden="true">
                                         Learn more
-                                        <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                        <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                                     </span>
                                 </motion.div>
                             ))}

@@ -33,7 +33,7 @@ const featuredCover = featured?.data.cover?.source
 ---
 
 <section class="py-16 lg:py-20">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
         <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 mb-10">
             <div>
                 <h2 class="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
@@ -64,7 +64,7 @@ const featuredCover = featured?.data.cover?.source
                         <div class="aspect-[16/9] w-full rounded-photo border border-rule bg-surface" aria-hidden="true" />
                     )}
 
-                    <time class="mt-4 mb-1.5 block text-sm text-muted tabular-nums">
+                    <time class="mt-4 mb-1.5 block font-mono text-xs text-muted">
                         {formatDate(featured.data.date)}
                     </time>
                     <h3 class="text-xl sm:text-2xl font-semibold text-ink leading-tight text-balance decoration-marker decoration-2 underline-offset-4 group-hover:underline">
@@ -103,7 +103,7 @@ const featuredCover = featured?.data.cover?.source
                             )}
 
                             <div class="min-w-0">
-                                <time class="mb-1.5 block text-sm text-muted tabular-nums">
+                                <time class="mb-1.5 block font-mono text-xs text-muted">
                                     {formatDate(article.data.date)}
                                 </time>
                                 <h3 class="text-base sm:text-[17px] font-semibold text-ink leading-snug line-clamp-2 decoration-marker decoration-2 underline-offset-4 group-hover:underline">

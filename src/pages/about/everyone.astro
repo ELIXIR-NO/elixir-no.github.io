@@ -78,7 +78,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
 
     <!-- Hero -->
     <section class="relative bg-paper border-b border-rule overflow-hidden -mt-[var(--nav-offset)]">
-        <div class="relative pt-[calc(var(--nav-offset)+3rem)] pb-12 sm:pb-16">
+        <div class="relative pt-[calc(var(--nav-offset)+1.5rem)] pb-12 sm:pb-16">
             <div class="mx-auto max-w-7xl px-6 sm:px-8">
                 <a
                     href={`${BASE}/about`}
@@ -151,7 +151,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             return (
                                 <a
                                     href={`#org-${key}`}
-                                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-control border border-rule bg-surface text-xs font-semibold text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                    class="inline-flex h-9 items-center gap-2 px-3 rounded-control border border-rule bg-surface text-sm font-medium text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     {org?.universityShort || key.toUpperCase()}
                                 </a>
@@ -160,7 +160,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                     }
                     <a
                         href="#org-external"
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-control border border-rule bg-surface text-xs font-semibold text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                        class="inline-flex h-9 items-center gap-2 px-3 rounded-control border border-rule bg-surface text-sm font-medium text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     >
                         Advisory & External
                     </a>
@@ -170,13 +170,13 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
     </section>
 
     <!-- Main content -->
-    <main id="main-content" class="mx-auto max-w-7xl px-6 sm:px-8 py-12 sm:py-16 flex-1">
+    <main id="main-content" class="mx-auto max-w-7xl px-6 sm:px-8 py-16 lg:py-20 flex-1">
         <!-- Main university sections -->
         {
             mainOrgs.map(({ key, data: orgData, meta: orgMeta }) => (
                 <section
                     id={`org-${key}`}
-                    class="mb-16 last:mb-0 scroll-mt-24"
+                    class="mb-16 lg:mb-20 last:mb-0 scroll-mt-24"
                 >
                     <div class="flex items-center gap-4 mb-8">
                         {orgMeta && (
@@ -191,7 +191,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             </div>
                         )}
                         <div>
-                            <h2 class="text-xl sm:text-2xl font-semibold text-ink tracking-tight">
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
                                 {orgData.name}
                             </h2>
                             <p class="text-sm text-muted">
@@ -250,10 +250,10 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
         {externalPeople.length > 0 && (
             <section
                 id="org-external"
-                class="mt-16 pt-16 border-t border-rule scroll-mt-24"
+                class="mt-16 lg:mt-20 pt-16 lg:pt-20 border-t border-rule scroll-mt-24"
             >
                 <div class="mb-8">
-                    <h2 class="text-xl sm:text-2xl font-semibold text-ink tracking-tight">
+                    <h2 class="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
                         Advisory & External Collaborators
                     </h2>
                     <p class="text-sm text-muted mt-1">

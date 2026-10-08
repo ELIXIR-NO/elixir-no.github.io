@@ -177,27 +177,6 @@
       @apply mt-16 mb-8;
     }
   }
-
-  #training-materials-list,#past-training-materials-list {
-    @apply list-none space-y-2;
-
-    ol, ul {
-      @apply space-y-3;
-    }
-
-    li {
-      @apply bg-surface rounded-card p-3 border border-rule;
-    }
-
-    li a {
-      @apply text-lg font-semibold text-ink hover:underline decoration-marker decoration-2 underline-offset-4;
-    }
-
-    li div {
-      @apply text-muted text-sm mt-1;
-    }
-  }
-
 }
 
 /* ─── CMS Preview styles ──────────────────────────────── */

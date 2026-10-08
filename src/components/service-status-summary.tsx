@@ -121,7 +121,7 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
     return (
         <a
             href={href}
-            className="group mt-5 inline-flex items-center gap-2.5 rounded-control border border-rule bg-surface px-3 py-1.5 text-sm font-medium text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            className="group mt-5 inline-flex h-9 items-center gap-2.5 rounded-control border border-rule bg-surface px-3 text-sm font-medium text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         >
             <span className="relative flex h-2 w-2 rounded-marker shrink-0" aria-hidden="true">
                 {cfg.ping && !reduce && (

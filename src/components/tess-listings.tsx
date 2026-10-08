@@ -114,7 +114,7 @@ export function TessMaterials() {
                 <input id="material-filter" type="search" autoComplete="off"
                        placeholder="Filter materials by title"
                        value={filter} onChange={e => setFilter(e.target.value)}
-                       className="w-full rounded-control border border-rule bg-surface py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
+                       className="h-10 w-full rounded-control border border-rule bg-surface pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:ring-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent" />
             </div>
             <ul className={`mt-4 ${LIST}`}>
                 {shown.map(material => (

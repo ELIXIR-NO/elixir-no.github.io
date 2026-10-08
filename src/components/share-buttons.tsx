@@ -52,7 +52,7 @@ export default function ShareButtons({ url, title, summary = '' }: Props) {
     };
 
     const btn =
-        'inline-flex items-center justify-center h-11 w-11 rounded-control ' +
+        'inline-flex items-center justify-center h-10 w-10 rounded-control ' +
         'border border-rule ' +
         'text-ink ' +
         'hover:border-ink ' +

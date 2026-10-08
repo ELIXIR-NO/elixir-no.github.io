@@ -117,7 +117,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
             {/* Mobile toggle button */}
             <button
                 onClick={() => setMobileOpen(prev => !prev)}
-                className="lg:hidden flex items-center gap-2 rounded-control border border-rule bg-surface px-4 py-2.5 text-sm font-medium text-ink transition-colors hover:border-ink w-full justify-center"
+                className="lg:hidden flex h-10 items-center gap-2 rounded-control border border-rule bg-surface px-4 text-sm font-medium text-ink transition-colors hover:border-ink w-full justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 aria-expanded={mobileOpen}
             >
                 <AdjustmentsHorizontalIcon className="h-4 w-4" aria-hidden="true" />
@@ -131,7 +131,7 @@ export default function ProjectFilters({ groups = [] }: { groups: FilterGroup[] 
 
             {/* Mobile filter panel */}
             {mobileOpen && (
-                <div className="lg:hidden mt-3 rounded-card border border-rule bg-surface p-5">
+                <div className="lg:hidden mt-3 rounded-card border border-rule bg-surface p-4">
                     {filterContent}
                 </div>
             )}

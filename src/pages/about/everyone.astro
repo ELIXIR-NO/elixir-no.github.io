@@ -74,35 +74,27 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
         description: `Meet the ${totalPeople}+ researchers, engineers, and scientists powering Norway's bioinformatics infrastructure across five universities.`,
     }}
 >
-    <div class="h-[84px]" aria-hidden="true" />
-
     <!-- Hero -->
-    <section class="relative bg-brand-primary overflow-hidden -mt-[84px]">
-        <div
-            class="absolute inset-0 opacity-[0.03]"
-            style="background-image: radial-gradient(circle, white 1px, transparent 1px); background-size: 24px 24px;"
-            aria-hidden="true"
-        />
-
-        <div class="relative pt-[calc(84px+3rem)] pb-12 sm:pb-16">
+    <section class="relative bg-paper border-b border-rule overflow-hidden">
+        <div class="relative pt-24 sm:pt-28 pb-12 sm:pb-16">
             <div class="mx-auto max-w-7xl px-6 sm:px-8">
                 <a
                     href={`${BASE}/about`}
-                    class="everyone-fade inline-flex items-center gap-1.5 text-sm font-medium text-white/60 hover:text-white transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded"
+                    class="everyone-fade inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-8 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                 >
                     <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                     About ELIXIR Norway
                 </a>
 
                 <h1
-                    class="everyone-fade text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight"
+                    class="everyone-fade text-3xl sm:text-4xl md:text-5xl font-semibold text-ink tracking-tight"
                     style="animation-delay: 0.1s"
                 >
                     Our People
                 </h1>
 
                 <p
-                    class="everyone-fade mt-3 text-base sm:text-lg text-white/70 max-w-2xl"
+                    class="everyone-fade mt-3 text-base sm:text-lg text-body max-w-2xl"
                     style="animation-delay: 0.2s"
                 >
                     Researchers, engineers, and scientists across five Norwegian
@@ -117,29 +109,29 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                 >
                     <div>
                         <span
-                            class="text-2xl sm:text-3xl font-bold text-white"
+                            class="font-mono text-2xl sm:text-3xl font-semibold text-ink"
                         >
                             {totalPeople}+
                         </span>
-                        <span class="ml-2 text-sm text-white/60">Members</span>
+                        <span class="ml-2 text-sm text-muted">Members</span>
                     </div>
                     <div>
                         <span
-                            class="text-2xl sm:text-3xl font-bold text-white"
+                            class="font-mono text-2xl sm:text-3xl font-semibold text-ink"
                         >
                             {mainOrgKeys.length}
                         </span>
-                        <span class="ml-2 text-sm text-white/60"
+                        <span class="ml-2 text-sm text-muted"
                             >Universities</span
                         >
                     </div>
                     <div>
                         <span
-                            class="text-2xl sm:text-3xl font-bold text-white"
+                            class="font-mono text-2xl sm:text-3xl font-semibold text-ink"
                         >
                             {people.groups.length}
                         </span>
-                        <span class="ml-2 text-sm text-white/60"
+                        <span class="ml-2 text-sm text-muted"
                             >Governance Groups</span
                         >
                     </div>
@@ -157,7 +149,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             return (
                                 <a
                                     href={`#org-${key}`}
-                                    class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold text-white/80 bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                                    class="inline-flex h-9 items-center gap-2 px-3 rounded-control border border-rule bg-surface text-sm font-medium text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     {org?.universityShort || key.toUpperCase()}
                                 </a>
@@ -166,7 +158,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                     }
                     <a
                         href="#org-external"
-                        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold text-white/80 bg-white/10 hover:bg-white/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                        class="inline-flex h-9 items-center gap-2 px-3 rounded-control border border-rule bg-surface text-sm font-medium text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     >
                         Advisory & External
                     </a>
@@ -176,31 +168,31 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
     </section>
 
     <!-- Main content -->
-    <main id="main-content" class="mx-auto max-w-7xl px-6 sm:px-8 py-12 sm:py-16 flex-1">
+    <main id="main-content" class="mx-auto max-w-7xl px-6 sm:px-8 py-16 lg:py-20 flex-1">
         <!-- Main university sections -->
         {
             mainOrgs.map(({ key, data: orgData, meta: orgMeta }) => (
                 <section
                     id={`org-${key}`}
-                    class="mb-16 last:mb-0 scroll-mt-24"
+                    class="mb-16 lg:mb-20 last:mb-0 scroll-mt-24"
                 >
                     <div class="flex items-center gap-4 mb-8">
                         {orgMeta && (
-                            <div class="shrink-0 h-12 w-12 rounded-xl flex items-center justify-center border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.04] shadow-sm">
+                            <div class="shrink-0 h-12 w-12 rounded-control flex items-center justify-center border border-rule bg-surface">
                                 <img
                                     src={`${BASE}${orgMeta.logo}`}
                                     alt=""
                                     aria-hidden="true"
-                                    class="h-8 w-8 object-contain dark:invert-[0.85]"
+                                    class="h-8 w-8 object-contain dark:invert-85"
                                     loading="lazy"
                                 />
                             </div>
                         )}
                         <div>
-                            <h2 class="text-xl sm:text-2xl font-bold text-brand-primary dark:text-white tracking-tight">
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
                                 {orgData.name}
                             </h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                            <p class="text-sm text-muted">
                                 {orgData.people.length} members
                                 {orgMeta ? ` — ${orgMeta.nodeName}` : ""}
                             </p>
@@ -208,7 +200,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                         {orgMeta && (
                             <a
                                 href={`${BASE}/about/${orgMeta.slug}`}
-                                class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                                class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                             >
                                 View node
                                 <ArrowRightIcon className="h-3 w-3" aria-hidden="true" />
@@ -224,24 +216,24 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                                         href={person["profile-url"]}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03] transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                        class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3 transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
-                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
                                             <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="truncate text-sm font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors">{person.name}</div>
-                                            <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
+                                            <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                            <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
                                         </div>
                                     </a>
                                 ) : (
-                                    <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03]">
-                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm">
+                                    <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3">
+                                        <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
                                             <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                         </div>
                                         <div class="min-w-0">
-                                            <div class="truncate text-sm font-semibold text-brand-primary dark:text-white">{person.name}</div>
-                                            <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
+                                            <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                            <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
                                         </div>
                                     </div>
                                 )}
@@ -256,13 +248,13 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
         {externalPeople.length > 0 && (
             <section
                 id="org-external"
-                class="mt-16 pt-16 border-t border-gray-200/60 dark:border-gray-700/30 scroll-mt-24"
+                class="mt-16 lg:mt-20 pt-16 lg:pt-20 border-t border-rule scroll-mt-24"
             >
                 <div class="mb-8">
-                    <h2 class="text-xl sm:text-2xl font-bold text-brand-primary dark:text-white tracking-tight">
+                    <h2 class="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
                         Advisory & External Collaborators
                     </h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    <p class="text-sm text-muted mt-1">
                         International experts serving on our Scientific Advisory Committee and Stakeholder Panel.
                     </p>
                 </div>
@@ -275,26 +267,26 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                                     href={person["profile-url"]}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03] transition-all duration-200 hover:border-accent/30 hover:shadow-md hover:shadow-accent/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                    class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3 transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
-                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm transition-transform duration-200 group-hover:scale-105">
+                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
                                         <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="truncate text-sm font-semibold text-brand-primary dark:text-white group-hover:text-accent transition-colors">{person.name}</div>
-                                        <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
-                                        <div class="truncate text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{person.orgName}</div>
+                                        <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                        <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
+                                        <div class="truncate text-[11px] text-muted mt-0.5">{person.orgName}</div>
                                     </div>
                                 </a>
                             ) : (
-                                <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.03] p-3 shadow-sm ring-1 ring-black/[0.03] dark:ring-white/[0.03]">
-                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-gray-200/60 dark:border-gray-700/40 shadow-sm">
+                                <div class="grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3">
+                                    <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
                                         <img alt={person.name} src={`${BASE}${person.photo}`} class="h-full w-full object-cover" loading="lazy" />
                                     </div>
                                     <div class="min-w-0">
-                                        <div class="truncate text-sm font-semibold text-brand-primary dark:text-white">{person.name}</div>
-                                        <div class="truncate text-xs text-brand-grey dark:text-gray-400 mt-0.5">{composeTitle(person)}</div>
-                                        <div class="truncate text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">{person.orgName}</div>
+                                        <div class="truncate text-sm font-semibold text-ink">{person.name}</div>
+                                        <div class="truncate text-xs text-body mt-0.5">{composeTitle(person)}</div>
+                                        <div class="truncate text-[11px] text-muted mt-0.5">{person.orgName}</div>
                                     </div>
                                 </div>
                             )}

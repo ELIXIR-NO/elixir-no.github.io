@@ -34,8 +34,6 @@ const coverUrl = `${siteUrl}${BASE}${org.coverImage}`;
     description: org.subtitle,
     image: coverUrl,
 }}>
-    <div class="h-[84px]" aria-hidden="true" />
-
     <OrgHero
         nodeName={org.nodeName}
         university={org.university}
@@ -45,7 +43,7 @@ const coverUrl = `${siteUrl}${BASE}${org.coverImage}`;
         color={org.color}
     />
 
-    <main id="main-content" class="px-6 sm:px-8 py-16 sm:py-20 flex-1">
+    <main id="main-content" class="px-6 sm:px-8 py-16 lg:py-20 flex-1">
         <div class="mx-auto max-w-4xl">
             <article class="content">
                 <Content components={components} />

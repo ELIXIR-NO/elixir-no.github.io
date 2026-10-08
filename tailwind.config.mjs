@@ -1,5 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
-const colors = require('tailwindcss/colors')
+
+const token = (name) => `rgb(var(--color-${name}) / <alpha-value>)`
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -10,27 +11,34 @@ export default {
             fontFamily: {
                 sans: ['var(--font-body, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
                 display: ['var(--font-display, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
+                mono: ['var(--font-mono, ui-monospace)', ...defaultTheme.fontFamily.mono],
             },
             colors: {
-                accent: 'rgb(var(--color-accent) / <alpha-value>)',
+                accent: token('accent'),
+                // Theme-aware: values flip under .dark in global.scss, so no dark: variant is needed.
+                paper: token('paper'),
+                surface: token('surface'),
+                ink: token('ink'),
+                body: token('body'),
+                muted: token('muted'),
+                rule: token('rule'),
+                marker: token('marker'),
+                'marker-text': token('marker-text'),
                 brand: {
                     "primary": "#023452",
                     "secondary": "#f47d20",
-                    "grey": "#4d4848",
-                },
-                light: {
-                    "background": colors.white,
-                    "surface": "#f8f9fa",
-                    "on-background": "#4d4848",
-                    "on-surface": "#4d4848",
                 },
                 dark: {
-                    "background": "#121212",
-                    "surface": "#202020",
-                    "on-background": colors.slate["100"],
-                    "on-surface": colors.slate["200"],
-                    "on-primary": colors.white,
+                    "background": "#0a161e",
+                    "surface": "#0f1e28",
                 },
+            },
+            borderRadius: {
+                control: '8px',
+                card: '12px',
+                photo: '12px',
+                chip: '6px',
+                marker: '2px',
             },
             invert: {
                 85: '.85',

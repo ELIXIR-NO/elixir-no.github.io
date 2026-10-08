@@ -21,72 +21,43 @@ const REFRESH_INTERVAL = 60_000;
 
 const statusConfig: Record<Status, {
     dot: string;
-    ping: string | null;
     label: string;
     labelClass: string;
-    cardBorder: string;
-    cardBg: string;
 }> = {
     checking: {
-        dot: 'bg-yellow-400',
-        ping: 'bg-yellow-400',
+        dot: 'bg-muted',
         label: 'Checking',
-        labelClass: 'text-yellow-600 dark:text-yellow-400',
-        cardBorder: 'border-gray-200/60 dark:border-gray-700/30',
-        cardBg: 'bg-white dark:bg-white/[0.02]',
+        labelClass: 'text-muted',
     },
     ok: {
-        dot: 'bg-emerald-500',
-        ping: 'bg-emerald-400',
+        dot: 'bg-emerald-600 dark:bg-emerald-400',
         label: 'Operational',
-        labelClass: 'text-emerald-600 dark:text-emerald-400',
-        cardBorder: 'border-emerald-200/60 dark:border-emerald-800/30',
-        cardBg: 'bg-emerald-50/30 dark:bg-emerald-950/10',
+        labelClass: 'text-emerald-700 dark:text-emerald-400',
     },
     reachable: {
-        dot: 'bg-sky-500',
-        ping: null,
+        dot: 'bg-sky-600 dark:bg-sky-400',
         label: 'Reachable',
-        labelClass: 'text-sky-600 dark:text-sky-400',
-        cardBorder: 'border-sky-200/60 dark:border-sky-800/30',
-        cardBg: 'bg-sky-50/30 dark:bg-sky-950/10',
+        labelClass: 'text-sky-700 dark:text-sky-400',
     },
     degraded: {
-        dot: 'bg-amber-500',
-        ping: null,
+        dot: 'bg-amber-600 dark:bg-amber-400',
         label: 'Degraded',
-        labelClass: 'text-amber-600 dark:text-amber-400',
-        cardBorder: 'border-amber-200/60 dark:border-amber-800/30',
-        cardBg: 'bg-amber-50/30 dark:bg-amber-950/10',
+        labelClass: 'text-amber-700 dark:text-amber-400',
     },
     error: {
-        dot: 'bg-red-500',
-        ping: null,
+        dot: 'bg-red-600 dark:bg-red-400',
         label: 'Error',
-        labelClass: 'text-red-600 dark:text-red-400',
-        cardBorder: 'border-red-200/60 dark:border-red-800/30',
-        cardBg: 'bg-red-50/30 dark:bg-red-950/10',
+        labelClass: 'text-red-700 dark:text-red-400',
     },
     down: {
-        dot: 'bg-red-500',
-        ping: null,
+        dot: 'bg-red-600 dark:bg-red-400',
         label: 'Unreachable',
-        labelClass: 'text-red-600 dark:text-red-400',
-        cardBorder: 'border-red-200/60 dark:border-red-800/30',
-        cardBg: 'bg-red-50/30 dark:bg-red-950/10',
+        labelClass: 'text-red-700 dark:text-red-400',
     },
 };
 
 function StatusDot({ status }: { status: Status }) {
-    const cfg = statusConfig[status];
-    return (
-        <span className="relative flex h-2.5 w-2.5">
-            {cfg.ping && (
-                <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${cfg.ping} opacity-50`} />
-            )}
-            <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${cfg.dot}`} />
-        </span>
-    );
+    return <span className={`block h-2 w-2 rounded-marker ${statusConfig[status].dot}`} />;
 }
 
 function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
@@ -106,30 +77,30 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
     const problems = degraded + errored + down;
 
     return (
-        <div className="rounded-xl border border-gray-200/60 dark:border-gray-700/30 bg-white dark:bg-white/[0.02] p-6">
+        <div className="rounded-card border border-rule bg-surface p-5">
             <div className="flex items-center gap-3">
                 {!allChecked ? (
-                    <div className="h-10 w-10 rounded-full bg-yellow-100 dark:bg-yellow-900/20 flex items-center justify-center shrink-0">
-                        <svg className="h-5 w-5 text-yellow-500 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
+                        <svg className="h-5 w-5 text-muted animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
                     </div>
                 ) : allOk ? (
-                    <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
-                        <CheckIcon className="h-5 w-5 text-emerald-500" aria-hidden="true" />
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
+                        <CheckIcon className="h-5 w-5 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
                     </div>
                 ) : problems > 0 ? (
-                    <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/20 flex items-center justify-center shrink-0">
-                        <ExclamationTriangleIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
+                        <ExclamationTriangleIcon className="h-5 w-5 text-red-700 dark:text-red-400" aria-hidden="true" />
                     </div>
                 ) : (
-                    <div className="h-10 w-10 rounded-full bg-sky-100 dark:bg-sky-900/20 flex items-center justify-center shrink-0">
-                        <InformationCircleIcon className="h-5 w-5 text-sky-500" aria-hidden="true" />
+                    <div className="h-9 w-9 rounded-control border border-rule flex items-center justify-center shrink-0">
+                        <InformationCircleIcon className="h-5 w-5 text-sky-700 dark:text-sky-400" aria-hidden="true" />
                     </div>
                 )}
                 <div>
-                    <p className="text-lg font-semibold text-brand-primary dark:text-white">
+                    <p className="text-lg font-semibold text-ink">
                         {!allChecked
                             ? 'Checking services...'
                             : allOk
@@ -139,7 +110,7 @@ function OverallSummary({ states }: { states: Map<string, ServiceState> }) {
                             : `${ok} confirmed operational`
                         }
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <p className="text-sm text-muted">
                         {allChecked
                             ? [
                                 ok > 0 ? `${ok} operational` : null,
@@ -213,12 +184,12 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                     return (
                         <div
                             key={service.slug}
-                            className={`rounded-xl border p-4 transition-colors duration-200 ${cfg.cardBorder} ${cfg.cardBg}`}
+                            className="rounded-card border border-rule bg-surface p-4"
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div className="flex items-center gap-3 min-w-0">
                                     {service.logo ? (
-                                        <div className="h-9 w-9 shrink-0 rounded-lg bg-white dark:bg-gray-100 border border-gray-200/40 dark:border-gray-200/20 flex items-center justify-center p-1 overflow-hidden">
+                                        <div className="h-9 w-9 shrink-0 rounded-control bg-white border border-rule flex items-center justify-center p-1 overflow-hidden">
                                             <img
                                                 src={service.logo}
                                                 alt=""
@@ -228,25 +199,25 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                             />
                                         </div>
                                     ) : (
-                                        <div className="h-9 w-9 shrink-0 rounded-lg bg-accent/10 flex items-center justify-center" aria-hidden="true">
-                                            <span className="text-sm font-bold text-accent">{service.title.charAt(0)}</span>
+                                        <div className="h-9 w-9 shrink-0 rounded-control border border-rule flex items-center justify-center" aria-hidden="true">
+                                            <span className="text-sm font-semibold text-ink">{service.title.charAt(0)}</span>
                                         </div>
                                     )}
                                     <div className="min-w-0">
-                                        <p className="text-sm font-semibold text-brand-primary dark:text-white truncate">
+                                        <p className="text-sm font-semibold text-ink truncate">
                                             {service.title}
                                         </p>
                                         <a
                                             href={service.website}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xs text-gray-500 dark:text-gray-400 hover:text-accent transition-colors truncate block"
+                                            className="text-xs font-mono text-muted hover:text-accent transition-colors truncate block"
                                         >
                                             {new URL(service.website).hostname}
                                         </a>
                                     </div>
                                 </div>
-                                <div className="shrink-0 pt-0.5">
+                                <div className="shrink-0 pt-1.5">
                                     <StatusDot status={state.status} />
                                 </div>
                             </div>
@@ -257,28 +228,28 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                         {cfg.label}
                                     </span>
                                     {state.httpStatus !== null && (
-                                        <span className={`text-xs font-mono px-1.5 py-0.5 rounded ${
+                                        <span className={`text-xs font-mono px-1.5 py-0.5 rounded-chip border border-rule ${
                                             state.httpStatus >= 200 && state.httpStatus < 300
-                                                ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                                                ? 'text-emerald-700 dark:text-emerald-400'
                                                 : state.httpStatus >= 300 && state.httpStatus < 400
-                                                ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300'
+                                                ? 'text-sky-700 dark:text-sky-400'
                                                 : state.httpStatus >= 400 && state.httpStatus < 500
-                                                ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300'
-                                                : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300'
+                                                ? 'text-amber-700 dark:text-amber-400'
+                                                : 'text-red-700 dark:text-red-400'
                                         }`}>
                                             {state.httpStatus}
                                         </span>
                                     )}
                                 </div>
                                 {state.latency !== null && state.status !== 'checking' && (
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 tabular-nums shrink-0">
+                                    <span className="text-xs font-mono text-muted tabular-nums shrink-0">
                                         {state.latency}ms
                                     </span>
                                 )}
                             </div>
 
                             {state.detail && state.status !== 'checking' && (
-                                <p className="mt-1.5 text-xs text-gray-500 dark:text-gray-400 truncate">
+                                <p className="mt-1.5 text-xs text-muted truncate">
                                     {state.detail}
                                 </p>
                             )}
@@ -287,7 +258,7 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                 })}
             </div>
 
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-xs text-muted">
                 Checks HTTP status codes when CORS allows, falls back to reachability probes otherwise.
                 Results reflect your network. Refreshes every 60 seconds.
             </p>

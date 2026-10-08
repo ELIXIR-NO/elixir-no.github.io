@@ -1,7 +1,7 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { Fragment, useEffect, useState, useCallback } from "react";
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useState, useCallback } from "react";
 import CommandPalette from "./command-palette.tsx";
-import ThemeToggle from "./theme-toggle.tsx";
+import ThemeToggle, { circleButtonClass } from "./theme-toggle.tsx";
 import NavAboutMenu from "./nav-about-menu.tsx";
 import NavDropdown from "./nav-dropdown.tsx";
 import NavMobileAccordion from "./nav-mobile-accordion.tsx";
@@ -28,25 +28,63 @@ const isActivePath = (pathname: string, href: string) =>
     pathname === href || pathname.startsWith(href + '/');
 
 const navLinkClass = (active: boolean) =>
-    `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-        active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white'
+    `relative z-10 px-3.5 py-2 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] rounded-control transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+        active ? 'text-ink' : 'text-body hover:text-ink'
     }`;
 
-const useScrolled = (threshold = 20) => {
+// Merge and split thresholds differ so a scroll position hovering near one
+// edge cannot flip the nav back and forth. `settled` turns true one frame
+// after the first measurement so a reload mid-page snaps to the merged state
+// instead of morphing from the server-rendered relaxed one.
+const useScrolled = (merge = 48, split = 16) => {
     const [scrolled, setScrolled] = useState(false);
+    const [settled, setSettled] = useState(false);
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > threshold);
+        const onScroll = () => {
+            const y = window.scrollY;
+            setScrolled((prev) => (prev ? y > split : y > merge));
+        };
         onScroll();
+        const frame = requestAnimationFrame(() => setSettled(true));
         window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, [threshold]);
-    return scrolled;
+        return () => {
+            cancelAnimationFrame(frame);
+            window.removeEventListener('scroll', onScroll);
+        };
+    }, [merge, split]);
+    return { scrolled, settled };
+};
+
+const PILL_RADIUS = 9999;
+
+const morphTransition = { layout: { duration: 0.35, ease: 'easeOut' as const } };
+const instantTransition = { layout: { duration: 0 } };
+type LayoutTransition = typeof morphTransition | typeof instantTransition;
+
+/**
+ * Surface + rule border painted behind a nav piece. A separate layout element
+ * so its opacity can fade independently of the content while framer keeps the
+ * corner radius undistorted during the morph.
+ */
+const Skin = ({ visible, radius, transition, className }: { visible: boolean; radius: number; transition: LayoutTransition; className: string }) => {
+    const shouldReduceMotion = useReducedMotion();
+    return (
+        <motion.div
+            aria-hidden="true"
+            layout
+            initial={false}
+            animate={{ opacity: visible ? 1 : 0 }}
+            transition={{ ...transition, opacity: { duration: shouldReduceMotion ? 0 : 0.3 } }}
+            style={{ borderRadius: radius }}
+            className={`pointer-events-none absolute inset-0 z-0 bg-surface/90 ${className}`}
+        />
+    );
 };
 
 export const Navigation = ({ pathname }: { pathname: string }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
-    const scrolled = useScrolled();
+    const { scrolled, settled } = useScrolled();
     const shouldReduceMotion = useReducedMotion();
 
     const activeIndex = navigation.findIndex((item) => isActivePath(pathname, item.href));
@@ -67,39 +105,56 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
         return () => document.removeEventListener('keydown', onKey);
     }, [mobileMenuOpen, closeMobile]);
 
+    const layoutTransition = settled ? morphTransition : instantTransition;
+    const logoClass = `w-auto transition-[filter] duration-300 motion-reduce:transition-none ${
+        scrolled ? 'h-9 lg:h-10' : 'h-11 lg:h-[60px] [filter:drop-shadow(0_0_14px_rgb(var(--color-paper)/0.9))]'
+    }`;
+
     return (
-        <Fragment>
+        <MotionConfig reducedMotion="user">
             <CommandPalette open={searchOpen} setOpen={setSearchOpen} />
-            <header className="fixed top-3 inset-x-3 sm:inset-x-5 lg:inset-x-8 z-50">
-                <div
-                    className={`rounded-2xl transition-all duration-300 ${
-                        scrolled
-                            ? 'bg-white/80 dark:bg-dark-background/80 backdrop-blur-xl shadow-lg shadow-black/[0.08] dark:shadow-black/30 border border-gray-200/60 dark:border-gray-700/60'
-                            : 'bg-white/40 dark:bg-dark-background/40 backdrop-blur-md border border-white/40 dark:border-white/10'
-                    }`}
+            <header className="pointer-events-none fixed top-3 inset-x-3 sm:inset-x-5 lg:inset-x-8 z-50">
+                <motion.div
+                    layout
+                    initial={false}
+                    transition={layoutTransition}
+                    style={{ borderRadius: PILL_RADIUS }}
+                    data-merged={scrolled}
+                    className={`group relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'pointer-events-auto px-4 py-2 lg:px-5' : ''}`}
                 >
-                    <nav aria-label="Main navigation" className="flex items-center justify-between px-5 py-3 lg:px-6">
+                    <Skin visible={scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="shadow-lg shadow-black/[0.08] dark:shadow-black/30" />
 
-                        {/* Logo */}
-                        <div className="flex shrink-0">
-                            <a href={`${BASE}/`} className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg">
+                    <nav aria-label="Main navigation" className="contents">
+                        {/* Logo: floats large on its own at the top, shrinks into the bar once merged */}
+                        <motion.div
+                            layout
+                            initial={false}
+                            transition={layoutTransition}
+                            className={`pointer-events-auto relative z-10 justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
+                        >
+                            <a href={`${BASE}/`} className="relative flex focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control">
                                 <span className="sr-only">ELIXIR Norway</span>
-                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className="hidden dark:block h-10 w-auto" width="120" height="48" />
-                                <img alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className="block dark:hidden h-10 w-auto" width="120" height="48" />
+                                {/* elixir-no-light.svg is the white wordmark for dark backgrounds. */}
+                                <motion.img layout transition={layoutTransition} alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-light.svg`} className={`hidden dark:block ${logoClass}`} width="140" height="94" />
+                                <motion.img layout transition={layoutTransition} alt="ELIXIR Norway logo" src={`${BASE}/assets/logos/elixir-no-dark.svg`} className={`block dark:hidden ${logoClass}`} width="140" height="94" />
                             </a>
-                        </div>
+                        </motion.div>
 
-                        {/* Desktop nav links + magic pill */}
-                        <div
-                            className="relative hidden lg:flex lg:items-center lg:gap-x-1"
+                        {/* Desktop link strip + magic pill */}
+                        <motion.div
+                            layout="position"
+                            initial={false}
+                            transition={layoutTransition}
+                            className="pointer-events-auto relative z-10 hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
+                            <Skin visible={!scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="border border-rule" />
                             {glider && (
                                 <motion.span
                                     aria-hidden="true"
-                                    className="pointer-events-none absolute rounded-lg bg-accent/10"
+                                    className="pointer-events-none absolute h-0.5 rounded-marker bg-marker"
                                     initial={false}
-                                    animate={{ left: glider.left, top: glider.top, width: glider.width, height: glider.height }}
+                                    animate={{ left: glider.left + 14, top: glider.top + glider.height - 5, width: glider.width - 28 }}
                                     transition={shouldReduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 34 }}
                                 />
                             )}
@@ -116,7 +171,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                             active={active}
                                             panelId="about-menu-panel"
                                             panelLabel="About ELIXIR Norway"
-                                            panelClassName="w-80"
+                                            panelClassName={`w-80 ${scrolled ? 'mt-5' : 'mt-3'}`}
                                             rootRef={registerRef(i)}
                                             onHover={() => setHoveredIndex(i)}
                                         >
@@ -138,27 +193,27 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                     </a>
                                 );
                             })}
-                        </div>
+                        </motion.div>
 
-                        {/* Desktop right actions */}
-                        <div className="hidden lg:flex lg:items-center lg:gap-x-1">
+                        {/* Right actions: theme toggle, then search (desktop) or menu (mobile) */}
+                        <motion.div
+                            layout="position"
+                            initial={false}
+                            transition={layoutTransition}
+                            className="pointer-events-auto relative z-10 col-start-3 justify-self-end flex items-center gap-x-2"
+                        >
                             <ThemeToggle />
                             <button
                                 onClick={() => setSearchOpen(true)}
-                                className="h-9 w-9 flex items-center justify-center rounded-xl text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className={`hidden lg:flex ${circleButtonClass}`}
                                 aria-label="Search (Ctrl+K)"
                             >
-                                <SearchIcon className="h-5 w-5" />
+                                <SearchIcon className="h-[22px] w-[22px]" />
                             </button>
-                        </div>
-
-                        {/* Mobile menu button — animated bars morph to X */}
-                        <div className="flex lg:hidden items-center gap-x-1">
-                            <ThemeToggle />
                             <button
                                 type="button"
                                 onClick={() => setMobileMenuOpen(prev => !prev)}
-                                className="relative h-9 w-9 flex items-center justify-center rounded-xl text-brand-grey dark:text-gray-300 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                                className={`relative lg:hidden ${circleButtonClass}`}
                                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={mobileMenuOpen}
                             >
@@ -175,15 +230,15 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                                     />
                                 </div>
                             </button>
-                        </div>
+                        </motion.div>
                     </nav>
-                </div>
+                </motion.div>
             </header>
 
             {/* Spacer for fixed header */}
-            <div className="h-[84px]" aria-hidden="true" />
+            <div className="h-[var(--nav-offset)]" aria-hidden="true" />
 
-            {/* Mobile menu — full-screen overlay */}
+            {/* Mobile menu: full-screen overlay */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
@@ -191,7 +246,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="fixed inset-0 z-40 bg-white/95 dark:bg-dark-background/95 backdrop-blur-xl lg:hidden flex flex-col"
+                        className="fixed inset-0 z-40 bg-paper/95 backdrop-blur-xl lg:hidden flex flex-col"
                         role="dialog"
                         aria-modal="true"
                         aria-label="Mobile navigation"
@@ -200,7 +255,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             <ul className="space-y-1">
                                 {navigation.map((item, i) => {
                                     const active = isActivePath(pathname, item.href);
-                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-bold tracking-tight transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded ${active ? 'text-accent' : 'text-brand-primary dark:text-white hover:text-accent'}`;
+                                    const bigLink = `block py-2.5 landscape:py-1.5 text-2xl landscape:text-xl sm:text-3xl font-semibold tracking-tight text-ink decoration-marker decoration-2 underline-offset-[6px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded-control ${active ? 'underline' : 'hover:underline'}`;
 
                                     return (
                                         <motion.li
@@ -232,14 +287,14 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                         </nav>
 
                         <motion.div
-                            className="px-8 sm:px-12 pb-8 pt-4 border-t border-gray-200/60 dark:border-gray-700/30"
+                            className="px-8 sm:px-12 pb-8 pt-4 border-t border-rule"
                             initial={shouldReduceMotion ? {} : { opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.25 }}
                         >
                             <button
                                 onClick={() => { closeMobile(); setSearchOpen(true); }}
-                                className="flex items-center gap-3 text-base font-semibold text-gray-500 dark:text-gray-400 hover:text-accent transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded"
+                                className="flex items-center gap-3 text-base font-semibold text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:rounded-control"
                             >
                                 <SearchIcon className="h-5 w-5" />
                                 Search
@@ -248,7 +303,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </Fragment>
+        </MotionConfig>
     );
 };
 

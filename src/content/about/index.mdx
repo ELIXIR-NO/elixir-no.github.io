@@ -14,10 +14,10 @@ export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
     <div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-primary dark:text-white leading-[1.15] mt-0">Collaborative <span className="text-accent">Life Science</span> Hub Linking Five Organisations to <a href="https://www.elixir-europe.org" className="text-accent no-underline hover:underline underline-offset-4">ELIXIR Europe</a></h1>
-        <p className="mt-8 sm:mt-10 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300">Coordinated from the <a href="https://www.uib.no/" className="text-accent no-underline hover:underline underline-offset-2">University of Bergen</a>, ELIXIR Norway connects the <a href="https://www.uio.no/" className="text-accent no-underline hover:underline underline-offset-2">University of Oslo</a>, <a href="https://uit.no/" className="text-accent no-underline hover:underline underline-offset-2">UiT Tromsø</a>, <a href="https://www.ntnu.no/" className="text-accent no-underline hover:underline underline-offset-2">NTNU</a>, and <a href="https://www.nmbu.no/" className="text-accent no-underline hover:underline underline-offset-2">NMBU</a> into a national network — part of <a href="https://www.elixir-europe.org" className="text-accent no-underline hover:underline underline-offset-2">ELIXIR Europe</a>'s infrastructure for life science data.</p>
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink leading-[1.15] mt-0">Collaborative <span className="text-accent">Life Science</span> Hub Linking Five Organisations to <a href="https://www.elixir-europe.org" className="text-accent no-underline hover:underline underline-offset-4">ELIXIR Europe</a></h1>
+        <p className="mt-8 sm:mt-10 text-base sm:text-lg leading-relaxed text-body">Coordinated from the <a href="https://www.uib.no/" className="text-accent no-underline hover:underline underline-offset-2">University of Bergen</a>, ELIXIR Norway connects the <a href="https://www.uio.no/" className="text-accent no-underline hover:underline underline-offset-2">University of Oslo</a>, <a href="https://uit.no/" className="text-accent no-underline hover:underline underline-offset-2">UiT Tromsø</a>, <a href="https://www.ntnu.no/" className="text-accent no-underline hover:underline underline-offset-2">NTNU</a>, and <a href="https://www.nmbu.no/" className="text-accent no-underline hover:underline underline-offset-2">NMBU</a> into a national network — part of <a href="https://www.elixir-europe.org" className="text-accent no-underline hover:underline underline-offset-2">ELIXIR Europe</a>'s infrastructure for life science data.</p>
     </div>
-    <div className="hidden lg:block">
+    <div>
         <AboutHeroVisual client:visible />
     </div>
 </div>
@@ -26,34 +26,34 @@ export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
     <Fragment slot="description">ELIXIR Norway is organised across five partner universities, with dedicated leadership, coordination, and advisory committees guiding our national infrastructure.</Fragment>
     <div className="mt-8">
         <Universities client:visible />
-        <div className="mt-16 mx-auto max-w-5xl">
+        <div className="mt-16">
             <div>
-                <h3 className="text-lg font-medium text-brand-primary dark:text-white mb-5">Node Leaders</h3>
-                <div className="border-t border-gray-200/60 dark:border-gray-700/30 pt-5">
+                <h3 className="text-lg font-medium text-ink mb-5">Node Leaders</h3>
+                <div className="border-t border-rule pt-5">
                     <People elixirGroup="node-leaders" layout="featured"/>
                 </div>
             </div>
             <div className="mt-10">
-                <h3 className="text-lg font-medium text-brand-primary dark:text-white mb-5">Coordinators</h3>
-                <div className="border-t border-gray-200/60 dark:border-gray-700/30 pt-5">
+                <h3 className="text-lg font-medium text-ink mb-5">Coordinators</h3>
+                <div className="border-t border-rule pt-5">
                     <People elixirGroup="coordinators" layout="featured"/>
                 </div>
             </div>
             <div className="mt-10">
-                <h3 className="text-lg font-medium text-brand-primary dark:text-white mb-5">Steering Board</h3>
-                <div className="border-t border-gray-200/60 dark:border-gray-700/30 pt-5">
+                <h3 className="text-lg font-medium text-ink mb-5">Steering Board</h3>
+                <div className="border-t border-rule pt-5">
                     <People elixirGroup="steering-board" layout="featured"/>
                 </div>
             </div>
             <div className="mt-10">
-                <h3 className="text-lg font-medium text-brand-primary dark:text-white mb-5">Scientific Advisory Committee</h3>
-                <div className="border-t border-gray-200/60 dark:border-gray-700/30 pt-5">
+                <h3 className="text-lg font-medium text-ink mb-5">Scientific Advisory Committee</h3>
+                <div className="border-t border-rule pt-5">
                     <People elixirGroup="scientific-advisory-committee" layout="featured"/>
                 </div>
             </div>
             <div className="mt-10">
-                <h3 className="text-lg font-medium text-brand-primary dark:text-white mb-5">Stakeholder Panel</h3>
-                <div className="border-t border-gray-200/60 dark:border-gray-700/30 pt-5">
+                <h3 className="text-lg font-medium text-ink mb-5">Stakeholder Panel</h3>
+                <div className="border-t border-rule pt-5">
                     <People elixirGroup="stakeholder-panel" layout="featured"/>
                 </div>
             </div>
@@ -64,12 +64,12 @@ export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <BaseContentSection title="Impact" marginTop>
     <Fragment slot="description">We categorise the impact of ELIXIR-funded work into distinct areas. Every activity maps to one or more of the categories shown below.</Fragment>
-    <figure className="text-center max-w-4xl mx-auto">
+    <figure className="max-w-4xl">
         <img src={`${BASE}/assets/figures/impact.png`}
              alt="ELIXIR impact areas diagram"
              className="w-full mx-auto object-contain"
              loading="lazy" />
-        <figcaption className="mt-6 text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+        <figcaption className="mt-6 text-xs sm:text-sm text-muted leading-relaxed">
             Adapted from Martin et al. (2021) <a href="https://doi.org/10.1111/apce.12328" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline underline-offset-2">DOI: 10.1111/apce.12328</a>
         </figcaption>
     </figure>

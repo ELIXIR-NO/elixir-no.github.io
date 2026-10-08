@@ -30,30 +30,30 @@ export const LI: React.FC<React.LiHTMLAttributes<HTMLLIElement>> = (props) => (
 // title is: fixed sizes here meant an h2 that matched the title at 640px and
 // overtook it below that, so the deeper heading looked like the page heading.
 export const H1: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = ({ className, ...props }) => (
-    <h1 {...props} className={className || "text-2xl sm:text-3xl md:text-4xl font-bold mt-8 mb-4 scroll-mt-12"}/>
+    <h1 {...props} className={className || "text-2xl sm:text-3xl md:text-4xl font-semibold mt-8 mb-4 scroll-mt-12"}/>
 );
 
 export const H2: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = (props) => (
-    <h2 {...props} className="text-xl sm:text-2xl md:text-3xl font-semibold mt-8 mb-3 scroll-mt-12"/>
+    <h2 {...props} className="text-xl sm:text-2xl md:text-3xl font-semibold mt-12 mb-4 scroll-mt-12"/>
 );
 
 export const H3: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = (props) => (
-    <h3 {...props} className="text-lg sm:text-xl md:text-2xl font-semibold mt-5 mb-2 scroll-mt-12"/>
+    <h3 {...props} className="text-lg sm:text-xl md:text-2xl font-semibold mt-8 mb-3 scroll-mt-12"/>
 );
 
 export const H4: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = (props) => (
-    <h4 {...props} className="text-lg md:text-xl font-semibold mt-4 mb-2 scroll-mt-12"/>
+    <h4 {...props} className="text-lg md:text-xl font-semibold mt-6 mb-2 scroll-mt-12"/>
 );
 
 // h5 and h6 land on the body size rather than below it. A heading set smaller
 // than the text it introduces reads as a caption; weight and the display face
 // carry the distinction at this depth instead.
 export const H5: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = (props) => (
-    <h5 {...props} className="text-lg font-bold mt-3 mb-2 scroll-mt-12"/>
+    <h5 {...props} className="text-lg font-bold mt-6 mb-2 scroll-mt-12"/>
 );
 
 export const H6: React.FC<React.HTMLAttributes<HTMLHeadingElement>> = (props) => (
-    <h6 {...props} className="text-lg font-semibold mt-3 mb-2 scroll-mt-12"/>
+    <h6 {...props} className="text-lg font-semibold mt-6 mb-2 scroll-mt-12"/>
 );
 
 export const P: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = (props) => (
@@ -61,7 +61,7 @@ export const P: React.FC<React.HTMLAttributes<HTMLParagraphElement>> = (props) =
 );
 
 export const PRE: React.FC<React.HTMLAttributes<HTMLPreElement>> = (props) => (
-    <pre {...props} className="bg-gray-100 p-4 rounded-md overflow-x-auto my-4"/>
+    <pre {...props} className="bg-surface border border-rule p-4 rounded-card overflow-x-auto my-6"/>
 );
 
 export const Figure: React.FC<React.HTMLAttributes<HTMLElement>> = ({ children, ...props }) => (
@@ -74,31 +74,31 @@ export const Figure: React.FC<React.HTMLAttributes<HTMLElement>> = ({ children, 
 // noinspection HtmlRequiredAltAttribute
 export const Img: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
     !props.title
-        ? <img {...props} className="w-full h-auto rounded-md mx-auto my-8"/>
+        ? <img {...props} className="w-full h-auto rounded-photo mx-auto my-6"/>
         : (
             <figure className="w-full mx-auto">
-                <img {...props} className="w-full h-auto rounded-md mx-auto my-8"/>
-                <figcaption className="text-slate-400 text-sm italic text-center my-2">{props.title}</figcaption>
+                <img {...props} className="w-full h-auto rounded-photo mx-auto my-6"/>
+                <figcaption className="text-muted text-sm text-center -mt-3 mb-6">{props.title}</figcaption>
             </figure>
         )
 );
 
 export const Blockquote: React.FC<React.BlockquoteHTMLAttributes<HTMLQuoteElement>> = ({ children, ...props }) => (
-    <blockquote {...props} className="text-lg relative border-l-4 border-gray-300 pl-6 pt-2 my-12">
+    <blockquote {...props} className="text-lg relative border-l-2 border-rule pl-6 pt-2 my-8">
         <FaQuoteLeft
-            className="absolute top-0 left-0 transform -translate-x-3 -translate-y-1/2 text-5xl text-gray-300"
+            className="absolute top-0 left-0 transform -translate-x-3 -translate-y-1/2 text-5xl text-rule"
             aria-hidden="true"/>
         {children}
     </blockquote>
 );
 
 export const Hr: React.FC<React.HTMLAttributes<HTMLHRElement>> = (props) => (
-    <hr {...props} className="my-8 border-t border-gray-200"/>
+    <hr {...props} className="my-8 border-t border-rule"/>
 );
 
 export const Table: React.FC<React.TableHTMLAttributes<HTMLTableElement>> = ({ children, ...props }) => (
     <div className="overflow-x-auto my-6">
-        <table {...props} className="min-w-full border-collapse">
+        <table {...props} className="min-w-full border-collapse border border-rule">
             {children}
         </table>
     </div>
@@ -106,15 +106,15 @@ export const Table: React.FC<React.TableHTMLAttributes<HTMLTableElement>> = ({ c
 
 export const Th: React.FC<React.ThHTMLAttributes<HTMLTableHeaderCellElement>> = (props) => (
     <th scope="col" {...props}
-        className="bg-slate-50 dark:bg-dark-surface border border-gray-300 px-4 py-2 text-left font-semibold"/>
+        className="bg-paper border border-rule px-4 py-2 text-left font-semibold text-ink"/>
 );
 
 export const Td: React.FC<React.TdHTMLAttributes<HTMLTableDataCellElement>> = (props) => (
-    <td {...props} className="border border-gray-300 px-4 py-2"/>
+    <td {...props} className="border border-rule px-4 py-2"/>
 );
 
 export const Em: React.FC<any> = (props) => (
-    <em {...props} className="font-bold not-italic text-accent"/>
+    <em {...props} className="font-semibold not-italic text-ink"/>
 );
 
 export const Strong: React.FC<any> = (props) => (

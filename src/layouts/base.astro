@@ -24,7 +24,7 @@ const { seo } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="bg-white dark:bg-dark-background">
+<html lang="en" class="bg-paper">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,6 +34,7 @@ const { seo } = Astro.props;
 
         <Font cssVariable="--font-body" preload />
         <Font cssVariable="--font-display" preload />
+        <Font cssVariable="--font-mono" />
 
         <SEOHead {...seo} />
 
@@ -81,7 +82,7 @@ const { seo } = Astro.props;
         <!-- Skip to content link for accessibility -->
         <a
             href="#main-content"
-            class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-primary focus:text-white focus:rounded focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
+            class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-brand-primary focus:text-white focus:rounded-control focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2"
         >
             Skip to main content
         </a>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import { ArrowRightIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import Button from "../button.tsx";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -31,70 +32,55 @@ const featuredCover = featured?.data.cover?.source
     : null;
 ---
 
-<section class="py-20 lg:py-28">
-    <div class="max-w-7xl mx-auto px-6 lg:px-12">
-        <div class="flex items-end justify-between mb-12">
+<section class="py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+        <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 mb-10">
             <div>
-                <h2 class="text-3xl font-bold tracking-tight text-brand-primary dark:text-white sm:text-4xl">
+                <h2 class="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                     Latest News
                 </h2>
-                <p class="mt-3 text-lg text-brand-grey dark:text-gray-300">
+                <p class="mt-3 text-lg text-body">
                     Stay updated with the latest from ELIXIR Norway.
                 </p>
             </div>
-            <a
-                href={`${BASE}/news`}
-                class="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent/5 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-                View all news
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </a>
+            <Button href={`${BASE}/news`} variant="link" size="sm" className="hidden sm:inline-flex">View all news</Button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-            {/* Featured article — large card with image */}
+        <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] gap-10 lg:gap-9 items-start">
             {featured && (
                 <a
                     href={articleUrl(featured.id)}
-                    class="group relative flex flex-col justify-end min-h-[360px] lg:min-h-[420px] rounded-2xl lg:rounded-3xl overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                    class="group block focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-paper rounded-card"
                 >
-                    {/* Background */}
                     {featuredCover ? (
                         <img
                             src={featuredCover}
                             alt=""
                             aria-hidden="true"
-                            class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            class="aspect-[16/9] w-full object-cover rounded-photo border border-rule bg-surface"
                             loading="lazy"
                         />
                     ) : (
-                        <div class="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-primary/80" />
+                        <div class="aspect-[16/9] w-full rounded-photo border border-rule bg-surface" aria-hidden="true" />
                     )}
 
-                    {/* Gradient overlay — opaque enough at bottom to guarantee WCAG contrast for text */}
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/5" />
-
-                    {/* Content */}
-                    <div class="relative p-6 sm:p-8">
-                        <time class="text-xs font-semibold text-white/90 mb-3 block">
-                            {formatDate(featured.data.date)}
-                        </time>
-                        <h3 class="text-xl sm:text-2xl font-bold text-white leading-snug mb-3 group-hover:text-brand-secondary transition-colors">
-                            {featured.data.title}
-                        </h3>
-                        <p class="text-sm text-gray-200 leading-relaxed line-clamp-2 max-w-lg">
-                            {featured.data.summary}
-                        </p>
-                        <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-white group-hover:text-brand-secondary transition-colors">
-                            Read article
-                            <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                        </span>
-                    </div>
+                    <time class="mt-4 mb-1.5 block font-mono text-xs text-muted">
+                        {formatDate(featured.data.date)}
+                    </time>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-ink leading-tight text-balance decoration-marker decoration-2 underline-offset-4 group-hover:underline">
+                        {featured.data.title}
+                    </h3>
+                    <p class="mt-2.5 text-[15px] text-body leading-relaxed line-clamp-3">
+                        {featured.data.summary}
+                    </p>
+                    <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
+                        Read article
+                        <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                    </span>
                 </a>
             )}
 
-            {/* Secondary articles — stacked text cards */}
-            <div class="flex flex-col gap-6 lg:gap-8 justify-center">
+            <div class="flex flex-col">
                 {rest.map((article) => {
                     const hasCover = !!article.data.cover?.source;
                     const coverUrl = hasCover ? resolveCoverUrl(article.id, article.data.cover!.source) : null;
@@ -102,49 +88,39 @@ const featuredCover = featured?.data.cover?.source
                     return (
                         <a
                             href={articleUrl(article.id)}
-                            class="group flex gap-5 items-start py-6 border-b border-gray-200/80 dark:border-gray-700/40 last:border-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 rounded-lg"
+                            class="group grid grid-cols-[88px_minmax(0,1fr)] sm:grid-cols-[112px_minmax(0,1fr)] gap-4 sm:gap-5 py-5 border-t border-rule first:border-t-0 first:pt-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                         >
-                            {/* Thumbnail */}
-                            {hasCover && (
-                                <div class="hidden sm:block flex-shrink-0 w-28 h-20 rounded-xl overflow-hidden bg-gray-100 dark:bg-dark-surface">
-                                    <img
-                                        src={coverUrl}
-                                        alt=""
-                                        aria-hidden="true"
-                                        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        loading="lazy"
-                                    />
-                                </div>
+                            {hasCover ? (
+                                <img
+                                    src={coverUrl}
+                                    alt=""
+                                    aria-hidden="true"
+                                    class="aspect-[4/3] w-full object-cover rounded-control border border-rule bg-surface"
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div class="aspect-[4/3] w-full rounded-control border border-rule bg-surface" aria-hidden="true" />
                             )}
 
-                            <div class="flex-1 min-w-0">
-                                <time class="text-xs font-semibold text-accent mb-1.5 block">
+                            <div class="min-w-0">
+                                <time class="mb-1.5 block font-mono text-xs text-muted">
                                     {formatDate(article.data.date)}
                                 </time>
-                                <h3 class="text-base font-bold text-brand-primary dark:text-white leading-snug group-hover:text-accent transition-colors line-clamp-2">
+                                <h3 class="text-base sm:text-[17px] font-semibold text-ink leading-snug line-clamp-2 decoration-marker decoration-2 underline-offset-4 group-hover:underline">
                                     {article.data.title}
                                 </h3>
-                                <p class="mt-1.5 text-sm text-brand-grey dark:text-gray-400 leading-relaxed line-clamp-2">
+                                <p class="mt-1.5 text-sm text-body leading-relaxed line-clamp-2">
                                     {article.data.summary}
                                 </p>
                             </div>
-
-                            <ChevronRightIcon className="flex-shrink-0 h-5 w-5 text-gray-500 dark:text-gray-400 group-hover:text-accent transition-all group-hover:translate-x-1 mt-1" aria-hidden="true" />
                         </a>
                     );
                 })}
             </div>
         </div>
 
-        {/* Mobile "View all" */}
-        <div class="mt-8 text-center sm:hidden">
-            <a
-                href={`${BASE}/news`}
-                class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-accent hover:bg-accent/5 rounded-lg transition-colors"
-            >
-                View all news
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
-            </a>
+        <div class="mt-8 sm:hidden">
+            <Button href={`${BASE}/news`} variant="link" size="sm">View all news</Button>
         </div>
     </div>
 </section>

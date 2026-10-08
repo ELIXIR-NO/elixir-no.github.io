@@ -4,8 +4,54 @@
 
 @layer base {
 
-  :root { --color-accent: 2 52 82; }
-  .dark { --color-accent: 244 125 32; }
+  :root {
+    --color-accent: 2 52 82;
+    --color-paper: 245 247 248;
+    --color-surface: 255 255 255;
+    --color-ink: 2 52 82;
+    --color-body: 59 74 85;
+    --color-muted: 91 107 119;
+    --color-rule: 211 220 225;
+    --color-marker: 244 125 32;
+    /* Orange as text needs a darker shade: #F47D20 on white is under 3:1. */
+    --color-marker-text: 154 70 0;
+  }
+
+  .dark {
+    --color-accent: 247 148 74;
+    --color-paper: 10 22 30;
+    --color-surface: 15 30 40;
+    --color-ink: 234 240 243;
+    --color-body: 180 195 204;
+    --color-muted: 143 163 177;
+    --color-rule: 34 52 65;
+    --color-marker-text: 247 148 74;
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-paper text-body;
+  }
+
+  /* Share of paper washed over the hero video; the radial wash behind the copy carries contrast. */
+  :root {
+    --hero-tint-light: 0.33;
+    --hero-tint-dark: 0.45;
+    --hero-tint: var(--hero-tint-light);
+  }
+
+  .dark {
+    --hero-tint: var(--hero-tint-dark);
+  }
+
+  /* Height of the floating nav at rest: top inset + logo (padding + artwork). */
+  :root {
+    --nav-offset: 4rem;
+
+    @media (min-width: 1024px) {
+      --nav-offset: 5.5rem;
+    }
+  }
 
   html {
     font-size: 16px;
@@ -46,19 +92,19 @@
   html.dark { scrollbar-color: rgba(255,255,255,0.2) transparent; }
 
   h1, h2, h3, h4, h5, h6, dt {
-    @apply font-display tracking-tight text-pretty text-slate-950 dark:text-slate-50;
+    @apply font-display tracking-tight text-pretty text-ink;
 
     #main-content &:first-child {
       @apply mt-0;
     }
   }
 
-  p, dd, button, li, th, td, span, figcaption {
-    @apply text-light-on-background dark:text-dark-on-background;
+  p, dd, button, li, th, td, figcaption {
+    @apply text-body;
   }
 
   .content a, .link {
-    @apply text-accent hover:text-accent/70 underline underline-offset-2 decoration-accent/30 hover:decoration-accent/60 transition-colors;
+    @apply text-ink underline underline-offset-[3px] decoration-ink/30 hover:decoration-marker hover:decoration-2 transition-colors;
   }
 
   /* Screen-reader hint for links that open in a new window */
@@ -67,50 +113,62 @@
     @apply sr-only;
   }
 
-  em, strong {
-    all: unset;
-  }
-
   time {
-    @apply text-slate-600 dark:text-slate-300;
+    @apply text-muted;
   }
 }
 
 @layer components {
+  /* Every phrase sits in the same grid cell, so the cell keeps the widest and
+     tallest phrase's box (two lines where one does not fit) and a swap never
+     reflows the text around it. */
+  .rotor {
+    display: grid;
+    place-items: center;
+    perspective: 6em;
+  }
+
+  .rotor-word {
+    grid-area: 1 / 1;
+    visibility: hidden;
+    max-width: 100%;
+    text-align: center;
+    text-wrap: balance;
+    transform-origin: 50% 50% -0.5em;
+    backface-visibility: hidden;
+
+    &.is-on, &.is-out { visibility: visible; }
+    &.is-in { animation: rotor-in 0.6s cubic-bezier(0.22, 0.8, 0.26, 1) both; }
+    &.is-out { animation: rotor-out 0.6s cubic-bezier(0.22, 0.8, 0.26, 1) both; }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+    }
+  }
+
+  /* Soft paper halo that keeps hero copy legible over the video without a box behind it. */
+  .hero-legible {
+    text-shadow:
+      0 0 2px rgb(var(--color-paper) / 0.7),
+      0 0 10px rgb(var(--color-paper) / 0.65),
+      0 0 30px rgb(var(--color-paper) / 0.55);
+  }
+
+  @keyframes rotor-in {
+    from { transform: rotateX(90deg); opacity: 0.25; }
+    to { transform: rotateX(0); opacity: 1; }
+  }
+
+  @keyframes rotor-out {
+    from { transform: rotateX(0); opacity: 1; }
+    to { transform: rotateX(-90deg); opacity: 0.25; }
+  }
+
   .content {
     & :first-child {
       @apply mt-0;
     }
-
-    & h1 {
-      @apply mt-16 mb-8;
-    }
-
-    & h2 {
-      @apply mt-16 mb-8;
-    }
   }
-
-  #training-materials-list,#past-training-materials-list {
-    @apply list-none space-y-2;
-
-    ol, ul {
-      @apply space-y-3;
-    }
-
-    li {
-      @apply bg-light-surface dark:bg-dark-surface rounded-lg p-3 shadow-sm border border-gray-200 dark:border-gray-700;
-    }
-
-    li a {
-      @apply text-lg font-semibold text-blue-600 dark:text-blue-400 hover:underline;
-    }
-
-    li div {
-      @apply text-gray-600 dark:text-gray-300 text-sm mt-1;
-    }
-  }
-
 }
 
 /* ─── CMS Preview styles ──────────────────────────────── */

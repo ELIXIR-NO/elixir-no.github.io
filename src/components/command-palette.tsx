@@ -138,7 +138,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                 <div className="fixed inset-0 z-[999]" role="dialog" aria-modal="true" aria-label="Search">
                     {/* Backdrop */}
                     <motion.div
-                        className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm"
+                        className="fixed inset-0 bg-black/30 dark:bg-black/60"
                         initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -152,7 +152,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                         onClick={(e) => { if (e.target === e.currentTarget) close(); }}
                     >
                         <motion.div
-                            className="mx-auto max-w-xl rounded-2xl bg-white dark:bg-dark-surface shadow-2xl shadow-black/20 dark:shadow-black/50 overflow-hidden ring-1 ring-black/5 dark:ring-white/10"
+                            className="mx-auto max-w-xl rounded-card border border-rule bg-surface shadow-lg shadow-black/5 overflow-hidden"
                             initial={shouldReduceMotion ? {} : { opacity: 0, scale: 0.96, y: -8 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={shouldReduceMotion ? {} : { opacity: 0, scale: 0.96, y: -8 }}
@@ -160,8 +160,8 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Search input */}
-                            <div className="grid grid-cols-1">
-                                <MagnifyingGlassIcon className="pointer-events-none col-start-1 row-start-1 ml-4 h-5 w-5 self-center text-gray-400 dark:text-gray-500" aria-hidden="true" />
+                            <div className="grid grid-cols-1 border-b border-rule">
+                                <MagnifyingGlassIcon className="pointer-events-none col-start-1 row-start-1 ml-4 h-5 w-5 self-center text-muted" aria-hidden="true" />
                                 <input
                                     ref={inputRef}
                                     type="text"
@@ -169,7 +169,7 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                     onChange={onInputChange}
                                     onKeyDown={onKeyDown}
                                     placeholder="Search pages, services, people..."
-                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-brand-primary dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 outline-none border-0 ring-0 focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none sm:text-sm"
+                                    className="col-start-1 row-start-1 h-12 w-full pl-11 pr-4 bg-transparent text-base text-ink placeholder:text-muted outline-none border-0 ring-0 focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none sm:text-sm"
                                     aria-label="Search"
                                     aria-autocomplete="list"
                                     aria-controls="search-results"
@@ -197,28 +197,28 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                                                 aria-selected={i === activeIndex}
                                                 onClick={() => navigate(item.url)}
                                                 onMouseEnter={() => setActiveIndex(i)}
-                                                className={`group flex items-start gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition-colors ${
+                                                className={`group flex items-start gap-3 rounded-r-control border-l-2 px-3 py-2.5 cursor-pointer transition-colors ${
                                                     i === activeIndex
-                                                        ? 'bg-accent/10'
-                                                        : 'hover:bg-gray-50 dark:hover:bg-white/[0.04]'
+                                                        ? 'bg-paper border-marker'
+                                                        : 'border-transparent hover:bg-paper'
                                                 }`}
                                             >
-                                                <ResultIcon className={`h-5 w-5 shrink-0 mt-0.5 ${i === activeIndex ? 'text-accent' : 'text-gray-400 dark:text-gray-500'}`} aria-hidden="true" />
+                                                <ResultIcon className={`h-5 w-5 shrink-0 mt-0.5 ${i === activeIndex ? 'text-ink' : 'text-muted'}`} aria-hidden="true" />
                                                 <div className="min-w-0 flex-1">
                                                     <p className={`text-sm font-medium truncate ${
                                                         i === activeIndex
-                                                            ? 'text-brand-primary dark:text-white'
-                                                            : 'text-gray-700 dark:text-gray-300'
+                                                            ? 'text-ink'
+                                                            : 'text-body'
                                                     }`}>
                                                         {item.title}
                                                     </p>
                                                     <p
-                                                        className="mt-0.5 text-xs text-gray-500 dark:text-gray-400 line-clamp-1 [&_mark]:bg-accent/20 [&_mark]:text-brand-primary dark:[&_mark]:text-white [&_mark]:rounded-sm [&_mark]:px-0.5"
+                                                        className="mt-0.5 text-xs text-muted line-clamp-1 [&_mark]:bg-marker/25 [&_mark]:text-ink [&_mark]:px-0.5"
                                                         dangerouslySetInnerHTML={{ __html: sanitized }}
                                                     />
                                                 </div>
                                                 {i === activeIndex && (
-                                                    <span className="hidden sm:inline-flex shrink-0 self-center text-xs text-accent/60">
+                                                    <span className="hidden sm:inline-flex shrink-0 self-center text-xs text-muted">
                                                         Jump to
                                                     </span>
                                                 )}
@@ -231,33 +231,33 @@ export default function CommandPalette({ open, setOpen }: { open: boolean; setOp
                             {/* No results */}
                             {hasQuery && results.length === 0 && (
                                 <div className="px-6 py-14 text-center">
-                                    <ExclamationCircleIcon className="mx-auto h-6 w-6 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-                                    <p className="mt-4 text-sm font-medium text-brand-primary dark:text-white">No results found</p>
-                                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Try a different search term</p>
+                                    <ExclamationCircleIcon className="mx-auto h-6 w-6 text-muted" aria-hidden="true" />
+                                    <p className="mt-4 text-sm font-medium text-ink">No results found</p>
+                                    <p className="mt-1 text-xs text-muted">Try a different search term</p>
                                 </div>
                             )}
 
                             {/* Initial state */}
                             {!hasQuery && (
                                 <div className="px-6 py-10 text-center">
-                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    <p className="text-sm text-muted">
                                         Search across all pages, services, and content
                                     </p>
                                 </div>
                             )}
 
                             {/* Footer with keyboard hints */}
-                            <div className="flex items-center gap-4 px-4 py-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-white/[0.02]">
+                            <div className="flex items-center gap-4 px-4 py-2 text-xs text-muted border-t border-rule bg-paper">
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-chip border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x21B5;</kbd>
                                     select
                                 </span>
                                 <span className="flex items-center gap-1.5">
-                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
+                                    <kbd className="inline-flex h-5 min-w-[20px] items-center justify-center rounded-chip border border-rule bg-surface px-1 font-mono text-[10px] font-medium">&#x2191;&#x2193;</kbd>
                                     navigate
                                 </span>
                                 <span className="flex items-center gap-1.5 ml-auto">
-                                    <kbd className="inline-flex h-5 items-center justify-center rounded border border-gray-300/60 dark:border-gray-600/40 bg-white dark:bg-white/5 px-1.5 font-mono text-[10px] font-medium">esc</kbd>
+                                    <kbd className="inline-flex h-5 items-center justify-center rounded-chip border border-rule bg-surface px-1.5 font-mono text-[10px] font-medium">esc</kbd>
                                     close
                                 </span>
                             </div>

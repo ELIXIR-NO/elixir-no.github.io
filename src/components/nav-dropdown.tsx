@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 
 const ChevronIcon = ({ className }: { className?: string }) => (
@@ -7,7 +7,7 @@ const ChevronIcon = ({ className }: { className?: string }) => (
 );
 
 const linkColor = (active: boolean) =>
-    active ? 'text-accent' : 'text-brand-grey dark:text-gray-300 hover:text-brand-primary dark:hover:text-white';
+    active ? 'text-ink' : 'text-body hover:text-ink';
 
 type Props = {
     /** Visible text; also the trigger link. */
@@ -20,7 +20,7 @@ type Props = {
     panelId: string;
     /** Accessible name for the panel region. */
     panelLabel: string;
-    /** Extra classes for the floating panel (e.g. width). */
+    /** Extra classes for the floating panel (width, offset from the trigger). */
     panelClassName?: string;
     /** Ref registrar from useMagicPill so the glider can measure this item. */
     rootRef?: (el: HTMLElement | null) => void;
@@ -38,11 +38,10 @@ type Props = {
  * Composes with useMagicPill via `rootRef` + `onHover`.
  */
 export default function NavDropdown({
-    label, href, active, panelId, panelLabel, panelClassName = '', rootRef, onHover, children,
+    label, href, active, panelId, panelLabel, panelClassName = 'mt-3', rootRef, onHover, children,
 }: Props) {
     const [open, setOpen] = useState(false);
     const [hoverCapable, setHoverCapable] = useState(false);
-    const shouldReduceMotion = useReducedMotion();
     const wrapRef = useRef<HTMLDivElement | null>(null);
     const chevronRef = useRef<HTMLButtonElement | null>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -88,7 +87,7 @@ export default function NavDropdown({
         >
             <a
                 href={href}
-                className={`rounded-lg py-2 pl-3.5 pr-1.5 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
+                className={`rounded-control py-2 pl-3.5 pr-1.5 text-sm 2xl:text-[0.9375rem] font-medium tracking-[-0.01em] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
                 aria-current={active ? 'page' : undefined}
             >
                 {label}
@@ -100,9 +99,9 @@ export default function NavDropdown({
                 aria-expanded={open}
                 aria-controls={panelId}
                 aria-label={open ? `Close ${label} menu` : `Open ${label} menu`}
-                className={`rounded-lg py-2 pl-1 pr-2.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
+                className={`rounded-control py-2 pl-1 pr-2.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${linkColor(active)}`}
             >
-                <ChevronIcon className={`h-3.5 w-3.5 transition-transform ${shouldReduceMotion ? '' : 'duration-200'} ${open ? 'rotate-180' : ''}`} />
+                <ChevronIcon className={`h-3.5 w-3.5 transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} />
             </button>
 
             <AnimatePresence>
@@ -111,11 +110,11 @@ export default function NavDropdown({
                         id={panelId}
                         role="region"
                         aria-label={panelLabel}
-                        initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                        initial={{ opacity: 0, y: -8 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
+                        exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.2 }}
-                        className={`absolute left-0 top-full mt-3 rounded-2xl border border-gray-200/70 dark:border-gray-700/50 bg-white/95 dark:bg-dark-background/95 backdrop-blur-xl p-3 shadow-xl shadow-black/[0.12] dark:shadow-black/40 ${panelClassName}`}
+                        className={`absolute left-0 top-full rounded-card border border-rule bg-surface p-3 shadow-lg shadow-black/5 ${panelClassName}`}
                         onMouseEnter={clearCloseTimer}
                         onMouseLeave={() => { if (hoverCapable) scheduleClose(); }}
                     >

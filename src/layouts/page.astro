@@ -2,6 +2,7 @@
 import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
+import Button from "../components/button.tsx";
 import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
@@ -136,24 +137,22 @@ function periodToRelative(p: string): string {
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Status badge colors (reused from listing page)
-const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
+const statusColors: Record<string, { text: string; dot: string }> = {
     ongoing: {
-        bg: 'bg-green-100 dark:bg-green-900/20',
         text: 'text-green-700 dark:text-green-400',
-        dot: 'bg-green-500 dark:bg-green-400',
+        dot: 'bg-green-600 dark:bg-green-400',
     },
     completed: {
-        bg: 'bg-gray-100 dark:bg-gray-800/40',
-        text: 'text-gray-600 dark:text-gray-400',
-        dot: 'bg-gray-400 dark:bg-gray-500',
+        text: 'text-muted',
+        dot: 'bg-muted',
     },
 };
 
 const categoryColors: Record<string, string> = {
-    european: 'bg-blue-100 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400',
-    elixir: 'bg-accent/10 text-accent',
-    norwegian: 'bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400',
-    global: 'bg-purple-100 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400',
+    european: 'before:bg-blue-600 dark:before:bg-blue-400',
+    elixir: 'before:bg-marker',
+    norwegian: 'before:bg-red-600 dark:before:bg-red-400',
+    global: 'before:bg-purple-600 dark:before:bg-purple-400',
 };
 
 // Max width classes based on variant
@@ -228,7 +227,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
 <BaseLayout seo={mergedSeo}>
     {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
-    <div class="isolate px-6 sm:px-8 pb-12 pt-24 sm:pt-28 flex-1">
+    <div class="isolate px-6 sm:px-8 pb-16 lg:pb-20 pt-24 sm:pt-28 flex-1">
         <div class={`mx-auto ${containerClasses[finalVariant]}`}>
             <!-- Breadcrumbs -->
             {breadcrumbs && <Breadcrumbs crumbs={breadcrumbs} />}
@@ -240,7 +239,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType && (
                             <a
                                 href={`${BASE}/${contentType === 'projects' ? 'funding-and-projects' : contentType}`}
-                                class="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-brand-primary dark:hover:text-white transition-colors mb-6"
+                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6"
                             >
                                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                                 {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
@@ -251,7 +250,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType === 'news' && tags.length > 0 && (
                             <div class="flex flex-wrap gap-2 mb-4">
                                 {tags.map((tag: string) => (
-                                    <span class="rounded-full px-3 py-1 text-xs font-semibold bg-accent/10 text-accent">
+                                    <span class="rounded-chip border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(tag)}
                                     </span>
                                 ))}
@@ -263,14 +262,14 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                 {status && status !== 'unknown' && (() => {
                                     const sc = statusColors[status] ?? statusColors.completed;
                                     return (
-                                        <span class={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${sc.bg} ${sc.text}`}>
-                                            <span class={`h-1.5 w-1.5 rounded-full ${sc.dot}`} />
+                                        <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
+                                            <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} />
                                             {slugToTitleCase(status)}
                                         </span>
                                     );
                                 })()}
                                 {category && category !== 'unknown' && (
-                                    <span class={`rounded-full px-3 py-1 text-xs font-semibold ${categoryColors[category] ?? 'bg-gray-100 dark:bg-gray-800/40 text-gray-600 dark:text-gray-400'}`}>
+                                    <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold text-ink before:h-1.5 before:w-1.5 before:rounded-marker before:content-[''] ${categoryColors[category] ?? 'before:bg-muted'}`}>
                                         {slugToTitleCase(category)}
                                     </span>
                                 )}
@@ -278,7 +277,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {finalTitle && (
-                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-brand-primary dark:text-white text-balance leading-[1.15]">
+                            <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-ink text-balance leading-[1.1]">
                                 {finalTitle}
                             </h1>
                         )}
@@ -292,25 +291,25 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                         <img
                                             src={author.photo}
                                             alt=""
-                                            class="h-9 w-9 rounded-full ring-2 ring-white dark:ring-dark-background object-cover"
+                                            class="h-9 w-9 rounded-full ring-2 ring-paper object-cover"
                                             loading="lazy"
                                         />
                                     ))}
                                 </div>
                                 <div class="text-sm">
-                                    <p class="font-medium text-brand-primary dark:text-white">
+                                    <p class="font-medium text-ink">
                                         {resolvedAuthors.map((author, i) => (
                                             <>
-                                                {i > 0 && <span class="text-gray-500 dark:text-gray-400">, </span>}
+                                                {i > 0 && <span class="text-muted">, </span>}
                                                 {author.url
-                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="hover:text-accent transition-colors">{author.name}</a>
+                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors">{author.name}</a>
                                                     : <span>{author.name}</span>
                                                 }
                                             </>
                                         ))}
                                     </p>
                                     {dateObj && (
-                                        <p class="text-gray-500 dark:text-gray-400">
+                                        <p class="text-muted">
                                             <time datetime={dateObj.toISOString()}>{formattedDate}</time>
                                             <span class="mx-1">&middot;</span>
                                             <span>{relativeDate}</span>
@@ -322,19 +321,19 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Date row for non-news */}
                         {contentType !== 'news' && dateObj && (
-                            <div class="mt-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div class="mt-4 flex items-center gap-2 text-sm text-muted">
                                 <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                 <time datetime={dateObj.toISOString()}>
                                     {formattedDate}
                                 </time>
-                                <span class="text-gray-300 dark:text-gray-600">&middot;</span>
+                                <span class="text-rule">&middot;</span>
                                 <span>{relativeDate}</span>
                             </div>
                         )}
 
                         {/* Project metadata row */}
                         {contentType === 'projects' && (period || funder?.name) && (
-                            <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500 dark:text-gray-400">
+                            <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
                                 {period && (
                                     <span class="inline-flex items-center gap-1.5" title={period}>
                                         <ClockIcon className="h-4 w-4" aria-hidden="true" />
@@ -345,13 +344,13 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     <span class="inline-flex items-center gap-1.5">
                                         <BuildingLibraryIcon className="h-4 w-4" aria-hidden="true" />
                                         {funder.link
-                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-brand-primary dark:hover:text-white transition-colors">{funder.name}</a>
+                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">{funder.name}</a>
                                             : funder.name
                                         }
                                     </span>
                                 )}
                                 {externalLink && (
-                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-brand-primary dark:hover:text-white transition-colors">
+                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-ink transition-colors">
                                         <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                                         Project website
                                     </a>
@@ -361,29 +360,21 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
 
                         {/* Summary / lead paragraph */}
                         {summary && contentType && (
-                            <p class="mt-5 text-base sm:text-lg leading-relaxed text-brand-grey dark:text-gray-300 text-balance">
+                            <p class="mt-5 text-base sm:text-lg leading-relaxed text-body text-balance">
                                 {summary}
                             </p>
                         )}
 
                         {/* Service external link */}
                         {contentType === 'services' && serviceUrl && (
-                            <a
-                                href={serviceUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background"
-                            >
-                                Visit service
-                                <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
-                            </a>
+                            <Button href={serviceUrl} external className="mt-6">Visit service</Button>
                         )}
 
                         {/* Project keywords */}
                         {contentType === 'projects' && keywords.length > 0 && (
                             <div class="mt-5 flex flex-wrap gap-2">
                                 {keywords.map((kw: string) => (
-                                    <span class="rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 dark:bg-gray-800/40 text-gray-600 dark:text-gray-400">
+                                    <span class="rounded-chip border border-rule px-2 py-0.5 text-xs font-medium text-muted">
                                         {slugToTitleCase(kw)}
                                     </span>
                                 ))}
@@ -391,7 +382,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         )}
 
                         {/* Divider before cover or content */}
-                        {!finalCover && <div class="mt-8 border-t border-gray-200/60 dark:border-gray-700/30" />}
+                        {!finalCover && <div class="mt-8 border-t border-rule" />}
 
                         {finalCover && (
                             <figure class="mt-8">
@@ -402,11 +393,11 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                         finalTitle ||
                                         "Cover image"
                                     }
-                                    class="w-full rounded-xl"
+                                    class="w-full rounded-photo border border-rule"
                                     loading="lazy"
                                 />
                                 {finalCover.caption && (
-                                    <figcaption class="text-sm text-gray-500 dark:text-gray-400 mt-3 text-center">
+                                    <figcaption class="text-sm text-muted mt-3 text-center">
                                         {finalCover.caption}
                                     </figcaption>
                                 )}

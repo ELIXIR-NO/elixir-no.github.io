@@ -11,34 +11,29 @@ type ServiceInfo = {
 
 type Overall = 'idle' | 'checking' | 'operational' | 'reachable' | 'issues';
 
-const overallConfig: Record<Overall, { pill: string; dot: string; ping: string | null }> = {
+const overallConfig: Record<Overall, { dot: string; ping: string | null }> = {
     idle: {
-        pill: 'bg-accent/5 border-accent/20 text-accent',
-        dot: 'bg-gray-400',
+        dot: 'bg-muted',
         ping: null,
     },
     checking: {
-        pill: 'bg-gray-50 dark:bg-white/[0.03] border-gray-200/70 dark:border-gray-700/40 text-gray-600 dark:text-gray-300',
-        dot: 'bg-amber-500',
-        ping: 'bg-amber-400',
+        dot: 'bg-amber-600 dark:bg-amber-400',
+        ping: 'bg-amber-500 dark:bg-amber-400',
     },
     operational: {
-        pill: 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/60 dark:border-emerald-800/40 text-emerald-700 dark:text-emerald-400',
-        dot: 'bg-emerald-500',
-        ping: 'bg-emerald-400',
+        dot: 'bg-emerald-600 dark:bg-emerald-400',
+        ping: null,
     },
     // Probes that only confirmed reachability (no-cors fallback when the proxy is
     // unavailable) — reachable but HTTP status unverified. Mirrors the detailed
     // status page's distinct "reachable" bucket so the pill never claims
     // "operational" for unverified results.
     reachable: {
-        pill: 'bg-sky-50/60 dark:bg-sky-950/20 border-sky-300/60 dark:border-sky-800/40 text-sky-700 dark:text-sky-400',
-        dot: 'bg-sky-500',
+        dot: 'bg-sky-600 dark:bg-sky-400',
         ping: null,
     },
     issues: {
-        pill: 'bg-amber-50/70 dark:bg-amber-950/20 border-amber-300/70 dark:border-amber-800/40 text-amber-700 dark:text-amber-400',
-        dot: 'bg-amber-500',
+        dot: 'bg-amber-600 dark:bg-amber-400',
         ping: null,
     },
 };
@@ -126,20 +121,20 @@ export default function ServiceStatusSummary({ services, href }: { services: Ser
     return (
         <a
             href={href}
-            className={`group mt-5 inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-background ${cfg.pill}`}
+            className="group mt-5 inline-flex h-9 items-center gap-2.5 rounded-control border border-rule bg-surface px-3 text-sm font-medium text-ink transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         >
-            <span className="relative flex h-2.5 w-2.5 shrink-0" aria-hidden="true">
+            <span className="relative flex h-2 w-2 rounded-marker shrink-0" aria-hidden="true">
                 {cfg.ping && !reduce && (
-                    <span className={`absolute inline-flex h-full w-full animate-ping rounded-full ${cfg.ping} opacity-75`} />
+                    <span className={`absolute inline-flex h-full w-full rounded-marker animate-ping ${cfg.ping} opacity-75`} />
                 )}
-                <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${cfg.dot}`} />
+                <span className={`relative inline-flex h-2 w-2 rounded-marker ${cfg.dot}`} />
             </span>
             <span className="text-inherit" aria-live="polite">
                 {label}
-                {countText && <span className="text-inherit ml-1.5 font-medium opacity-75">· {countText}</span>}
+                {countText && <span className="ml-1.5 font-mono text-xs text-muted">· {countText}</span>}
             </span>
             <ArrowRightIcon
-                className="h-3.5 w-3.5 shrink-0 opacity-80 transition-transform duration-200 group-hover:translate-x-0.5"
+                className="h-3.5 w-3.5 shrink-0 text-muted transition-transform duration-200 group-hover:translate-x-0.5"
                 aria-hidden="true"
             />
         </a>

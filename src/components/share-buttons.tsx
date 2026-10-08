@@ -52,18 +52,18 @@ export default function ShareButtons({ url, title, summary = '' }: Props) {
     };
 
     const btn =
-        'inline-flex items-center justify-center h-11 w-11 rounded-lg ' +
-        'border border-gray-200 dark:border-gray-700 ' +
-        'text-gray-600 dark:text-gray-400 ' +
-        'hover:text-accent hover:border-accent/40 ' +
+        'inline-flex items-center justify-center h-10 w-10 rounded-control ' +
+        'border border-rule ' +
+        'text-ink ' +
+        'hover:border-ink ' +
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ' +
-        'focus-visible:ring-offset-white dark:focus-visible:ring-offset-dark-background ' +
+        'focus-visible:ring-offset-paper ' +
         'transition-colors';
 
     return (
-        <div className="not-prose mt-12 pt-6 border-t border-gray-200 dark:border-gray-800">
+        <div className="not-prose mt-12 pt-6 border-t border-rule">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                     Share
                 </span>
                 <div className="flex items-center gap-2">

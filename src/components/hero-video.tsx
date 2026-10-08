@@ -15,10 +15,9 @@ const HERO_VIDEO: { poster?: string; sources: VideoSource[] } = {
     ],
 };
 
-// Dev-only stand-in: a local 25s, 1280px trim of CC0 drone footage of ice climbing near Tromsø,
-// https://commons.wikimedia.org/wiki/File:Drone_Footage_of_People_Climbing_Ice_Formation.webm
-// The file is excluded via .git/info/exclude and never committed; index.astro only enables it under
-// `astro dev` when the file exists, so a fresh clone gets the empty state.
+// Dev-only stand-in: a local montage of ELIXIR Norway photos and clips. The file is excluded via
+// .git/info/exclude and never committed; index.astro only enables it under `astro dev` when the
+// file exists, so a fresh clone gets the empty state.
 const SAMPLE_SOURCES: VideoSource[] = [
     { src: `${BASE}/videos/dev-sample.webm`, type: 'video/webm' },
 ];

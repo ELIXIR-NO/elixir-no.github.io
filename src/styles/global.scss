@@ -119,10 +119,11 @@
 }
 
 @layer components {
-  /* Every word sits in the same grid cell, so the line keeps the longest
-     word's box and a swap never reflows the text around it. */
+  /* Every phrase sits in the same grid cell, so the cell keeps the widest and
+     tallest phrase's box (two lines where one does not fit) and a swap never
+     reflows the text around it. */
   .rotor {
-    display: inline-grid;
+    display: grid;
     justify-items: center;
     perspective: 6em;
   }
@@ -130,7 +131,9 @@
   .rotor-word {
     grid-area: 1 / 1;
     visibility: hidden;
-    white-space: pre;
+    max-width: 100%;
+    text-align: center;
+    text-wrap: balance;
     transform-origin: 50% 50% -0.5em;
     backface-visibility: hidden;
 

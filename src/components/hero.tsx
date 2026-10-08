@@ -8,9 +8,10 @@ import HeroVideo from './hero-video';
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const WORDS = ['life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics'];
+// The first phrase is also the static fallback and completes the sr-only heading.
+const WORDS = ['life science', 'every researcher', 'research that matters', 'data you can trust', 'understanding life', 'the next generation'];
 const FLIP_MS = 600;
-const DWELL_MS = 2300;
+const DWELL_MS = 2600;
 
 function RotatingWord({ playing }: { playing: boolean }) {
     const [{ current, leaving }, setFlip] = useState<{ current: number; leaving: number | null }>({ current: 0, leaving: null });

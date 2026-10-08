@@ -46,7 +46,7 @@ export default function NavMobileAccordion({ label, href, active, panelId, linkC
                     aria-label={open ? `Collapse ${label} section` : `Expand ${label} section`}
                     className="grid h-11 w-11 shrink-0 place-items-center rounded-control text-ink hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
-                    <ChevronIcon className={`h-5 w-5 transition-transform ${shouldReduceMotion ? '' : 'duration-200'} ${open ? 'rotate-180' : ''}`} />
+                    <ChevronIcon className={`h-5 w-5 transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} />
                 </button>
             </div>
             <AnimatePresence initial={false}>

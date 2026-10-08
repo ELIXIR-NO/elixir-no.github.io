@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // Inside the merged nav bar (group data-merged) the circles drop their own
 // surface so the bar reads as one piece; the colour transition rides the morph.
 export const circleButtonClass =
     'h-10 w-10 flex items-center justify-center rounded-full border border-rule bg-surface/90 text-ink hover:border-ink group-data-[merged=true]:border-transparent group-data-[merged=true]:bg-transparent group-data-[merged=true]:hover:border-transparent group-data-[merged=true]:hover:bg-ink/5 transition-[border-color,background-color,color] duration-300 motion-reduce:transition-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent';
 
+// Transform-only entrance so the icon swap collapses to a cross-fade under reduced motion
+// (the nav's MotionConfig skips transforms) and the server-rendered markup never depends on it.
+const iconVariants = {
+    initial: { scale: 0, rotate: -90, opacity: 0 },
+    animate: { scale: 1, rotate: 0, opacity: 1 },
+    exit: { scale: 0, rotate: 90, opacity: 0 },
+};
+
 export default function ThemeToggle() {
     const [isDark, setIsDark] = useState(false);
-    const shouldReduceMotion = useReducedMotion();
 
     useEffect(() => {
         setIsDark(document.documentElement.classList.contains('dark'));
@@ -22,20 +29,10 @@ export default function ThemeToggle() {
         setIsDark(dark);
     };
 
-    const iconVariants = shouldReduceMotion
-        ? { initial: {}, animate: {}, exit: {} }
-        : {
-            initial: { scale: 0, rotate: -90, opacity: 0 },
-            animate: { scale: 1, rotate: 0, opacity: 1 },
-            exit: { scale: 0, rotate: 90, opacity: 0 },
-        };
-
     return (
-        <motion.button
+        <button
             onClick={toggle}
             className={`relative ${circleButtonClass}`}
-            whileHover={undefined}
-            whileTap={undefined}
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
             <AnimatePresence mode="wait" initial={false}>
@@ -85,6 +82,6 @@ export default function ThemeToggle() {
                     </motion.svg>
                 )}
             </AnimatePresence>
-        </motion.button>
+        </button>
     );
 }

@@ -126,7 +126,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                     const category = project.data.category ?? 'unknown';
                     const keywords = project.data.keywords ?? [];
                     const sc = statusColors[status] ?? statusColors.completed;
-                
+
                     return (
                         <a
                             href={`${BASE}/funding-and-projects/${slug}`}

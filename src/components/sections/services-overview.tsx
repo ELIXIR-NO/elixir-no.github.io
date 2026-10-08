@@ -61,7 +61,7 @@ export default function ServicesOverview() {
             <section className="py-16 lg:py-20">
                 <div className="max-w-7xl mx-auto px-6 sm:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
-                        {/* Left — heading */}
+                        {/* Heading column */}
                         <motion.div
                             className="lg:col-span-2 lg:sticky lg:top-32"
                             initial={{ y: 20 }}
@@ -78,7 +78,7 @@ export default function ServicesOverview() {
                             <Button href={`${BASE}/services`} variant="link" size="sm" className="mt-6">Explore all services</Button>
                         </motion.div>
 
-                        {/* Right — cards */}
+                        {/* Card grid */}
                         <motion.div
                             className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-5"
                             variants={container}

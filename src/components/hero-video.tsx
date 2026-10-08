@@ -4,14 +4,17 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 type VideoSource = { src: string; type: string; media?: string };
 
-// Drop hero.webm, hero.mp4 (plus hero-720.webm / hero-720.mp4) and hero-poster.avif into public/videos/ and list them here.
-const HERO_VIDEO: { poster?: string; sources: VideoSource[] } = {
-    poster: undefined, // `${BASE}/videos/hero-poster.avif`
+// Best codec first, each as a 720p variant for small screens then full size. A browser that ignores
+// `media` on <source> takes the first playable entry, the 720p AV1, which still fills the hero.
+const HERO_VIDEO: { poster: string; sources: VideoSource[] } = {
+    poster: `${BASE}/videos/hero-poster.avif`,
     sources: [
-        // { src: `${BASE}/videos/hero-720.webm`, type: 'video/webm', media: '(max-width: 767px)' },
-        // { src: `${BASE}/videos/hero-720.mp4`, type: 'video/mp4', media: '(max-width: 767px)' },
-        // { src: `${BASE}/videos/hero.webm`, type: 'video/webm' },
-        // { src: `${BASE}/videos/hero.mp4`, type: 'video/mp4' },
+        { src: `${BASE}/videos/hero-720.av1.mp4`, type: 'video/mp4; codecs="av01.0.08M.08"', media: '(max-width: 767px)' },
+        { src: `${BASE}/videos/hero.av1.mp4`, type: 'video/mp4; codecs="av01.0.09M.08"' },
+        { src: `${BASE}/videos/hero-720.webm`, type: 'video/webm; codecs="vp09.00.40.08"', media: '(max-width: 767px)' },
+        { src: `${BASE}/videos/hero.webm`, type: 'video/webm; codecs="vp09.00.41.08"' },
+        { src: `${BASE}/videos/hero-720.mp4`, type: 'video/mp4; codecs="avc1.640020"', media: '(max-width: 767px)' },
+        { src: `${BASE}/videos/hero.mp4`, type: 'video/mp4; codecs="avc1.640032"' },
     ],
 };
 
@@ -67,7 +70,7 @@ export default function HeroVideo({ playing, devSample = false }: { playing: boo
             {allowVideo ? (
                 <video
                     ref={videoRef}
-                    className="h-full w-full object-cover saturate-[.9]"
+                    className="h-full w-full object-cover"
                     poster={poster}
                     muted
                     loop
@@ -85,7 +88,7 @@ export default function HeroVideo({ playing, devSample = false }: { playing: boo
                     ))}
                 </video>
             ) : (
-                <img src={poster} alt="" className="h-full w-full object-cover saturate-[.9]" />
+                <img src={poster} alt="" className="h-full w-full object-cover" />
             )}
             {/* A light global tint; the hero copy carries its own glow for contrast. */}
             <div className="absolute inset-0 bg-[rgb(var(--color-paper)/var(--hero-tint))]" />

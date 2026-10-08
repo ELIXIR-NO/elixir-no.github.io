@@ -66,7 +66,7 @@ type LayoutTransition = typeof morphTransition | typeof instantTransition;
  * so its opacity can fade independently of the content while framer keeps the
  * corner radius undistorted during the morph.
  */
-const Skin = ({ visible, radius, transition, shadow = false }: { visible: boolean; radius: number; transition: LayoutTransition; shadow?: boolean }) => {
+const Skin = ({ visible, radius, transition, className }: { visible: boolean; radius: number; transition: LayoutTransition; className: string }) => {
     const shouldReduceMotion = useReducedMotion();
     return (
         <motion.div
@@ -76,7 +76,7 @@ const Skin = ({ visible, radius, transition, shadow = false }: { visible: boolea
             animate={{ opacity: visible ? 1 : 0 }}
             transition={{ ...transition, opacity: { duration: shouldReduceMotion ? 0 : 0.3 } }}
             style={{ borderRadius: radius }}
-            className={`pointer-events-none absolute inset-0 border border-rule bg-surface/90 ${shadow ? 'shadow-lg shadow-black/[0.08] dark:shadow-black/30' : ''}`}
+            className={`pointer-events-none absolute inset-0 z-0 bg-surface/90 ${className}`}
         />
     );
 };
@@ -121,7 +121,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                     style={{ borderRadius: PILL_RADIUS }}
                     className={`relative grid grid-cols-[1fr_auto_1fr] items-center ${scrolled ? 'px-4 py-2 lg:px-5' : ''}`}
                 >
-                    <Skin visible={scrolled} radius={PILL_RADIUS} transition={layoutTransition} shadow />
+                    <Skin visible={scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="shadow-lg shadow-black/[0.08] dark:shadow-black/30" />
 
                     <nav aria-label="Main navigation" className="contents">
                         {/* Logo: floats large on its own at the top, shrinks into the bar once merged */}
@@ -129,7 +129,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout
                             initial={false}
                             transition={layoutTransition}
-                            className={`relative justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
+                            className={`relative z-10 justify-self-start flex items-center ${scrolled ? 'p-1' : 'p-1 lg:p-2'}`}
                         >
                             <a href={`${BASE}/`} className="relative flex focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control">
                                 <span className="sr-only">ELIXIR Norway</span>
@@ -144,10 +144,10 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout="position"
                             initial={false}
                             transition={layoutTransition}
-                            className="relative hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
+                            className="relative z-10 hidden lg:flex items-center gap-x-1 justify-self-center px-1.5 py-1.5"
                             onMouseLeave={() => setHoveredIndex(null)}
                         >
-                            <Skin visible={!scrolled} radius={PILL_RADIUS} transition={layoutTransition} />
+                            <Skin visible={!scrolled} radius={PILL_RADIUS} transition={layoutTransition} className="border border-rule" />
                             {glider && (
                                 <motion.span
                                     aria-hidden="true"
@@ -199,7 +199,7 @@ export const Navigation = ({ pathname }: { pathname: string }) => {
                             layout="position"
                             initial={false}
                             transition={layoutTransition}
-                            className="col-start-3 justify-self-end flex items-center gap-x-2"
+                            className="relative z-10 col-start-3 justify-self-end flex items-center gap-x-2"
                         >
                             <ThemeToggle />
                             <button

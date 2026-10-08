@@ -69,7 +69,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                 aria-roledescription="carousel"
             >
                 {/* Header row */}
-                <div className="flex items-end justify-between mb-8">
+                <div className="flex items-end justify-between mb-10">
                     <div>
                         <span className="text-xs font-semibold uppercase tracking-wider text-marker-text">
                             Highlights
@@ -81,14 +81,14 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                     <div className="hidden sm:flex items-center gap-2">
                         <button
                             onClick={prev}
-                            className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            className="grid h-10 w-10 place-items-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             aria-label="Previous slide"
                         >
                             <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
                         </button>
                         <button
                             onClick={next}
-                            className="p-2 rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            className="grid h-10 w-10 place-items-center rounded-control border border-rule text-ink hover:border-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                             aria-label="Next slide"
                         >
                             <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
@@ -98,7 +98,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
 
                 {/* Screenshots vary in aspect, so they sit framed inside a 16:9 plate instead of being cropped. The
                     height cap keeps the whole block inside one viewport, so the floating nav never covers the arrows. */}
-                <div className="relative aspect-[16/9] max-h-[52svh] rounded-card overflow-hidden border border-rule bg-paper">
+                <div className="relative w-full aspect-[16/9] max-h-[52svh] rounded-card overflow-hidden border border-rule bg-paper">
                     <AnimatePresence initial={false} custom={direction} mode="popLayout">
                         <motion.div
                             key={current}

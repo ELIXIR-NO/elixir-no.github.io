@@ -11,7 +11,7 @@ const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 // The first phrase is also the static fallback and completes the sr-only heading.
 const WORDS = [
     'life science', 'genomics', 'bioinformatics', 'biomedical', 'proteomics',
-    'scientists across Norway', 'discoveries that matter', 'data you can trust', 'understanding life', 'the next generation',
+    'AI-ready data', 'scientists across Norway', 'discoveries that matter', 'data you can trust', 'understanding life', 'the next generation',
 ];
 const FLIP_MS = 600;
 // Multi-word phrases stay a little longer than single fields so they can be read.

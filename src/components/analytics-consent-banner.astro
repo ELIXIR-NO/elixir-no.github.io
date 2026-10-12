@@ -19,13 +19,13 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
 <!-- Shown by the script below until the visitor chooses; without JavaScript Matomo never loads, so there is nothing to ask. -->
 <section
     id="analytics-consent"
-    class="consent-slide-up fixed inset-x-0 bottom-0 z-50 max-h-[75vh] overflow-y-auto border-t border-rule bg-surface shadow-[0_-8px_30px_rgb(2_52_82/0.08)]"
+    class="consent-slide-up fixed inset-x-0 bottom-0 z-50 max-h-[75vh] overflow-y-auto border-t border-rule bg-surface shadow-[0_-8px_30px_rgb(0_0_0/0.08)]"
     aria-labelledby="analytics-consent-title"
     data-pagefind-ignore
     hidden
 >
-    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-        <div class="min-w-0 max-w-3xl text-sm leading-relaxed text-body">
+    <div class="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-4 sm:px-8 sm:py-5 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+        <div class="min-w-0 max-w-2xl text-sm leading-normal text-body">
             <h2 id="analytics-consent-title" class="font-display text-base font-semibold text-ink">
                 Your privacy matters
             </h2>
@@ -54,12 +54,12 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
                 </div>
             </details>
         </div>
-        <div class="flex shrink-0 flex-wrap items-center gap-3">
-            <Button arrow={false} data-analytics-choice="accepted">Accept</Button>
+        <div class="grid shrink-0 grid-cols-2 gap-3">
+            <Button arrow={false} className="justify-center" data-analytics-choice="accepted">Accept</Button>
             <button
                 type="button"
                 data-analytics-choice="opted-out"
-                class="inline-flex h-12 items-center rounded-full border border-ink px-[22px] text-[15px] font-semibold text-ink transition-colors hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                class="inline-flex h-12 items-center justify-center rounded-full border border-ink px-[22px] text-[15px] font-semibold text-ink transition-colors hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             >
                 Opt out
             </button>

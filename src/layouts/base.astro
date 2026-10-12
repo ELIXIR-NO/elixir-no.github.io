@@ -3,6 +3,7 @@ import Navigation from "../components/navigation";
 import Footer from "../components/footer";
 import SEOHead from "../components/seo-head.astro";
 import SiteBanner from "../components/site-banner.astro";
+import AnalyticsConsentBanner from "../components/analytics-consent-banner.astro";
 import { Font } from "astro:assets";
 import "../styles/global.scss";
 
@@ -94,5 +95,7 @@ const { seo } = Astro.props;
         <slot />
 
         <Footer />
+
+        <AnalyticsConsentBanner />
     </body>
 </html>

@@ -1,0 +1,120 @@
+---
+import Button from "./button.tsx";
+
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const jointControllers = [
+    "University of Bergen (UiB), Department of Informatics, as lead partner",
+    "Norwegian University of Life Sciences (NMBU), as lead partner",
+    "Norwegian University of Science and Technology (NTNU), as lead partner",
+    "University of Oslo (UiO), as lead partner",
+    "UiT The Arctic University of Norway, as lead partner",
+    "Norwegian Institute of Public Health (FHI), as additional partner",
+    "Norwegian Veterinary Institute, as additional partner",
+];
+
+const link = "font-semibold text-ink underline decoration-marker decoration-2 underline-offset-4 hover:decoration-ink rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
+---
+
+<!-- Shown by the script below until the visitor chooses; without JavaScript Matomo never loads, so there is nothing to ask. -->
+<section
+    id="analytics-consent"
+    class="consent-slide-up fixed inset-x-0 bottom-0 z-50 max-h-[75vh] overflow-y-auto border-t border-rule bg-surface shadow-[0_-8px_30px_rgb(2_52_82/0.08)]"
+    aria-labelledby="analytics-consent-title"
+    data-pagefind-ignore
+    hidden
+>
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-5 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <div class="min-w-0 max-w-3xl text-sm leading-relaxed text-body">
+            <h2 id="analytics-consent-title" class="font-display text-base font-semibold text-ink">
+                Your privacy matters
+            </h2>
+            <p class="mt-1">
+                ELIXIR Norway uses Matomo, without cookies, to collect and analyse traffic data solely to
+                assess how the website performs and to improve our services. See our
+                <a href={`${BASE}/privacy-policy`} class={link}>privacy policy</a> for how we process your data.
+            </p>
+            <details class="group">
+                <summary class={`inline-flex min-h-11 cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden ${link}`}>
+                    <span class="group-open:hidden">Show more</span>
+                    <span class="hidden group-open:inline">Show less</span>
+                </summary>
+                <div class="space-y-2 pb-1">
+                    <p>
+                        Raw data is kept for two years and then deleted. Aggregated statistics derived from it may be
+                        kept indefinitely for analysis and reporting.
+                    </p>
+                    <p>
+                        The data is co-processed and co-controlled under the consortium agreement for ELIXIR4OLS,
+                        Enabling Open Life Science in Norway, between:
+                    </p>
+                    <ul class="list-disc space-y-0.5 pl-5">
+                        {jointControllers.map((controller) => <li>{controller}</li>)}
+                    </ul>
+                </div>
+            </details>
+        </div>
+        <div class="flex shrink-0 flex-wrap items-center gap-3">
+            <Button arrow={false} data-analytics-choice="accepted">Accept</Button>
+            <button
+                type="button"
+                data-analytics-choice="opted-out"
+                class="inline-flex h-12 items-center rounded-full border border-ink px-[22px] text-[15px] font-semibold text-ink transition-colors hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+            >
+                Opt out
+            </button>
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes consentSlideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        .consent-slide-up { animation: consentSlideUp 0.4s ease-out; }
+    }
+</style>
+
+<style is:global>
+    /* Room for the fixed banner, so the page end and focused controls stay visible (WCAG 2.4.11). */
+    html { scroll-padding-bottom: var(--analytics-consent-height, 0px); }
+    body { padding-bottom: var(--analytics-consent-height, 0px); }
+</style>
+
+<script>
+    import {
+        ANALYTICS_CHOICE_EVENT,
+        readAnalyticsChoice,
+        sendsDoNotTrack,
+        setAnalyticsChoice,
+        type AnalyticsChoice,
+    } from "../lib/analytics-consent";
+
+    const banner = document.getElementById("analytics-consent");
+
+    // Matomo records nothing under Do Not Track, so there is nothing to ask about.
+    if (banner && readAnalyticsChoice() === null && !sendsDoNotTrack()) {
+        const root = document.documentElement;
+        const reserveSpace = () => root.style.setProperty("--analytics-consent-height", `${banner.offsetHeight}px`);
+        const resizes = new ResizeObserver(reserveSpace);
+
+        const close = () => {
+            banner.hidden = true;
+            resizes.disconnect();
+            root.style.removeProperty("--analytics-consent-height");
+            document.removeEventListener(ANALYTICS_CHOICE_EVENT, close);
+        };
+
+        banner.addEventListener("click", (event) => {
+            const choice = (event.target as Element).closest<HTMLElement>("[data-analytics-choice]");
+            if (choice) setAnalyticsChoice(choice.dataset.analyticsChoice as AnalyticsChoice);
+        });
+        // The privacy policy page can record the choice too.
+        document.addEventListener(ANALYTICS_CHOICE_EVENT, close);
+
+        banner.hidden = false;
+        resizes.observe(banner);
+    }
+</script>

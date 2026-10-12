@@ -1,10 +1,11 @@
 // The visitor's Matomo analytics choice, kept in the cookies Matomo's tracker
-// reads itself: while mtm_consent_removed is set it sends nothing, checked
-// before every request. The Tag Manager container tracks cookieless without
-// requiring consent, so no choice means tracked. Accepting still writes
-// mtm_consent, so switching the container to require consent needs no change
-// here. Never call the tracker's consent API instead: setConsentGiven turns
-// cookies back on for a container configured to run without them.
+// reads itself. The Tag Manager container tracks cookieless without requiring
+// consent, so no choice means tracked. Even with cookies disabled the tracker
+// checks mtm_consent_removed before every request and sends nothing while it
+// is set. It ignores mtm_consent in that mode, so that cookie only lets the
+// banner remember an acceptance, and requiring consent in the container would
+// stop tracking for everyone. Never call the tracker's consent API instead:
+// setConsentGiven turns cookies back on.
 
 export type AnalyticsChoice = 'accepted' | 'opted-out';
 

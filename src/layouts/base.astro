@@ -88,6 +88,9 @@ const { seo } = Astro.props;
             Skip to main content
         </a>
 
+        {/* Fixed to the bottom, but early in the DOM so keyboard and screen reader users reach it first. */}
+        <AnalyticsConsentBanner />
+
         <SiteBanner />
 
         <Navigation client:load pathname={Astro.url.pathname} />
@@ -95,7 +98,5 @@ const { seo } = Astro.props;
         <slot />
 
         <Footer />
-
-        <AnalyticsConsentBanner />
     </body>
 </html>

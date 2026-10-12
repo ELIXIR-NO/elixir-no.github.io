@@ -3,6 +3,7 @@ import Button from "./button.tsx";
 
 const BASE = import.meta.env.BASE_URL.replace(/\/$/, '');
 
+// Also listed in the privacy policy (src/content/privacy-policy/index.mdx); keep both in step.
 const jointControllers = [
     "University of Bergen (UiB), Department of Informatics, as lead partner",
     "Norwegian University of Life Sciences (NMBU), as lead partner",
@@ -13,11 +14,10 @@ const jointControllers = [
     "Norwegian Veterinary Institute, as additional partner",
 ];
 
-// Shown by the script below until the visitor chooses; without JavaScript
-// Matomo never loads, so there is nothing to ask.
 const link = "font-semibold text-ink underline decoration-marker decoration-2 underline-offset-4 hover:decoration-ink rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent";
 ---
 
+{/* Shown by the script below until the visitor chooses; without JavaScript Matomo never loads, so there is nothing to ask. */}
 <section
     id="analytics-consent"
     class="consent-slide-up fixed inset-x-0 bottom-0 z-30 max-h-[75dvh] overflow-y-auto border-t border-rule bg-surface shadow-[0_-8px_30px_rgb(0_0_0/0.08)]"
@@ -54,6 +54,7 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
                     </ul>
                 </div>
             </details>
+            <p id="analytics-consent-blocked" class="mt-2 font-semibold text-ink empty:hidden" role="alert"></p>
         </div>
         <div class="grid shrink-0 grid-cols-2 gap-3">
             <Button arrow={false} className="justify-center" data-analytics-choice="accepted">Accept</Button>
@@ -90,14 +91,18 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
 <script>
     import {
         ANALYTICS_CHOICE_EVENT,
+        isAnalyticsChoice,
         readAnalyticsChoice,
+        renewAnalyticsChoice,
         sendsDoNotTrack,
         setAnalyticsChoice,
-        type AnalyticsChoice,
     } from "../lib/analytics-consent";
 
     const banner = document.getElementById("analytics-consent");
     const saved = document.getElementById("analytics-consent-saved");
+    const blocked = document.getElementById("analytics-consent-blocked");
+
+    renewAnalyticsChoice();
 
     // Matomo records nothing under Do Not Track, so there is nothing to ask about.
     if (banner && readAnalyticsChoice() === null && !sendsDoNotTrack()) {
@@ -115,10 +120,7 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
         };
 
         const close = () => {
-            if (banner.contains(document.activeElement)) {
-                moveFocusPastBanner();
-                if (saved) saved.textContent = "Your analytics choice is saved.";
-            }
+            if (banner.contains(document.activeElement)) moveFocusPastBanner();
             banner.hidden = true;
             resizes.disconnect();
             root.style.removeProperty("--analytics-consent-height");
@@ -126,8 +128,13 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
         };
 
         banner.addEventListener("click", (event) => {
-            const choice = (event.target as Element).closest<HTMLElement>("[data-analytics-choice]");
-            if (choice) setAnalyticsChoice(choice.dataset.analyticsChoice as AnalyticsChoice);
+            const choice = (event.target as Element).closest<HTMLElement>("[data-analytics-choice]")?.dataset.analyticsChoice;
+            if (!isAnalyticsChoice(choice)) return;
+            if (setAnalyticsChoice(choice)) {
+                if (saved) saved.textContent = "Your analytics choice is saved.";
+            } else if (blocked) {
+                blocked.textContent = "Your browser is blocking cookies for this site, so your choice can't be saved.";
+            }
         });
         // The privacy policy page can record the choice too.
         document.addEventListener(ANALYTICS_CHOICE_EVENT, close);

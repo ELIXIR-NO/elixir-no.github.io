@@ -1,11 +1,49 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ANALYTICS_CHOICE_EVENT, readAnalyticsChoice, sendsDoNotTrack, setAnalyticsChoice } from './analytics-consent';
+import {
+    ANALYTICS_CHOICE_EVENT,
+    isAnalyticsChoice,
+    readAnalyticsChoice,
+    renewAnalyticsChoice,
+    sendsDoNotTrack,
+    setAnalyticsChoice,
+} from './analytics-consent';
 
 const clearCookies = () => {
     for (const name of ['mtm_consent', 'mtm_consent_removed']) {
         document.cookie = `${name}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/`;
     }
 };
+
+const nativeCookie = (() => {
+    for (let proto = Object.getPrototypeOf(document); proto; proto = Object.getPrototypeOf(proto)) {
+        const descriptor = Object.getOwnPropertyDescriptor(proto, 'cookie');
+        if (descriptor) return descriptor;
+    }
+    throw new Error('document.cookie has no accessor');
+})();
+
+// Records every cookie write; with `store: false` the browser refuses them all.
+const watchCookieWrites = ({ store = true } = {}) => {
+    const writes: string[] = [];
+    Object.defineProperty(document, 'cookie', {
+        configurable: true,
+        get: () => nativeCookie.get!.call(document),
+        set: (value: string) => {
+            writes.push(value);
+            if (store) nativeCookie.set!.call(document, value);
+        },
+    });
+    return writes;
+};
+
+const restoreCookies = () => {
+    delete (document as { cookie?: string }).cookie;
+    vi.unstubAllGlobals();
+    clearCookies();
+};
+
+// The pattern Matomo's tracker uses to read a cookie.
+const matomoReads = (name: string) => new RegExp(`(^|;)[ ]*${name}=([^;]+)`).test(document.cookie);
 
 describe('readAnalyticsChoice', () => {
     it('is null before any choice', () => {
@@ -25,11 +63,54 @@ describe('readAnalyticsChoice', () => {
     it('ignores empty values and look-alike names', () => {
         expect(readAnalyticsChoice('mtm_consent=')).toBeNull();
         expect(readAnalyticsChoice('mtm_consent_extra=1; xmtm_consent=1')).toBeNull();
+        expect(readAnalyticsChoice('mtm_consent_removed=; mtm_consent=1')).toBe('accepted');
+    });
+
+    it('accepts values that contain an equals sign', () => {
+        expect(readAnalyticsChoice('mtm_consent_removed=a=b')).toBe('opted-out');
+    });
+});
+
+describe('isAnalyticsChoice', () => {
+    it('accepts only the two choices', () => {
+        expect(isAnalyticsChoice('accepted')).toBe(true);
+        expect(isAnalyticsChoice('opted-out')).toBe(true);
+        expect(isAnalyticsChoice('opted-in')).toBe(false);
+        expect(isAnalyticsChoice(undefined)).toBe(false);
     });
 });
 
 describe('setAnalyticsChoice', () => {
-    afterEach(clearCookies);
+    afterEach(restoreCookies);
+
+    it('leaves an opt-out Matomo can read', () => {
+        expect(setAnalyticsChoice('opted-out')).toBe(true);
+        expect(matomoReads('mtm_consent_removed')).toBe(true);
+    });
+
+    it('writes first-party cookies that last a year', () => {
+        const writes = watchCookieWrites();
+        setAnalyticsChoice('accepted');
+        const kept = writes.find((write) => write.startsWith('mtm_consent=') && !write.startsWith('mtm_consent=;'));
+        expect(kept).toMatch(/; Max-Age=31536000; Path=\/; SameSite=Lax$/);
+    });
+
+    it('marks the cookies Secure on https', () => {
+        vi.stubGlobal('location', { protocol: 'https:' });
+        const writes = watchCookieWrites({ store: false });
+        setAnalyticsChoice('opted-out');
+        expect(writes.every((write) => write.endsWith('; Secure'))).toBe(true);
+    });
+
+    it('reports a refused cookie and stays quiet about it', () => {
+        watchCookieWrites({ store: false });
+        const listener = vi.fn();
+        document.addEventListener(ANALYTICS_CHOICE_EVENT, listener);
+        const stored = setAnalyticsChoice('opted-out');
+        document.removeEventListener(ANALYTICS_CHOICE_EVENT, listener);
+        expect(stored).toBe(false);
+        expect(listener).not.toHaveBeenCalled();
+    });
 
     it('stores an opt-out and clears an earlier acceptance', () => {
         setAnalyticsChoice('accepted');
@@ -55,6 +136,28 @@ describe('setAnalyticsChoice', () => {
     });
 });
 
+describe('renewAnalyticsChoice', () => {
+    afterEach(restoreCookies);
+
+    it('rewrites a stored choice without announcing it', () => {
+        setAnalyticsChoice('opted-out');
+        const writes = watchCookieWrites();
+        const listener = vi.fn();
+        document.addEventListener(ANALYTICS_CHOICE_EVENT, listener);
+        renewAnalyticsChoice();
+        document.removeEventListener(ANALYTICS_CHOICE_EVENT, listener);
+        expect(writes.some((write) => /^mtm_consent_removed=\d+; Max-Age=31536000;/.test(write))).toBe(true);
+        expect(readAnalyticsChoice()).toBe('opted-out');
+        expect(listener).not.toHaveBeenCalled();
+    });
+
+    it('writes nothing before any choice', () => {
+        const writes = watchCookieWrites();
+        renewAnalyticsChoice();
+        expect(writes).toEqual([]);
+    });
+});
+
 describe('sendsDoNotTrack', () => {
     const nav = (doNotTrack: string | null, msDoNotTrack?: string) => ({ doNotTrack, msDoNotTrack }) as unknown as Navigator;
 
@@ -63,5 +166,7 @@ describe('sendsDoNotTrack', () => {
         expect(sendsDoNotTrack(nav(null, 'yes'))).toBe(true);
         expect(sendsDoNotTrack(nav('0'))).toBe(false);
         expect(sendsDoNotTrack(nav(null))).toBe(false);
+        expect(sendsDoNotTrack(nav('unspecified'))).toBe(false);
+        expect(sendsDoNotTrack(nav(undefined as unknown as null))).toBe(false);
     });
 });

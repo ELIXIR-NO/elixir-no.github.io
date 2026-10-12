@@ -9,12 +9,12 @@
     data-pagefind-ignore
     hidden
 >
-    <label class="flex cursor-pointer items-start gap-4 has-[:disabled]:cursor-not-allowed">
+    <label class="flex min-h-11 cursor-pointer items-center gap-4 has-[:disabled]:cursor-not-allowed">
         <input
             id="analytics-preference-input"
             type="checkbox"
             aria-describedby="analytics-preference-status"
-            class="mt-0.5 h-6 w-6 shrink-0 cursor-pointer rounded-chip border-muted text-accent focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50"
+            class="h-6 w-6 shrink-0 cursor-pointer rounded-chip border-muted text-accent focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50"
         />
         <span class="font-semibold text-ink">Include my visits in the website statistics</span>
     </label>
@@ -49,7 +49,11 @@
                 : "You are opted out. Check the box to opt in again.";
         };
 
-        checkbox.addEventListener("change", () => setAnalyticsChoice(checkbox.checked ? "accepted" : "opted-out"));
+        checkbox.addEventListener("change", () => {
+            if (setAnalyticsChoice(checkbox.checked ? "accepted" : "opted-out")) return;
+            render();
+            status.textContent = "Your browser is blocking cookies for this site, so your choice can't be saved.";
+        });
         document.addEventListener(ANALYTICS_CHOICE_EVENT, render);
 
         render();

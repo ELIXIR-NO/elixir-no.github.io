@@ -1,0 +1,62 @@
+---
+// The privacy policy's own analytics switch: the banner disappears once a
+// choice is made, so this is where a visitor changes their mind.
+---
+
+<div
+    id="analytics-preference"
+    class="my-8 rounded-card border border-rule bg-surface p-5 sm:p-6"
+    data-pagefind-ignore
+    hidden
+>
+    <div class="flex items-start gap-4">
+        <input
+            id="analytics-preference-input"
+            type="checkbox"
+            aria-describedby="analytics-preference-status"
+            class="mt-0.5 h-6 w-6 shrink-0 cursor-pointer rounded-chip border-muted text-accent focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        <div>
+            <label for="analytics-preference-input" class="block cursor-pointer font-semibold text-ink">
+                Include my visits in the website statistics
+            </label>
+            <p id="analytics-preference-status" class="mt-1 text-sm text-body" aria-live="polite"></p>
+        </div>
+    </div>
+</div>
+<noscript>
+    <p class="my-8 rounded-card border border-rule bg-surface p-5 text-sm text-body">
+        Matomo needs JavaScript, so with it turned off nothing about your visits is collected.
+    </p>
+</noscript>
+
+<script>
+    import { ANALYTICS_CHOICE_EVENT, readAnalyticsChoice, sendsDoNotTrack, setAnalyticsChoice } from "../lib/analytics-consent";
+
+    const preference = document.getElementById("analytics-preference");
+    const checkbox = document.getElementById("analytics-preference-input") as HTMLInputElement | null;
+    const status = document.getElementById("analytics-preference-status");
+
+    if (preference && checkbox && status) {
+        const render = () => {
+            if (sendsDoNotTrack()) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                status.textContent = "Your browser sends a Do Not Track signal, so Matomo records nothing from your visits.";
+                return;
+            }
+            // No choice yet means included: the site relies on legitimate interest, not prior consent.
+            const included = readAnalyticsChoice() !== "opted-out";
+            checkbox.checked = included;
+            status.textContent = included
+                ? "You are opted in. Uncheck the box to opt out."
+                : "You are opted out. Check the box to opt in again.";
+        };
+
+        checkbox.addEventListener("change", () => setAnalyticsChoice(checkbox.checked ? "accepted" : "opted-out"));
+        document.addEventListener(ANALYTICS_CHOICE_EVENT, render);
+
+        render();
+        preference.hidden = false;
+    }
+</script>

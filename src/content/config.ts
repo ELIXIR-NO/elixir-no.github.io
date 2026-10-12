@@ -21,6 +21,15 @@ const accessibility = defineCollection({
     }),
 });
 
+const privacyPolicy = defineCollection({
+    type: 'content',
+    schema: z.object({
+        title: z.string().optional(),
+        layout: z.string().optional(),
+        variant: z.string().optional(),
+    }),
+});
+
 const events = defineCollection({
     type: 'content',
     schema: z.object({
@@ -95,4 +104,5 @@ export const collections = {
     about,
     'funding-and-projects': fundingAndProjects,
     accessibility,
+    'privacy-policy': privacyPolicy,
 };

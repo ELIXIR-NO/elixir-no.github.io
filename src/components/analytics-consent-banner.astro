@@ -31,8 +31,8 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
                 Your privacy matters
             </h2>
             <p class="mt-1">
-                ELIXIR Norway uses Matomo, without cookies, to measure how this website is used, so we can
-                improve it and report on our services. See our
+                ELIXIR Norway uses Matomo to measure how this website is used, so we can improve it and report
+                on our services. Matomo records nothing and sets no cookies unless you accept. See our
                 <a href={`${BASE}/privacy-policy`} class={link}>privacy policy</a> for how we process your data.
             </p>
             <details class="group">
@@ -93,7 +93,6 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
         ANALYTICS_CHOICE_EVENT,
         isAnalyticsChoice,
         readAnalyticsChoice,
-        renewAnalyticsChoice,
         sendsDoNotTrack,
         setAnalyticsChoice,
     } from "../lib/analytics-consent";
@@ -101,8 +100,6 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
     const banner = document.getElementById("analytics-consent");
     const saved = document.getElementById("analytics-consent-saved");
     const blocked = document.getElementById("analytics-consent-blocked");
-
-    renewAnalyticsChoice();
 
     // Matomo records nothing under Do Not Track, so there is nothing to ask about.
     if (banner && readAnalyticsChoice() === null && !sendsDoNotTrack()) {

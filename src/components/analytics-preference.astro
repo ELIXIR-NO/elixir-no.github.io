@@ -41,12 +41,13 @@
                 status.textContent = "Your browser sends a Do Not Track signal, so Matomo records nothing from your visits.";
                 return;
             }
-            // No choice yet means included: the site relies on legitimate interest, not prior consent.
-            const included = readAnalyticsChoice() !== "opted-out";
-            checkbox.checked = included;
-            status.textContent = included
-                ? "You are opted in. Uncheck the box to opt out."
-                : "You are opted out. Check the box to opt in again.";
+            const choice = readAnalyticsChoice();
+            checkbox.checked = choice === "accepted";
+            status.textContent = {
+                accepted: "You are opted in. Uncheck the box to opt out.",
+                "opted-out": "You are opted out. Check the box to opt in.",
+                none: "You haven't chosen yet, so nothing is recorded. Check the box to opt in.",
+            }[choice ?? "none"];
         };
 
         checkbox.addEventListener("change", () => {

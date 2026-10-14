@@ -32,7 +32,7 @@ Personal data is processed on the basis of the Consortium's legitimate interests
 
 These legitimate interests include monitoring and evaluating how the website is used, assessing service performance, maintaining the security and functionality of the website, fulfilling reporting and accountability obligations, and continuously improving and developing the services we provide. The purposes are described in more detail under "Purpose of the processing" below.
 
-You can opt out at any time, as described under "Your choice" below.
+Because Matomo stores cookies in your browser, it runs only after you accept it. You can change your choice at any time, as described under "Your choice" below.
 
 ## How we collect your data
 
@@ -40,9 +40,8 @@ This website uses [Matomo](https://matomo.org/), an open-source web analytics pl
 
 We use Matomo to produce statistics about the use of this website, which help us maintain, improve and develop it. Matomo is configured to collect as little as possible:
 
-- It does not set cookies, so it stores no identifier in your browser to recognise you.
+- It runs only if you accept analytics. Until you do, it records nothing and sets no cookies.
 - It honours Do Not Track. If your browser sends a Do Not Track signal, Matomo records nothing about your visits.
-- It does not ask for consent before recording a visit, because the processing is based on legitimate interest. You can opt out at any time instead.
 
 Where Matomo is hosted is described under "Transfers to third countries" below. A demonstration of Matomo and its reports is available at [demo.matomo.cloud](https://demo.matomo.cloud).
 
@@ -60,7 +59,7 @@ All processing is limited to what is necessary for these operational, analytical
 
 ## Processed data
 
-Each time you view a page, Matomo processes the following data:
+Once you have accepted analytics, Matomo processes the following data each time you view a page:
 
 - Your IP address. To protect your privacy, its last 2 bytes are anonymised.
 - The date and time of the request.
@@ -68,15 +67,16 @@ Each time you view a page, Matomo processes the following data:
 - The address of the page you are viewing (page URL).
 - The address of the page you came from (referrer URL), which shows whether you arrived from a search engine, a social network, another website, or by entering the address directly.
 - The time in your local time zone.
-- Files you download from this website.
-- Links to other websites that you click.
 - How long you spend on each page. To measure this more accurately, your browser sends a short signal to Matomo every 15 seconds or so while the page is in view.
 - The main language of your browser (Accept-Language header).
 - The user agent of your browser (User-Agent header), which describes your browser and operating system.
+- A random visitor ID and the time of your first visit, kept in a cookie so Matomo can tell a returning visitor from a new one.
 
 A page view is recorded when a page loads, and again when the address changes without a new page loading, for example when you follow a link to another section of the same page.
 
-Matomo does not collect your screen resolution or browser plugins, and it does not record clicks other than on downloads and links to other websites.
+Matomo also records when you accept analytics, and when you opt out after having accepted, so we can see how visitors choose.
+
+Matomo does not collect your screen resolution or browser plugins, and it does not record which links you click or which files you download.
 
 For further information on how this data is used and secured, or to ask what data we hold about you, see "How to contact us" below.
 
@@ -84,24 +84,30 @@ For further information on how this data is used and secured, or to ask what dat
 
 Cookies are small text files that a website stores in your browser. For general information about cookies, see [aboutcookies.org](https://www.aboutcookies.org) or [allaboutcookies.org](https://www.allaboutcookies.org).
 
-Matomo does not set any cookies on this website. The only cookies this website sets are the two that remember your analytics choice:
+Matomo sets its cookies only after you accept analytics, and deletes them if you opt out:
+
+- `_pk_id` holds a random visitor ID and the time of your first visit. It expires after 13 months.
+- `_pk_ses` marks a visit in progress. It expires after 30 minutes without activity.
+- `_pk_ref` holds the address of the website you came from, when you arrive from another website. It expires after 6 months.
+
+Two more cookies remember your analytics choice:
 
 - `mtm_consent` is set when you accept analytics.
 - `mtm_consent_removed` is set when you opt out. While it is present, Matomo sends nothing about your visits.
 
-Setting one removes the other. Each holds only the time you made your choice, not an identifier. They are first-party cookies that expire 1 year after your last visit, after which the banner asks you again. Some browsers delete cookies like these sooner; Safari, for example, removes them after 7 days without a visit.
+Setting one removes the other. Each holds only the time you made your choice, not an identifier, and expires 1 year after you made it; the banner then asks you again. All of these are first-party cookies used only on this website. Some browsers delete cookies sooner; Safari, for example, removes them after 7 days without a visit.
 
-If your browser blocks or deletes cookies, your choice cannot be remembered. To stop analytics in that case, allow cookies for this website, or turn on Do Not Track if your browser offers it.
+If your browser blocks cookies, your choice cannot be saved and Matomo records nothing.
 
 This website also keeps two preferences in your browser's storage: whether you use the light or dark theme, and whether you have closed the announcement banner at the top of the page. These stay on your device and are never sent to us or anyone else.
 
 ## Your choice
 
-On your first visit, a banner at the bottom of the page lets you accept analytics or opt out. It stays until you make a choice. After that, you can change your choice at any time with the setting below.
+On your first visit, a banner at the bottom of the page asks whether you accept analytics. Matomo records nothing until you accept, and the banner stays until you make a choice. After that, you can change your choice at any time with the setting below.
 
 <AnalyticsPreference />
 
-If you opt out, no further analytics data about your visits is collected, to the extent technically feasible. Your choice applies to the browser and device you make it on.
+If you opt out, Matomo stops collecting data about your visits and deletes its cookies, to the extent technically feasible. Your choice applies to the browser and device you make it on.
 
 If your browser sends a Do Not Track signal, Matomo records nothing and the setting above cannot be changed. Matomo also needs JavaScript, so with JavaScript turned off nothing about your visits is collected.
 

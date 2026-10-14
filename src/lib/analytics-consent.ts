@@ -1,11 +1,9 @@
-// The visitor's Matomo analytics choice, kept in the cookies Matomo's tracker
-// reads itself. The Tag Manager container tracks cookieless without requiring
-// consent, so no choice means tracked. Even with cookies disabled the tracker
-// checks mtm_consent_removed before every request and sends nothing while it
-// is set. It ignores mtm_consent in that mode, so that cookie only lets the
-// banner remember an acceptance, and requiring consent in the container would
-// stop tracking for everyone. Never call the tracker's consent API instead:
-// setConsentGiven turns cookies back on.
+// The visitor's Matomo analytics choice. The Tag Manager container requires
+// consent, so the tracker sends nothing and sets no cookies until the visitor
+// accepts. The choice lives in the two cookies the tracker reads when it
+// starts; a tracker already running on the page is told directly, so an
+// acceptance sends the page view it held back and an opt-out deletes its
+// cookies at once.
 
 export type AnalyticsChoice = 'accepted' | 'opted-out';
 
@@ -14,8 +12,20 @@ export const ANALYTICS_CHOICE_EVENT = 'analytics-choice';
 const CONSENT_COOKIE = 'mtm_consent';
 const CONSENT_REMOVED_COOKIE = 'mtm_consent_removed';
 
-// A choice lasts a year from the latest visit; then the banner asks again.
+// A choice lasts a year; then the banner asks again.
 const CHOICE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
+
+interface MatomoTracker {
+    setConsentGiven(): void;
+    forgetConsentGiven(): void;
+}
+
+declare global {
+    interface Window {
+        _mtm?: object[];
+        Matomo?: { getAsyncTrackers(): MatomoTracker[] };
+    }
+}
 
 export function isAnalyticsChoice(value: unknown): value is AnalyticsChoice {
     return value === 'accepted' || value === 'opted-out';
@@ -49,20 +59,31 @@ function storeChoice(choice: AnalyticsChoice) {
     writeCookie(kept, String(Date.now()), `Max-Age=${CHOICE_MAX_AGE_SECONDS}`);
 }
 
-// Returns false when the browser refuses the cookie, so the choice did not stick.
-export function setAnalyticsChoice(choice: AnalyticsChoice): boolean {
-    storeChoice(choice);
-    if (readAnalyticsChoice() !== choice) return false;
-    document.dispatchEvent(new CustomEvent<AnalyticsChoice>(ANALYTICS_CHOICE_EVENT, { detail: choice }));
-    return true;
+function runningTrackers(): MatomoTracker[] {
+    return window.Matomo?.getAsyncTrackers() ?? [];
 }
 
-// Rewrites the stored choice so its lifetime counts from this visit. Browsers
-// cut script-set cookies short (Safari after 7 days without a visit), and an
-// opt-out that lapsed would let tracking resume before the banner asks again.
-export function renewAnalyticsChoice() {
-    const choice = readAnalyticsChoice();
-    if (choice) storeChoice(choice);
+// The container records these as Privacy events, but only while the visitor consents.
+function recordChoiceEvent(event: 'user_optin' | 'user_optout') {
+    (window._mtm ??= []).push({ event });
+}
+
+// Returns false when the browser refuses the cookie, so the choice did not stick.
+export function setAnalyticsChoice(choice: AnalyticsChoice): boolean {
+    if (choice === 'opted-out') {
+        // Only a visitor who accepted earlier can be counted: sending the event for
+        // anyone else would record a visit from someone who just said no.
+        if (readAnalyticsChoice() === 'accepted') recordChoiceEvent('user_optout');
+        runningTrackers().forEach((tracker) => tracker.forgetConsentGiven());
+    }
+    storeChoice(choice);
+    if (readAnalyticsChoice() !== choice) return false;
+    if (choice === 'accepted') {
+        runningTrackers().forEach((tracker) => tracker.setConsentGiven());
+        recordChoiceEvent('user_optin');
+    }
+    document.dispatchEvent(new CustomEvent<AnalyticsChoice>(ANALYTICS_CHOICE_EVENT, { detail: choice }));
+    return true;
 }
 
 // The same signal Matomo's enableDoNotTrack honours: with it on, nothing is recorded.

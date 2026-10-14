@@ -3,7 +3,6 @@ import {
     ANALYTICS_CHOICE_EVENT,
     isAnalyticsChoice,
     readAnalyticsChoice,
-    renewAnalyticsChoice,
     sendsDoNotTrack,
     setAnalyticsChoice,
 } from './analytics-consent';
@@ -40,6 +39,25 @@ const restoreCookies = () => {
     delete (document as { cookie?: string }).cookie;
     vi.unstubAllGlobals();
     clearCookies();
+};
+
+// A tracker running on the page, as the Tag Manager container exposes it.
+// Records its consent calls and the container events in the order they happen.
+const runTracker = () => {
+    const calls: string[] = [];
+    window.Matomo = {
+        getAsyncTrackers: () => [{
+            setConsentGiven: () => { calls.push('setConsentGiven'); },
+            forgetConsentGiven: () => { calls.push('forgetConsentGiven'); },
+        }],
+    };
+    window._mtm = { push: ({ event }: { event: string }) => calls.push(event) } as unknown as object[];
+    return calls;
+};
+
+const stopTracker = () => {
+    delete window.Matomo;
+    delete window._mtm;
 };
 
 // The pattern Matomo's tracker uses to read a cookie.
@@ -136,25 +154,42 @@ describe('setAnalyticsChoice', () => {
     });
 });
 
-describe('renewAnalyticsChoice', () => {
-    afterEach(restoreCookies);
-
-    it('rewrites a stored choice without announcing it', () => {
-        setAnalyticsChoice('opted-out');
-        const writes = watchCookieWrites();
-        const listener = vi.fn();
-        document.addEventListener(ANALYTICS_CHOICE_EVENT, listener);
-        renewAnalyticsChoice();
-        document.removeEventListener(ANALYTICS_CHOICE_EVENT, listener);
-        expect(writes.some((write) => /^mtm_consent_removed=\d+; Max-Age=31536000;/.test(write))).toBe(true);
-        expect(readAnalyticsChoice()).toBe('opted-out');
-        expect(listener).not.toHaveBeenCalled();
+describe('setAnalyticsChoice with Matomo', () => {
+    afterEach(() => {
+        stopTracker();
+        restoreCookies();
     });
 
-    it('writes nothing before any choice', () => {
-        const writes = watchCookieWrites();
-        renewAnalyticsChoice();
-        expect(writes).toEqual([]);
+    it('releases the held page view and records the opt-in on acceptance', () => {
+        const calls = runTracker();
+        setAnalyticsChoice('accepted');
+        expect(calls).toEqual(['setConsentGiven', 'user_optin']);
+    });
+
+    it('records the opt-out of a visitor who had accepted before stopping the tracker', () => {
+        const calls = runTracker();
+        setAnalyticsChoice('accepted');
+        calls.length = 0;
+        setAnalyticsChoice('opted-out');
+        expect(calls).toEqual(['user_optout', 'forgetConsentGiven']);
+    });
+
+    it('records nothing for a visitor who never accepted', () => {
+        const calls = runTracker();
+        setAnalyticsChoice('opted-out');
+        expect(calls).toEqual(['forgetConsentGiven']);
+    });
+
+    it('queues the opt-in for a container that has not loaded yet', () => {
+        setAnalyticsChoice('accepted');
+        expect(window._mtm).toEqual([{ event: 'user_optin' }]);
+    });
+
+    it('leaves the tracker alone when the acceptance cannot be stored', () => {
+        const calls = runTracker();
+        watchCookieWrites({ store: false });
+        expect(setAnalyticsChoice('accepted')).toBe(false);
+        expect(calls).toEqual([]);
     });
 });
 

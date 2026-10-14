@@ -45,12 +45,21 @@ const restoreCookies = () => {
 // Records its consent calls and the container events in the order they happen.
 const runTracker = () => {
     const calls: string[] = [];
-    window.Matomo = {
-        getAsyncTrackers: () => [{
-            setConsentGiven: () => { calls.push('setConsentGiven'); },
-            forgetConsentGiven: () => { calls.push('forgetConsentGiven'); },
-        }],
+    const tracker = {
+        detectsBrowserFeatures: false,
+        enableBrowserFeatureDetection() { this.detectsBrowserFeatures = true; },
+        // Matomo's own setConsentGiven switches detection on.
+        setConsentGiven() {
+            calls.push('setConsentGiven');
+            this.enableBrowserFeatureDetection();
+            if (this.detectsBrowserFeatures) calls.push('detects browser features');
+        },
+        forgetConsentGiven() {
+            calls.push('forgetConsentGiven');
+            document.cookie = 'mtm_consent_removed=1; Max-Age=946080000; Path=/';
+        },
     };
+    window.Matomo = { getAsyncTrackers: () => [tracker] };
     window._mtm = { push: ({ event }: { event: string }) => calls.push(event) } as unknown as object[];
     return calls;
 };
@@ -172,6 +181,20 @@ describe('setAnalyticsChoice with Matomo', () => {
         calls.length = 0;
         setAnalyticsChoice('opted-out');
         expect(calls).toEqual(['user_optout', 'forgetConsentGiven']);
+    });
+
+    it('keeps browser feature detection off when consent is given', () => {
+        const calls = runTracker();
+        setAnalyticsChoice('accepted');
+        expect(calls).not.toContain('detects browser features');
+    });
+
+    it('caps the opt-out cookie Matomo writes at a year', () => {
+        runTracker();
+        const writes = watchCookieWrites();
+        setAnalyticsChoice('opted-out');
+        const last = writes.filter((write) => write.startsWith('mtm_consent_removed=')).at(-1);
+        expect(last).toMatch(/; Max-Age=31536000;/);
     });
 
     it('records nothing for a visitor who never accepted', () => {

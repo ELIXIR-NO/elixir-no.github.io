@@ -69,7 +69,7 @@ Once you have accepted analytics, Matomo processes the following data each time 
 - The time in your local time zone.
 - How long you spend on each page. To measure this more accurately, your browser sends a short signal to Matomo every 15 seconds or so while the page is in view.
 - The main language of your browser (Accept-Language header).
-- The user agent of your browser (User-Agent header), which describes your browser and operating system.
+- The user agent of your browser (User-Agent header and, in Chrome and other Chromium-based browsers, the equivalent client hints), which describes your browser, its version, your operating system and, on some phones and tablets, the device model.
 - A random visitor ID and the time of your first visit, kept in a cookie so Matomo can tell a returning visitor from a new one.
 
 A page view is recorded when a page loads, and again when the address changes without a new page loading, for example when you follow a link to another section of the same page.
@@ -86,7 +86,7 @@ Cookies are small text files that a website stores in your browser. For general 
 
 Matomo sets its cookies only after you accept analytics, and deletes them if you opt out:
 
-- `_pk_id` holds a random visitor ID and the time of your first visit. It expires after 13 months.
+- `_pk_id` holds a random visitor ID and the time of your first visit. It expires 13 months after your last visit.
 - `_pk_ses` marks a visit in progress. It expires after 30 minutes without activity.
 - `_pk_ref` holds the address of the website you came from, when you arrive from another website. It expires after 6 months.
 
@@ -95,7 +95,7 @@ Two more cookies remember your analytics choice:
 - `mtm_consent` is set when you accept analytics.
 - `mtm_consent_removed` is set when you opt out. While it is present, Matomo sends nothing about your visits.
 
-Setting one removes the other. Each holds only the time you made your choice, not an identifier, and expires 1 year after you made it; the banner then asks you again. All of these are first-party cookies used only on this website. Some browsers delete cookies sooner; Safari, for example, removes them after 7 days without a visit.
+Setting one removes the other. Each holds only the time you made your choice, not an identifier, and expires 1 year after you made it; the banner then asks you again. All of these are first-party cookies used only on this website. Some browsers shorten these lifetimes; Safari, for example, limits them to 7 days, so there the banner asks again a week after you choose.
 
 If your browser blocks cookies, your choice cannot be saved and Matomo records nothing.
 
@@ -151,7 +151,7 @@ Subject to the conditions and limitations set out in applicable data protection 
 - **Right to erasure:** you can ask us to delete the personal data we process about you, under certain conditions.
 - **Right to data portability:** you can ask us to transfer the data we have collected about you to another organisation, or directly to you, under certain conditions.
 - **Right to restrict processing:** you can ask us to restrict the processing of your personal data, under certain conditions.
-- **Right to object:** you can object to the processing of analytics data about your visits at any time by opting out with the setting under "Your choice" above.
+- **Right to withdraw consent and to object:** you can stop the processing of analytics data about your visits at any time by opting out with the setting under "Your choice" above. This does not affect data collected before you opted out.
 
 To exercise these rights, see "How to contact us" below.
 
@@ -179,9 +179,9 @@ Where changes are material and may affect how personal data is processed, we wil
 
 Any revised version will be published on this page and becomes effective on the effective date stated below. We encourage you to review this policy periodically.
 
-This privacy policy was last updated on 12 October 2026.
+This privacy policy was last updated on 14 October 2026.
 
-Effective date: 12 October 2026.
+Effective date: 14 October 2026.
 
 ## How to contact us
 

@@ -18,6 +18,7 @@ const CHOICE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 interface MatomoTracker {
     setConsentGiven(): void;
     forgetConsentGiven(): void;
+    enableBrowserFeatureDetection(): void;
 }
 
 declare global {
@@ -63,6 +64,14 @@ function runningTrackers(): MatomoTracker[] {
     return window.Matomo?.getAsyncTrackers() ?? [];
 }
 
+function giveConsent(tracker: MatomoTracker) {
+    // setConsentGiven turns browser feature detection (screen size, plugins,
+    // client hints) back on for the rest of the page. The container keeps it
+    // off and the policy says none of that is collected.
+    tracker.enableBrowserFeatureDetection = () => {};
+    tracker.setConsentGiven();
+}
+
 // The container records these as Privacy events, but only while the visitor consents.
 function recordChoiceEvent(event: 'user_optin' | 'user_optout') {
     (window._mtm ??= []).push({ event });
@@ -76,10 +85,12 @@ export function setAnalyticsChoice(choice: AnalyticsChoice): boolean {
         if (readAnalyticsChoice() === 'accepted') recordChoiceEvent('user_optout');
         runningTrackers().forEach((tracker) => tracker.forgetConsentGiven());
     }
+    // After forgetConsentGiven, which writes its own 30-year opt-out cookie: this
+    // overwrites it with the year the policy promises.
     storeChoice(choice);
     if (readAnalyticsChoice() !== choice) return false;
     if (choice === 'accepted') {
-        runningTrackers().forEach((tracker) => tracker.setConsentGiven());
+        runningTrackers().forEach(giveConsent);
         recordChoiceEvent('user_optin');
     }
     document.dispatchEvent(new CustomEvent<AnalyticsChoice>(ANALYTICS_CHOICE_EVENT, { detail: choice }));

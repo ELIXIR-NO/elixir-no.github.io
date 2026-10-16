@@ -56,15 +56,10 @@ const link = "font-semibold text-ink underline decoration-marker decoration-2 un
             </details>
             <p id="analytics-consent-blocked" class="mt-2 font-semibold text-ink empty:hidden" role="alert"></p>
         </div>
+        {/* Declining must be as easy and as prominent as accepting, so both share one style. */}
         <div class="grid shrink-0 grid-cols-2 gap-3">
             <Button arrow={false} className="justify-center" data-analytics-choice="accepted">Accept</Button>
-            <button
-                type="button"
-                data-analytics-choice="opted-out"
-                class="inline-flex h-12 items-center justify-center rounded-full border border-ink px-[22px] text-[15px] font-semibold text-ink transition-colors hover:bg-ink/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-            >
-                Opt out
-            </button>
+            <Button arrow={false} className="justify-center" data-analytics-choice="opted-out">Decline</Button>
         </div>
     </div>
 </section>

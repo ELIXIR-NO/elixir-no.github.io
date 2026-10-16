@@ -12,6 +12,7 @@ const footerLinks = [
     { href: `${BASE}/events`, label: "Events" },
     { href: `${BASE}/training`, label: "Training" },
     { href: `${BASE}/accessibility`, label: "Accessibility" },
+    { href: `${BASE}/privacy-policy`, label: "Privacy Policy" },
 ];
 
 const socials = [

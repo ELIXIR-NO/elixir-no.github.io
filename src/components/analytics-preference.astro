@@ -1,0 +1,63 @@
+---
+// The privacy policy's own analytics switch: the banner disappears once a
+// choice is made, so this is where a visitor changes their mind.
+---
+
+<div
+    id="analytics-preference"
+    class="my-8 rounded-card border border-rule bg-surface p-5 sm:p-6"
+    data-pagefind-ignore
+    hidden
+>
+    <label class="flex min-h-11 cursor-pointer items-center gap-4 has-[:disabled]:cursor-not-allowed">
+        <input
+            id="analytics-preference-input"
+            type="checkbox"
+            aria-describedby="analytics-preference-status"
+            class="h-6 w-6 shrink-0 cursor-pointer rounded-chip border-muted text-accent focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-surface disabled:cursor-not-allowed disabled:opacity-50"
+        />
+        <span class="font-semibold text-ink">Include my visits in the website statistics</span>
+    </label>
+    <p id="analytics-preference-status" class="mt-1 pl-10 text-sm text-body" aria-live="polite"></p>
+</div>
+<noscript>
+    <p class="my-8 rounded-card border border-rule bg-surface p-5 text-sm text-body">
+        Matomo needs JavaScript, so with it turned off nothing about your visits is collected.
+    </p>
+</noscript>
+
+<script>
+    import { ANALYTICS_CHOICE_EVENT, readAnalyticsChoice, sendsDoNotTrack, setAnalyticsChoice } from "../lib/analytics-consent";
+
+    const preference = document.getElementById("analytics-preference");
+    const checkbox = document.getElementById("analytics-preference-input") as HTMLInputElement | null;
+    const status = document.getElementById("analytics-preference-status");
+
+    if (preference && checkbox && status) {
+        const render = () => {
+            if (sendsDoNotTrack()) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                status.textContent = "Your browser sends a Do Not Track signal, so Matomo records nothing from your visits.";
+                return;
+            }
+            const choice = readAnalyticsChoice();
+            checkbox.checked = choice === "accepted";
+            status.textContent = {
+                accepted: "You are opted in. Uncheck the box to opt out.",
+                "opted-out": "You are opted out. Check the box to opt in.",
+                none: "You haven't chosen yet, so nothing is recorded. Check the box to opt in.",
+            }[choice ?? "none"];
+        };
+
+        checkbox.addEventListener("change", () => {
+            if (setAnalyticsChoice(checkbox.checked ? "accepted" : "opted-out")) return;
+            render();
+            status.textContent = "Your browser is blocking cookies for this site, so your choice can't be saved.";
+        });
+        document.addEventListener(ANALYTICS_CHOICE_EVENT, render);
+
+        render();
+        preference.hidden = false;
+    }
+</script>

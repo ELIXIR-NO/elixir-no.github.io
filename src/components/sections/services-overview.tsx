@@ -39,7 +39,7 @@ const services: Service[] = [
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a>, <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a> and <a href="https://www.uib.no/en/safe" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">SAFE</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/sensitive-data`,
     },

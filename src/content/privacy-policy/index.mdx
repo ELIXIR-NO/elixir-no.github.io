@@ -43,7 +43,7 @@ We use Matomo to produce statistics about the use of this website, which help us
 - It records nothing and sets no cookies until you accept analytics.
 - It honours Do Not Track. If your browser sends a Do Not Track signal, Matomo records nothing about your visits.
 
-Where Matomo is hosted is described under "Transfers to third countries" below. A demonstration of Matomo and its reports is available at [demo.matomo.cloud](https://demo.matomo.cloud).
+Before you choose, your browser already downloads Matomo's script from our Matomo server, which sees your IP address as any web server does, but nothing about your visit is recorded in Matomo until you accept. Where Matomo is hosted is described under "Transfers to third countries" below.
 
 ## Purpose of the processing
 
@@ -61,7 +61,7 @@ All processing is limited to what is necessary for these operational, analytical
 
 Once you have accepted analytics, Matomo processes the following data each time you view a page:
 
-- Your IP address. To protect your privacy, its last 2 bytes are anonymised.
+- Your IP address. To protect your privacy, its last 2 bytes are anonymised. Matomo uses it to find the country you are visiting from, not your town or exact location.
 - The date and time of the request.
 - The title of the page you are viewing (page title).
 - The address of the page you are viewing (page URL).
@@ -72,7 +72,7 @@ Once you have accepted analytics, Matomo processes the following data each time 
 - The user agent of your browser (User-Agent header and, in Chrome and other Chromium-based browsers, the equivalent client hints), which describes your browser, its version, your operating system and, on some phones and tablets, the device model.
 - A random visitor ID and the time of your first visit, kept in a cookie so Matomo can tell a returning visitor from a new one.
 
-A page view is recorded when a page loads, and again when the address changes without a new page loading, for example when you follow a link to another section of the same page.
+A page view is recorded when a page loads, and again when the address changes without a new page loading: for example when you follow a link to another section of the same page, or use the filters on the News, Services or Funding & Projects pages.
 
 Matomo also records when you accept analytics, and when you opt out after having accepted, so we can see how visitors choose.
 
@@ -115,17 +115,17 @@ Opting out has no adverse consequences. It does not affect your ability to acces
 
 ## Recipients of the personal data
 
-We share the analytics data only in aggregated, anonymised form.
+Matomo and the proxy described under "Hosting and third-party content" run on servers that ELIXIR Norway manages on NREC, which the University of Bergen and the University of Oslo operate. Within the Consortium, only the people who administer the website and Matomo can see the raw analytics data. Outside it, we share the data only as aggregated statistics, for example in reports to funders, and these contain no personal data.
 
 ## Hosting and third-party content
 
-The pages of this website are hosted on [GitHub Pages](https://pages.github.com/), a service of GitHub, Inc., and delivered to you at elixir.no. [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) describes how GitHub handles data in providing this service.
+The pages of this website are stored on [GitHub Pages](https://pages.github.com/), a service of GitHub, Inc., but your browser never connects to GitHub. It connects to elixir.no, a reverse proxy that ELIXIR Norway runs on NREC, which fetches the pages from GitHub without passing on your IP address, so GitHub sees only the proxy. Like most web servers, the proxy keeps a log of the requests it receives, including your IP address, on its own server and shares it with no one.
 
 Fonts, videos and the search index are served from this website itself. Some pages also load content from other services. When they do, your browser connects to that service directly, which gives it your IP address and the standard technical details of the request. That provider's own privacy policy applies:
 
 - **Maps.** The pages for each partner institution under [About](/about) show a map from [OpenStreetMap](https://www.openstreetmap.org/). See the [OpenStreetMap Foundation privacy policy](https://osmfoundation.org/wiki/Privacy_Policy).
 - **Training listings.** The [Training](/training) page loads upcoming events, past events and training materials from [ELIXIR TeSS](https://tess.elixir-europe.org/).
-- **Service status.** The [Services](/services) and [Service status](/services/status) pages check whether each service is available through a small status service that we run on [Vercel](https://vercel.com/). If it cannot be reached, your browser contacts each service's website directly. See [Vercel's privacy notice](https://vercel.com/legal/privacy-notice).
+- **Service status.** The [Services](/services) and [Service status](/services/status) pages check whether each service is available through a small status service that we run on [Vercel](https://vercel.com/), in its Frankfurt region in Germany. If it cannot be reached, your browser contacts each service's website directly. See [Vercel's privacy notice](https://vercel.com/legal/privacy-notice).
 - **Images in older news articles.** Two news articles show an image hosted elsewhere, one by [Digital Life Norway](https://www.digitallifenorway.org/) and one by the [Data Stewardship Wizard](https://ds-wizard.org/) project.
 
 ## Transfers to third countries
@@ -134,7 +134,7 @@ The analytics data collected by Matomo is hosted by the [Norwegian Research and 
 
 The analytics data is stored and processed within Norway and is not transferred to, stored in, or otherwise processed in any foreign jurisdiction. The Consortium is committed to carrying out all processing in accordance with applicable data protection legislation, information security requirements, and established governance procedures.
 
-The providers listed under "Hosting and third-party content" above handle data under their own policies and may process it outside Norway.
+The proxy's request log is kept on NREC in Norway as well. The other providers listed under "Hosting and third-party content" above handle data under their own policies: the status service on Vercel runs in Frankfurt, inside the European Economic Area (EEA), while the remaining providers may process your IP address outside the EEA.
 
 ## Retention period
 
@@ -153,7 +153,7 @@ Subject to the conditions and limitations set out in applicable data protection 
 - **Right to restrict processing:** you can ask us to restrict the processing of your personal data, under certain conditions.
 - **Right to withdraw consent and to object:** you can stop the processing of analytics data about your visits at any time by opting out with the setting under "Your choice" above. This does not affect data collected before you opted out.
 
-To exercise these rights, see "How to contact us" below.
+Matomo does not know your name or how to contact you, so to find your data we need your visitor ID. It is stored in your browser in the cookie whose name starts with `_pk_id`, as the part of its value before the first full stop. Without it we may be unable to identify which data is yours (GDPR Article 11), although you can still opt out at any time. To exercise these rights, see "How to contact us" below.
 
 ## Right to lodge a complaint
 

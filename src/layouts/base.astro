@@ -53,17 +53,20 @@ const { seo } = Astro.props;
             })();
         </script>
 
-        <!-- Dark Mode -->
+        <!-- Theme: the visitor's stored choice decides, and the site is light until they choose. -->
         <script is:inline>
-            const theme = localStorage.getItem("theme") || "light";
-            if (
-                theme === "light" ||
-                !window.matchMedia("(prefers-color-scheme: dark)").matches
-            ) {
-                document.documentElement.classList.remove("dark");
-            } else {
-                document.documentElement.classList.add("dark");
-            }
+            (() => {
+                const apply = () => {
+                    let stored = null;
+                    try { stored = localStorage.getItem("theme"); } catch {}
+                    document.documentElement.classList.toggle("dark", stored === "dark");
+                };
+                apply();
+                // The back button restores a page as it was left, so the theme may have changed since.
+                window.addEventListener("pageshow", (event) => {
+                    if (event.persisted) apply();
+                });
+            })();
         </script>
 
         <!-- Matomo Tag Manager -->

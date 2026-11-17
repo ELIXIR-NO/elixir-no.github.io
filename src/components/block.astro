@@ -12,6 +12,6 @@ const { Content } = await render(await getBlock(slug));
 ---
 
 {/* Not elements.tsx: its links all open in a new tab and its lists and headings are article-sized. */}
-<div class:list={[className, "[&_a]:text-accent [&_a:hover]:underline [&_strong]:font-semibold [&_strong]:text-ink [&_em]:font-medium [&_em]:not-italic [&_em]:text-ink"]}>
+<div class:list={[className, "[&_a]:text-ink [&_a]:underline [&_a]:underline-offset-[3px] [&_a]:decoration-ink/30 [&_a]:transition-colors [&_a:hover]:decoration-marker [&_a:hover]:decoration-2 [&_strong]:font-semibold [&_strong]:text-ink [&_em]:font-medium [&_em]:not-italic [&_em]:text-ink"]}>
     <Content />
 </div>

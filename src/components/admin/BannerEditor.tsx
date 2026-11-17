@@ -2,37 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { readJsonFile, readFileFromRef, saveAsPR, commitToBranch, type SaveResult } from './github';
 import PRConfirmDialog from './PRConfirmDialog';
 import BranchPill from './BranchPill';
+import { isLive, renderInlineMarkdown, schema, type Banner } from '../../lib/banner';
 
-interface BannerData {
-    visible: boolean;
-    message: string;
+type BannerData = Banner;
+
+// <input type="datetime-local"> works in the browser's own time zone without
+// an offset, while banner.json stores an exact moment.
+function toLocalInput(iso: string | undefined): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60_000).toISOString().slice(0, 16);
 }
 
-function renderPreview(md: string): React.ReactNode {
-    const parts: React.ReactNode[] = [];
-    const regex = /\*\*(.+?)\*\*|\*(.+?)\*|\[([^\]]+)\]\(([^)]+)\)/g;
-    let lastIndex = 0;
-    let match;
-    let key = 0;
-
-    while ((match = regex.exec(md)) !== null) {
-        if (match.index > lastIndex) {
-            parts.push(md.slice(lastIndex, match.index));
-        }
-        if (match[1]) {
-            parts.push(<strong key={key++}>{match[1]}</strong>);
-        } else if (match[2]) {
-            parts.push(<em key={key++}>{match[2]}</em>);
-        } else if (match[3] && match[4]) {
-            parts.push(<a key={key++} href={match[4]} className="underline">{match[3]}</a>);
-        }
-        lastIndex = regex.lastIndex;
-    }
-    if (lastIndex < md.length) {
-        parts.push(md.slice(lastIndex));
-    }
-    return parts;
+function fromLocalInput(value: string): string | undefined {
+    const d = new Date(value);
+    return isNaN(d.getTime()) ? undefined : d.toISOString();
 }
+
+// One key order whatever order the editor filled the fields in, so saves do
+// not reshuffle banner.json. Unset keys are dropped by JSON.stringify.
+function serialize({ visible, label, message, link, expires }: BannerData): string {
+    return JSON.stringify({ visible, label, message, link, expires }, null, 4) + '\n';
+}
+
+const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const inputClass = 'w-full px-3 py-2 text-sm rounded-lg border border-gray-600 bg-dark-surface text-white focus:outline-none focus:ring-2 focus:ring-accent';
+const labelClass = 'block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5';
 
 export default function BannerEditor({ token, username, branchOverride, onBack }: { token: string; username: string; branchOverride?: string; onBack?: () => void }) {
     const [data, setData] = useState<BannerData | null>(null);
@@ -61,9 +57,20 @@ export default function BannerEditor({ token, username, branchOverride, onBack }
         setDirty(true);
     };
 
+    const updateLink = (patch: { label?: string; href?: string }) => {
+        const next = { label: data?.link?.label ?? '', href: data?.link?.href ?? '', ...patch };
+        update({ link: next.label || next.href ? next : undefined });
+    };
+
+    const check = data ? schema.safeParse(data) : null;
+    const problems = check && !check.success
+        ? check.error.issues.map((issue) => `${issue.path.join('.') || 'banner'}: ${issue.message}`)
+        : [];
+    const expired = !!data?.expires && Date.parse(data.expires) <= Date.now();
+
     const preparePublish = async () => {
-        if (!data) return;
-        const files = [{ path: 'src/data/banner.json', content: JSON.stringify(data, null, 4) + '\n' }];
+        if (!data || problems.length) return;
+        const files = [{ path: 'src/data/banner.json', content: serialize(data) }];
         if (branchOverride) {
             setSaving(true);
             try {
@@ -148,7 +155,7 @@ export default function BannerEditor({ token, username, branchOverride, onBack }
                         </div>
                     </div>
                     {dirty && (
-                        <button onClick={preparePublish} disabled={saving}
+                        <button onClick={preparePublish} disabled={saving || problems.length > 0}
                             className="px-4 py-2 text-sm font-semibold rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 transition-colors">
                             {saving ? 'Saving...' : branchOverride ? 'Push to PR' : 'Publish Changes'}
                         </button>
@@ -173,45 +180,119 @@ export default function BannerEditor({ token, username, branchOverride, onBack }
                     <span className="text-sm font-medium text-white">
                         {data.visible ? 'Visible' : 'Hidden'}
                     </span>
-                    {data.visible && (
+                    {isLive(data) && (
                         <span className="inline-flex items-center rounded-full bg-green-900/20 px-2.5 py-0.5 text-xs font-medium text-green-400">
                             Live on all pages
                         </span>
                     )}
+                    {data.visible && expired && (
+                        <span className="inline-flex items-center rounded-full bg-amber-900/20 px-2.5 py-0.5 text-xs font-medium text-amber-400">
+                            Deadline passed, so it is hidden
+                        </span>
+                    )}
+                </div>
+
+                {/* Label */}
+                <div className="mb-6">
+                    <label htmlFor="banner-label" className={labelClass}>Label (optional)</label>
+                    <input
+                        id="banner-label"
+                        value={data.label ?? ''}
+                        onChange={(e) => update({ label: e.target.value || undefined })}
+                        placeholder="e.g., Event, Maintenance"
+                        className={`${inputClass} max-w-xs`}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">A short tag shown before the message.</p>
                 </div>
 
                 {/* Message */}
                 <div className="mb-6">
-                    <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                        Message
-                    </label>
+                    <label htmlFor="banner-message" className={labelClass}>Message</label>
                     <textarea
+                        id="banner-message"
                         value={data.message}
                         onChange={(e) => update({ message: e.target.value })}
                         rows={3}
                         placeholder="e.g., NeLS will be under scheduled maintenance on March 25. See **[status page](https://status.elixir.no)** for details."
-                        className="w-full px-3 py-2 text-sm rounded-lg border border-gray-600 bg-dark-surface text-white focus:outline-none focus:ring-2 focus:ring-accent resize-y"
+                        className={`${inputClass} resize-y`}
                     />
                     <p className="text-xs text-gray-500 mt-1">
                         Supports inline markdown: **bold**, *italic*, [link text](url)
                     </p>
                 </div>
 
+                {/* Link */}
+                <div className="mb-6">
+                    <span className={labelClass}>Link (optional)</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-[12rem_1fr] gap-3">
+                        <input
+                            aria-label="Link text"
+                            value={data.link?.label ?? ''}
+                            onChange={(e) => updateLink({ label: e.target.value })}
+                            placeholder="Read more"
+                            className={inputClass}
+                        />
+                        <input
+                            aria-label="Link address"
+                            value={data.link?.href ?? ''}
+                            onChange={(e) => updateLink({ href: e.target.value })}
+                            placeholder="/events/2026/my-event or https://..."
+                            className={inputClass}
+                        />
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                        A page on this site starts with a single /; another website starts with https://.
+                    </p>
+                </div>
+
+                {/* Deadline */}
+                <div className="mb-6">
+                    <label htmlFor="banner-expires" className={labelClass}>Hide after (optional)</label>
+                    <div className="flex items-center gap-3">
+                        <input
+                            id="banner-expires"
+                            type="datetime-local"
+                            value={toLocalInput(data.expires)}
+                            onChange={(e) => update({ expires: fromLocalInput(e.target.value) })}
+                            className={`${inputClass} max-w-xs [color-scheme:dark]`}
+                        />
+                        {data.expires && (
+                            <button onClick={() => update({ expires: undefined })} className="text-sm text-gray-400 hover:text-white transition-colors">
+                                Clear
+                            </button>
+                        )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                        The banner disappears by itself at this time ({timeZone}). Leave empty to keep it until you hide it.
+                    </p>
+                </div>
+
+                {problems.length > 0 && (
+                    <div role="alert" className="mb-6 rounded-lg border border-red-800 bg-red-900/20 px-4 py-3 text-sm text-red-300">
+                        <p className="font-semibold">Fix these before publishing:</p>
+                        <ul className="mt-1 list-disc pl-5">
+                            {problems.map((problem) => <li key={problem}>{problem}</li>)}
+                        </ul>
+                    </div>
+                )}
+
                 {/* Preview */}
                 {data.message && (
                     <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                            Preview
-                        </label>
-                        <div className={`rounded-lg text-center text-sm py-2.5 px-4 ${
-                            data.visible ? 'bg-accent text-white' : 'bg-gray-700 text-gray-400'
-                        }`}>
-                            <div className="flex items-center justify-center gap-2">
-                                <svg className="h-4 w-4 shrink-0 opacity-80" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
-                                </svg>
-                                <p>{renderPreview(data.message)}</p>
+                        <span className={labelClass}>Preview</span>
+                        <div className={`flex items-center gap-2 rounded-lg border border-white/10 bg-brand-primary py-2.5 pl-4 pr-3 text-white ${isLive(data) ? '' : 'opacity-50'}`}>
+                            <div className="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-sm">
+                                {data.label && (
+                                    <span className="inline-flex items-center rounded-chip bg-brand-secondary px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-brand-primary">
+                                        {data.label}
+                                    </span>
+                                )}
+                                <p className="m-0 font-medium text-white" dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(data.message) }} />
+                                {data.link?.label && (
+                                    <span className="rounded-control bg-white px-3 py-1 font-semibold text-brand-primary">{data.link.label} →</span>
+                                )}
                             </div>
+                            <span className="text-white/75" aria-hidden="true">✕</span>
                         </div>
                         {!data.visible && <p className="text-xs text-gray-500 mt-1">Banner is hidden. Toggle visibility to show it.</p>}
                     </div>

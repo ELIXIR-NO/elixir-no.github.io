@@ -71,10 +71,11 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                 {/* Header row */}
                 <div className="flex items-end justify-between mb-10">
                     <div>
-                        <span className="text-xs font-semibold uppercase tracking-wider text-marker-text">
+                        <p className="flex items-center gap-2 text-sm font-semibold text-marker-text tracking-wide uppercase">
+                            <span className="h-2 w-2 rounded-marker bg-marker" aria-hidden="true" />
                             Highlights
-                        </span>
-                        <h2 className="mt-1 text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
+                        </p>
+                        <h2 className="mt-3 text-3xl sm:text-4xl font-semibold tracking-tight text-ink">
                             From our network
                         </h2>
                     </div>
@@ -149,7 +150,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                                 role="tab"
                                 aria-selected={i === current}
                                 aria-label={`Slide ${i + 1} of ${slides.length}`}
-                                className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-control overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                                className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-control overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
                                     i === current
                                         ? 'border-ink'
                                         : 'border-rule opacity-60 hover:opacity-100'

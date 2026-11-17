@@ -38,7 +38,7 @@ function formatDate(dateString: string): string {
             Workshops, seminars, and community gatherings
         </h1>
         <p class="mt-6 text-base sm:text-lg leading-relaxed text-body max-w-2xl">
-            Join ELIXIR Norway at events across the country — from hands-on bioinformatics
+            Join ELIXIR Norway at events across the country, from hands-on bioinformatics
             workshops to international conferences and public panel debates.
         </p>
     </div>
@@ -46,13 +46,7 @@ function formatDate(dateString: string): string {
     <!-- Upcoming events -->
     {upcoming.length > 0 && (
         <section class="mt-12">
-            <div class="flex items-center gap-3 mb-8">
-                <span class="inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold text-green-700 dark:text-green-400">
-                    <span class="h-2 w-2 rounded-marker bg-green-600 dark:bg-green-400" />
-                    Upcoming
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Upcoming events</h2>
-            </div>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink mb-8">Upcoming events</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {upcoming.map((event) => {
                     const slug = idToSlug(event.id);
@@ -85,7 +79,7 @@ function formatDate(dateString: string): string {
                                 <h3 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                                     {event.data.title}
                                 </h3>
-                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 flex-1">
+                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 mb-auto">
                                     {event.data.summary}
                                 </p>
                                 <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">
@@ -136,7 +130,7 @@ function formatDate(dateString: string): string {
                                 <h3 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                                     {event.data.title}
                                 </h3>
-                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 flex-1">
+                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-3 mb-auto">
                                     {event.data.summary}
                                 </p>
                                 <div class="mt-4 flex items-center gap-1.5 text-sm font-semibold text-ink">

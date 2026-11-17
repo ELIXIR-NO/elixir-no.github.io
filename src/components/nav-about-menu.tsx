@@ -49,7 +49,7 @@ export default function NavAboutMenu({ pathname, variant, onNavigate }: Props) {
                     aria-current={pathname === aboutOverviewHref ? 'page' : undefined}
                     className={`group flex items-center gap-2 rounded-control px-2.5 ${pad} text-sm font-semibold text-ink transition-colors hover:bg-paper focus:outline-none focus-visible:ring-2 focus-visible:ring-accent`}
                 >
-                    About ELIXIR Norway — overview
+                    About ELIXIR Norway: overview
                     <ArrowIcon />
                 </a>
             </div>

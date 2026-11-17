@@ -33,13 +33,13 @@ const services: Service[] = [
     },
     {
         title: 'e-Infrastructure',
-        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
+        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="link relative z-10">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/e-infrastructure`,
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="link relative z-10">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="link relative z-10">HUNT Cloud</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/sensitive-data`,
     },
@@ -70,10 +70,10 @@ export default function ServicesOverview() {
                             transition={{ duration: 0.5 }}
                         >
                             <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-                                Unlock the Power of Your Data
+                                Unlock the power of your data
                             </h2>
                             <p className="mt-3 text-lg text-body leading-relaxed">
-                                From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
+                                From comprehensive data management and analysis to secure storage and specialised support: everything you need to propel your life science research forward.
                             </p>
                             <Button href={`${BASE}/services`} variant="link" size="sm" className="mt-6">Explore all services</Button>
                         </motion.div>
@@ -99,7 +99,7 @@ export default function ServicesOverview() {
                                         {svc.icon}
                                     </div>
                                     <h3 className="text-base font-semibold text-ink mb-2">
-                                        <a href={svc.href} className="after:absolute after:inset-0 after:rounded-card focus:outline-none">
+                                        <a href={svc.href} className="decoration-marker decoration-2 underline-offset-4 hover:underline after:absolute after:inset-0 after:rounded-card focus:outline-none">
                                             {svc.title}
                                         </a>
                                     </h3>

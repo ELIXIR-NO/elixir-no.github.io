@@ -31,7 +31,7 @@ function composeTitle(person: Person) {
         person.title,
         ...person["elixir-groups"].map(g => g.role).filter(Boolean),
         ...person["affiliations"].map(a => {
-            if (a) return `${a?.role ? a.role + "—" : ''}${a.name}`;
+            if (a) return `${a?.role ? a.role + ", " : ''}${a.name}`;
         }),
     ]
         .filter(Boolean)
@@ -99,20 +99,23 @@ function getElixirRole(person: any): string {
                 Our team
             </p>
             <p class="mt-2 text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
-                70+ researchers, engineers & scientists
+                {peopleWithMeta.length}+ researchers, engineers & scientists
             </p>
             <p class="mt-2 text-sm text-body">
                 Across five Norwegian universities
             </p>
-            <span class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ink">
+            <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ink">
                 Meet the team
-                <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </span>
         </a>
     ) : (
         <ul class={`grid ${isFeatured ? '' : 'gap-3'} ${gridClass}`} role="list">
             {filteredPeople.map((person) => {
                 const role = getElixirRole(person);
+                const profileUrl = person["profile-url"];
+                const Card = profileUrl ? "a" : "div";
+                const cardLink = profileUrl ? { href: profileUrl, target: "_blank", rel: "noopener noreferrer" } : {};
                 return (
                     <li>
                         {isFeatured ? (
@@ -146,11 +149,12 @@ function getElixirRole(person: any): string {
                                 </div>
                             </a>
                         ) : (
-                            <a
-                                href={person["profile-url"]}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="group grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3 !no-underline transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                            <Card
+                                {...cardLink}
+                                class:list={[
+                                    "group grid grid-cols-[auto_1fr] items-center gap-3 rounded-card border border-rule bg-surface p-3",
+                                    profileUrl && "!no-underline transition-colors hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+                                ]}
                             >
                                 {!hidePicture && (
                                     <div class="h-11 w-11 shrink-0 overflow-hidden rounded-full border border-rule">
@@ -175,7 +179,7 @@ function getElixirRole(person: any): string {
                                         </div>
                                     )}
                                 </div>
-                            </a>
+                            </Card>
                         )}
                     </li>
                 );

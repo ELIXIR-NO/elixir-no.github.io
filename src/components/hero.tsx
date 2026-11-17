@@ -71,7 +71,7 @@ export function Hero({ copy }: { copy: HeroCopy }) {
                                     href={copy.tagline.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hero-legible inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-['']"
+                                    className="hero-legible inline-flex items-center gap-2.5 text-sm font-semibold text-ink hover:underline underline-offset-4 before:h-2 before:w-2 before:rounded-marker before:bg-marker before:content-[''] rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     {copy.tagline.label}
                                     <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5 text-muted" aria-hidden="true" />

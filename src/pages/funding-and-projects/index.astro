@@ -74,7 +74,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
 
 <Page variant="wide" seo={{
     title: "Funding & Projects",
-    description: "European and national research projects building infrastructure for life science data management, FAIR data, and genomics — funded by the European Commission and Norwegian Research Council.",
+    description: "European and national research projects building infrastructure for life science data management, FAIR data, and genomics, funded by the European Commission and Norwegian Research Council.",
 }}>
 
     <!-- Hero -->
@@ -105,6 +105,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                             type="text"
                             id="project-search"
                             placeholder="Search projects..."
+                            aria-label="Search projects"
                             class="h-10 w-full rounded-control border border-rule bg-surface pl-9 pr-3 text-sm text-ink placeholder:text-muted outline-none transition-colors focus:border-ink focus:ring-0 focus-visible:ring-2 focus-visible:ring-accent"
                         />
                     </div>
@@ -142,7 +143,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
                             {/* Top row: badges */}
                             <div class="flex items-center gap-2 flex-wrap">
                                 <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
-                                    <span class={`h-2 w-2 rounded-marker ${sc.dot}`} />
+                                    <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} aria-hidden="true" />
                                     {slugToTitleCase(status)}
                                 </span>
                                 {category !== 'unknown' && (
@@ -159,7 +160,7 @@ const statusColors: Record<string, { text: string; dot: string }> = {
 
                             {/* Summary */}
                             {project.data.summary && (
-                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 flex-1">
+                                <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 mb-auto">
                                     {project.data.summary}
                                 </p>
                             )}

@@ -3,7 +3,7 @@ import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
 import Button from "../components/button.tsx";
-import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -118,7 +118,7 @@ const dateObj = finalDate
     : null;
 
 const formattedDate = dateObj
-    ? dateObj.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    ? dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
     : null;
 
 const relativeDate = dateObj ? dayjs(dateObj).fromNow() : null;
@@ -239,7 +239,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType && (
                             <a
                                 href={`${BASE}/${contentType === 'projects' ? 'funding-and-projects' : contentType}`}
-                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6"
+                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                             >
                                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                                 {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
@@ -263,7 +263,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     const sc = statusColors[status] ?? statusColors.completed;
                                     return (
                                         <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
-                                            <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} />
+                                            <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} aria-hidden="true" />
                                             {slugToTitleCase(status)}
                                         </span>
                                     );
@@ -302,7 +302,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                             <>
                                                 {i > 0 && <span class="text-muted">, </span>}
                                                 {author.url
-                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors">{author.name}</a>
+                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">{author.name}</a>
                                                     : <span>{author.name}</span>
                                                 }
                                             </>
@@ -336,7 +336,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                             <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
                                 {period && (
                                     <span class="inline-flex items-center gap-1.5" title={period}>
-                                        <ClockIcon className="h-4 w-4" aria-hidden="true" />
+                                        <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                         {periodToRelative(period)}
                                     </span>
                                 )}
@@ -344,13 +344,13 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     <span class="inline-flex items-center gap-1.5">
                                         <BuildingLibraryIcon className="h-4 w-4" aria-hidden="true" />
                                         {funder.link
-                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">{funder.name}</a>
+                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="rounded-control hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">{funder.name}</a>
                                             : funder.name
                                         }
                                     </span>
                                 )}
                                 {externalLink && (
-                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-ink transition-colors">
+                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-control hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                                         <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                                         Project website
                                     </a>

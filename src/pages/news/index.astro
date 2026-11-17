@@ -49,7 +49,7 @@ const INITIAL_COUNT = 18;
 
 <Page variant="wide" seo={{
     title: "News",
-    description: "Latest news, updates, and announcements from ELIXIR Norway — bioinformatics infrastructure, genomics research, and life science data management in Norway.",
+    description: "Latest news, updates, and announcements from ELIXIR Norway: bioinformatics infrastructure, genomics research, and life science data management in Norway.",
 }}>
 
 
@@ -115,7 +115,7 @@ const INITIAL_COUNT = 18;
                         <h2 class="mt-2 text-base font-semibold text-ink leading-snug decoration-marker decoration-2 underline-offset-4 group-hover:underline line-clamp-2">
                             {entry.data.title}
                         </h2>
-                        <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 flex-1">
+                        <p class="mt-2 text-sm leading-relaxed text-body line-clamp-2 mb-auto">
                             {entry.data.summary}
                         </p>
                         {(entry.data.tags ?? []).length > 0 && (
@@ -135,6 +135,12 @@ const INITIAL_COUNT = 18;
                 </a>
             );
         })}
+    </div>
+
+    <!-- No results -->
+    <div id="no-results" class="hidden text-center py-16" role="status">
+        <NewspaperIcon className="mx-auto h-12 w-12 text-rule" aria-hidden="true" />
+        <p class="mt-4 text-body">No articles match the selected filters.</p>
     </div>
 
     <!-- Show more button -->
@@ -183,6 +189,9 @@ const INITIAL_COUNT = 18;
                 for (var j = 0; j < Math.min(limit, filtered.length); j++) {
                     filtered[j].classList.remove('hidden');
                 }
+
+                var noResults = document.getElementById('no-results');
+                if (noResults) noResults.classList.toggle('hidden', filtered.length > 0);
 
                 if (loadMoreContainer) {
                     if (hasConstraints() || shown >= cards.length) {

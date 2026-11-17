@@ -24,7 +24,7 @@ const Footer = () => {
 
                     {/* Brand column */}
                     <div className="lg:col-span-4 flex flex-col items-center lg:items-start gap-6">
-                        <a href={`${BASE}/`}>
+                        <a href={`${BASE}/`} className="rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                             <img
                                 alt="ELIXIR Norway logo"
                                 src={`${BASE}/assets/logos/elixir-no-light.svg`}
@@ -44,7 +44,7 @@ const Footer = () => {
                             ELIXIR Norway is the Norwegian Node of{' '}
                             <a
                                 href="https://elixir-europe.org"
-                                className="font-semibold text-ink underline decoration-marker decoration-2 underline-offset-4"
+                                className="font-semibold text-ink underline decoration-marker decoration-2 underline-offset-4 rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -76,7 +76,7 @@ const Footer = () => {
                                 <li key={label}>
                                     <a
                                         href={href}
-                                        className="text-sm text-body hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors"
+                                        className="text-sm text-body hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                     >
                                         {label}
                                     </a>
@@ -90,7 +90,7 @@ const Footer = () => {
                         <h3 className="text-sm font-semibold text-ink mb-4">Contact</h3>
                         <ul className="space-y-2 text-sm text-body">
                             <li>
-                                <a href={`mailto:${supportEmail}`} className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors">
+                                <a href={`mailto:${supportEmail}`} className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                                     {supportEmail}
                                 </a>
                             </li>
@@ -99,7 +99,7 @@ const Footer = () => {
                                     href={careers.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors"
+                                    className="hover:text-ink decoration-marker decoration-2 underline-offset-4 hover:underline transition-colors rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                 >
                                     {careers.label}
                                 </a>

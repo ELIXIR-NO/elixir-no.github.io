@@ -140,7 +140,7 @@ export const collections: Collection[] = [
         name: 'banner',
         label: 'Banner',
         file: 'src/data/banner.json',
-        description: 'Site-wide announcement banner shown at the top of every page, above the navigation. Toggle visibility on/off and set a short message. Supports inline markdown: **bold**, *italic*, [links](url).',
+        description: 'Site-wide announcement banner shown at the top of every page, above the navigation. Toggle visibility on/off and set a short message, with an optional label, link button and a time after which it hides itself. The message supports inline markdown: **bold**, *italic*, [links](url).',
     },
 ];
 

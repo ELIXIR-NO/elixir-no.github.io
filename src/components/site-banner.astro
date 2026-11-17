@@ -1,37 +1,50 @@
 ---
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import banner from "../data/banner.json";
+import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { banner, bannerId, isLive, renderInlineMarkdown } from "../lib/banner";
 
-const { visible, message } = banner;
-if (!visible || !message) return;
+if (!isLive(banner)) return;
 
-function renderInlineMarkdown(md: string): string {
-    return md
-        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="underline underline-offset-2 hover:text-paper/70 transition-colors">$1</a>');
-}
+const { label, message, link, expires } = banner;
+const external = link?.href.startsWith("https://");
 ---
 
 <div
     id="site-banner"
-    class="sticky top-0 z-[60] bg-ink text-sm [&_*]:!text-paper banner-slide-down"
-    role="status"
+    role="region"
+    aria-label="Announcement"
+    data-banner-id={bannerId(banner)}
+    data-expires={expires}
+    data-pagefind-ignore
+    class="sticky top-0 z-[60] border-b border-white/10 bg-brand-primary text-white banner-slide-down"
 >
-    <div class="mx-auto max-w-7xl px-6 py-2 flex items-center justify-center gap-3 relative">
-        <!-- Inline (not a Heroicon component): the banner-pulse animation lives in this
-             file's scoped <style>, which only matches elements carrying the Astro scope
-             attribute — a framework component's SVG never gets it. -->
-        <svg class="h-4 w-4 shrink-0 opacity-80 banner-pulse" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 1 1 0-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 0 1-1.44-4.282m3.102.069a18.03 18.03 0 0 1-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 0 1 8.835 2.535M10.34 6.66a23.847 23.847 0 0 0 8.835-2.535m0 0A23.74 23.74 0 0 0 18.795 3m.38 1.125a23.91 23.91 0 0 1 1.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 0 0 1.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 0 1 0 3.46" />
-        </svg>
-        <p set:html={renderInlineMarkdown(message)} />
+    <!-- Brand colours rather than theme tokens: the banner keeps the ELIXIR navy
+         in both themes, since a light bar in dark mode reads as part of the page. -->
+    <div class="flex w-full items-center gap-2 py-2 pl-4 pr-1.5 sm:py-2.5 sm:pl-6 sm:pr-3">
+        <div class="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-center text-sm sm:text-base">
+            {label && (
+                <span class="inline-flex items-center rounded-chip bg-brand-secondary px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-brand-primary">
+                    {label}
+                </span>
+            )}
+            <p class="m-0 font-medium text-white" set:html={renderInlineMarkdown(message)} />
+            {link && (
+                <a
+                    href={link.href}
+                    target={external ? "_blank" : undefined}
+                    rel={external ? "noopener noreferrer" : undefined}
+                    class="inline-flex items-center gap-1.5 rounded-control bg-white px-3 py-1 text-sm font-semibold text-brand-primary no-underline transition-colors hover:bg-white/85 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
+                >
+                    {link.label}
+                    <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                </a>
+            )}
+        </div>
         <button
-            onclick="document.getElementById('site-banner').remove(); document.documentElement.style.removeProperty('--site-banner-height'); sessionStorage.setItem('banner-dismissed','1')"
-            class="fixed right-3 top-1 p-1 rounded-control !text-paper/60 hover:!text-paper hover:bg-paper/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-paper/50 z-[61]"
+            type="button"
+            class="-my-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-white/75 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:my-0 sm:h-9 sm:w-9"
             aria-label="Dismiss announcement"
         >
-            <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+            <XMarkIcon className="h-5 w-5" aria-hidden="true" />
         </button>
     </div>
 </div>
@@ -42,25 +55,33 @@ function renderInlineMarkdown(md: string): string {
         to { transform: translateY(0); opacity: 1; }
     }
     .banner-slide-down { animation: bannerSlideDown 0.6s ease-out; }
-    @keyframes bannerPulse {
-        0%, 100% { transform: scale(1); opacity: 0.8; }
-        50% { transform: scale(1.15); opacity: 1; }
-    }
-    .banner-pulse { animation: bannerPulse 2s ease-in-out infinite; }
-    @media (prefers-reduced-motion: reduce) { .banner-pulse, .banner-slide-down { animation: none; } }
+    @media (prefers-reduced-motion: reduce) { .banner-slide-down { animation: none; } }
 </style>
 
 <script is:inline>
     (() => {
         const b = document.getElementById('site-banner');
         if (!b) return;
-        if (sessionStorage.getItem('banner-dismissed') === '1') {
+        const key = 'banner-dismissed';
+        let dismissed = null;
+        try { dismissed = sessionStorage.getItem(key); } catch {}
+        // The build only knows whether the deadline had passed when the site was
+        // last deployed, so each visit checks it again.
+        if (Date.parse(b.dataset.expires || '') <= Date.now() || dismissed === b.dataset.bannerId) {
             b.remove();
             return;
         }
         // The fixed navigation sits below the banner, which stays pinned to the top while scrolling.
-        const reserve = () => document.documentElement.style.setProperty('--site-banner-height', `${b.offsetHeight}px`);
+        const root = document.documentElement.style;
+        const reserve = () => root.setProperty('--site-banner-height', `${b.offsetHeight}px`);
         reserve();
-        new ResizeObserver(reserve).observe(b);
+        const observer = new ResizeObserver(reserve);
+        observer.observe(b);
+        b.querySelector('button').addEventListener('click', () => {
+            observer.disconnect();
+            b.remove();
+            root.removeProperty('--site-banner-height');
+            try { sessionStorage.setItem(key, b.dataset.bannerId); } catch {}
+        });
     })();
 </script>

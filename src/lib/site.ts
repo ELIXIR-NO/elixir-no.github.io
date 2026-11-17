@@ -18,7 +18,7 @@ const withBase = (value: string) => (SITE_PATH.test(value) ? `${BASE}${value}` :
 const sitePath = z.string()
     .regex(SITE_PATH, 'must be a path on this site, starting with a single /, with no spaces')
     .transform(withBase);
-const href = z.string()
+export const href = z.string()
     .regex(/^(https:\/\/|mailto:|\/(?![/\\]))\S*$/, 'must start with https://, mailto: or a single /, with no spaces')
     .transform(withBase);
 

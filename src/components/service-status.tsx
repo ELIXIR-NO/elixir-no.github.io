@@ -211,7 +211,7 @@ export default function ServiceStatus({ services }: { services: ServiceInfo[] })
                                             href={service.website}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="text-xs font-mono text-muted hover:text-accent transition-colors truncate block"
+                                            className="text-xs font-mono text-muted hover:text-accent transition-colors truncate block rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                                         >
                                             {new URL(service.website).hostname}
                                         </a>

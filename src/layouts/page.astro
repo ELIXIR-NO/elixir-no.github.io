@@ -302,7 +302,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                             <>
                                                 {i > 0 && <span class="text-muted">, </span>}
                                                 {author.url
-                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors">{author.name}</a>
+                                                    ? <a href={author.url} target="_blank" rel="noopener noreferrer" class="underline decoration-rule decoration-1 underline-offset-4 hover:decoration-marker hover:decoration-2 transition-colors rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">{author.name}</a>
                                                     : <span>{author.name}</span>
                                                 }
                                             </>
@@ -344,13 +344,13 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     <span class="inline-flex items-center gap-1.5">
                                         <BuildingLibraryIcon className="h-4 w-4" aria-hidden="true" />
                                         {funder.link
-                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="hover:text-ink transition-colors">{funder.name}</a>
+                                            ? <a href={funder.link} target="_blank" rel="noopener noreferrer" class="rounded-control hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">{funder.name}</a>
                                             : funder.name
                                         }
                                     </span>
                                 )}
                                 {externalLink && (
-                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 hover:text-ink transition-colors">
+                                    <a href={externalLink} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 rounded-control hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent">
                                         <ArrowTopRightOnSquareIcon className="h-4 w-4" aria-hidden="true" />
                                         Project website
                                     </a>

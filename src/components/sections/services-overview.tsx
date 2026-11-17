@@ -33,13 +33,13 @@ const services: Service[] = [
     },
     {
         title: 'e-Infrastructure',
-        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
+        description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="link relative z-10">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/e-infrastructure`,
     },
     {
         title: 'Sensitive Data',
-        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="relative z-10 underline underline-offset-2 hover:text-ink hover:decoration-marker transition-colors">HUNT Cloud</a>.</>,
+        description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="link relative z-10">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="link relative z-10">HUNT Cloud</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
         href: `${BASE}/sensitive-data`,
     },

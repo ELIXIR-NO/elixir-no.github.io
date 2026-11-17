@@ -48,12 +48,15 @@ const totalPeople = Object.values(orgsRecord).reduce(
     0
 );
 
+// organizations is keyed by slug (bergen); people.json uses the short key (uib).
+const orgByKey = Object.fromEntries(Object.values(organizations).map((o) => [o.key, o]));
+
 // Pre-compute org data for template
 const mainOrgs = mainOrgKeys
     .map((key) => ({
         key,
         data: orgsRecord[key],
-        meta: organizations[key],
+        meta: orgByKey[key],
     }))
     .filter((o) => o.data);
 
@@ -145,7 +148,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                 >
                     {
                         mainOrgKeys.map((key) => {
-                            const org = organizations[key];
+                            const org = orgByKey[key];
                             return (
                                 <a
                                     href={`#org-${key}`}
@@ -194,7 +197,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             </h2>
                             <p class="text-sm text-muted">
                                 {orgData.people.length} members
-                                {orgMeta ? ` — ${orgMeta.nodeName}` : ""}
+                                {orgMeta ? ` · ${orgMeta.nodeName}` : ""}
                             </p>
                         </div>
                         {orgMeta && (

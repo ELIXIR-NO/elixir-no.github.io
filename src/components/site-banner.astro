@@ -4,7 +4,13 @@ import { banner, bannerId, isLive, renderInlineMarkdown } from "../lib/banner";
 
 if (!isLive(banner)) return;
 
-const { label, message, link, expires } = banner;
+const { label, message, expires } = banner;
+
+// On the page the banner points to, the link would only reload that page.
+const withoutSlash = (path: string) => path.replace(/\/$/, "") || "/";
+const link = banner.link && withoutSlash(banner.link.href) !== withoutSlash(Astro.url.pathname)
+    ? banner.link
+    : undefined;
 const external = link?.href.startsWith("https://");
 ---
 
@@ -26,13 +32,18 @@ const external = link?.href.startsWith("https://");
                     {label}
                 </span>
             )}
-            <p class="m-0 font-medium text-white" set:html={renderInlineMarkdown(message)} />
+            <p id="site-banner-message" class="m-0 font-medium text-white" set:html={renderInlineMarkdown(message)} />
             {link && (
+                <!-- The name joins the link text with the message, so "Read more" has
+                     a subject in a screen reader's list of links. The ::before
+                     stretches the tap target to 44px without making the banner taller. -->
                 <a
+                    id="site-banner-link"
+                    aria-labelledby="site-banner-link site-banner-message"
                     href={link.href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    class="inline-flex items-center gap-1.5 rounded-control bg-white px-3 py-1 text-sm font-semibold text-brand-primary no-underline transition-colors hover:bg-white/85 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
+                    class="relative before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] inline-flex items-center gap-1.5 rounded-control bg-white px-3 py-1 text-sm font-semibold text-brand-primary no-underline transition-colors hover:bg-white/85 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
                 >
                     {link.label}
                     <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />

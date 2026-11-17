@@ -7,7 +7,16 @@ const root = document.documentElement;
 const isDark = () => root.classList.contains('dark');
 
 // What a page load does: base.astro puts this file's text in a classic script.
-const loadPage = () => new Function(themeInit)();
+// Indirect eval reads it as a script too, so code that only works inside a
+// function, such as a top-level return, fails here as it would in the browser.
+const loadPage = () => (0, eval)(themeInit);
+
+// Browsers that block storage throw when localStorage is read, before any method is called.
+const realStorage = Object.getOwnPropertyDescriptor(globalThis, 'localStorage')!;
+const blockStorage = () => Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    get() { throw new DOMException('The operation is insecure.', 'SecurityError'); },
+});
 
 const setDevice = (device: Theme) => vi.stubGlobal('matchMedia', (query: string) => ({
     matches: device === 'dark' && query.includes('prefers-color-scheme: dark'),
@@ -37,6 +46,7 @@ afterEach(() => {
     for (const [type, listener] of listen.mock.calls) window.removeEventListener(type as string, listener as EventListener);
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    Object.defineProperty(globalThis, 'localStorage', realStorage);
 });
 
 describe('theme on page load', () => {
@@ -63,11 +73,14 @@ describe('theme on page load', () => {
 
     it('stays light without failing when storage is blocked', () => {
         root.classList.add('dark');
-        vi.stubGlobal('localStorage', {
-            getItem: () => { throw new DOMException('The operation is insecure.', 'SecurityError'); },
-        });
+        blockStorage();
         expect(loadPage).not.toThrow();
         expect(isDark()).toBe(false);
+    });
+
+    // The text sits inside a <script> element, which either of these would end early.
+    it('holds nothing that would cut the script short in the page', () => {
+        expect(themeInit).not.toMatch(/<\/script|<!--/i);
     });
 });
 
@@ -82,6 +95,11 @@ describe('theme when the back button restores a page', () => {
         store(after);
         showPage(true);
         expect(isDark()).toBe(after === 'dark');
+
+        // And again: every later restore has to work, not only the first.
+        store(before);
+        showPage(true);
+        expect(isDark()).toBe(before === 'dark');
     });
 
     it('leaves a page alone when it is shown after a normal load', () => {

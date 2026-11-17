@@ -44,6 +44,7 @@ export default function ThemeToggle() {
                 {isDark ? (
                     <motion.svg
                         key="sun"
+                        data-icon="sun"
                         variants={iconVariants}
                         initial="initial"
                         animate="animate"
@@ -66,6 +67,7 @@ export default function ThemeToggle() {
                 ) : (
                     <motion.svg
                         key="moon"
+                        data-icon="moon"
                         variants={iconVariants}
                         initial="initial"
                         animate="animate"

@@ -123,6 +123,15 @@ const HAS_EXT = /\.[a-z0-9]{1,6}$/i;
 const SAFE_SCHEMES = new Set(['http', 'https', 'mailto', 'tel']);
 const SCHEMED_HREF = /(?:href|src)="([a-zA-Z][a-zA-Z0-9+.-]*):/g;
 
+// The theme has to be set before the page paints, so every page carries
+// src/lib/theme-init.js as a plain inline script in <head>.
+const THEME_SCRIPT = fs.readFileSync(path.join(ROOT, 'src/lib/theme-init.js'), 'utf8');
+
+function hasThemeScriptInHead(html) {
+  const head = html.slice(0, Math.max(0, html.indexOf('</head>')));
+  return head.includes(`<script>${THEME_SCRIPT}</script>`);
+}
+
 function extractUnsafeSchemes(html) {
   const found = new Set();
   for (const [, scheme] of html.matchAll(SCHEMED_HREF)) {
@@ -210,6 +219,7 @@ async function main() {
   const ssrPages = [];      // SSR pages in sitemap (no static HTML file)
   const assetErrors = [];   // { asset, foundOn, status, error }
   const schemeErrors = [];  // { url, scheme }
+  const themeErrors = [];   // page URLs without the theme script in <head>
   const assetCache = new Map(); // url → status
 
   // Parse sitemap
@@ -261,6 +271,8 @@ async function main() {
       schemeErrors.push({ url: siteUrl, scheme });
     }
 
+    if (pageHtml && !hasThemeScriptInHead(pageHtml)) themeErrors.push(siteUrl);
+
     // Check assets found in page HTML
     if (pageHtml) {
       const assets = extractLocalAssets(pageHtml, localUrl);
@@ -297,6 +309,7 @@ async function main() {
   console.log(`  │  Pages   ${String(pageOk).padStart(4)}/${String(staticTotal).padEnd(4)} ok   ${pageErrors.length > 0 ? c.red(`${pageErrors.length} failed`) : c.green('all passed')}           │`);
   console.log(`  │  Assets  ${String(assetOk).padStart(4)}/${String(totalAssets).padEnd(4)} ok   ${assetErrors.length > 0 ? c.red(`${assetErrors.length} failed`) : c.green('all passed')}           │`);
   console.log(`  │  Links   ${schemeErrors.length > 0 ? c.red(`${String(schemeErrors.length).padStart(4)} unsafe scheme(s)`) : c.green('   0 unsafe schemes   ')}          │`);
+  console.log(`  │  Theme   ${themeErrors.length > 0 ? c.red(`${String(themeErrors.length).padStart(4)} page(s) lack it  `) : c.green('   script in <head>   ')}          │`);
   if (ssrPages.length > 0)
     console.log(`  │  SSR     ${String(ssrPages.length).padStart(4)} pages skipped (no static HTML)      │`);
   console.log('  └─────────────────────────────────────────────┘\n');
@@ -318,6 +331,12 @@ async function main() {
     console.log();
   }
 
+  if (themeErrors.length > 0) {
+    console.log(c.red(c.bold('  Pages without the theme script in <head>:')));
+    for (const url of themeErrors) console.log(`    ${url}`);
+    console.log();
+  }
+
   if (assetErrors.length > 0) {
     console.log(c.red(c.bold('  Broken assets:')));
     for (const { asset, foundOn, status, error } of assetErrors) {
@@ -330,7 +349,7 @@ async function main() {
 
   server.close();
 
-  const failed = pageErrors.length + assetErrors.length + schemeErrors.length;
+  const failed = pageErrors.length + assetErrors.length + schemeErrors.length + themeErrors.length;
   if (failed > 0) {
     console.log(c.red(c.bold(`  ${failed} issue(s) found. Fix before deploying.\n`)));
     process.exit(1);

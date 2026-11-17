@@ -28,7 +28,7 @@ const external = link?.href.startsWith("https://");
     <div class="flex w-full items-center gap-2 py-3 pl-4 pr-1.5 sm:pl-6 sm:pr-3 lg:py-2.5">
         <!-- Below lg the label, message and link run on as one piece of text, so the
              banner stays two lines on a phone; from lg they sit in a centred row. -->
-        <div class="relative min-w-0 flex-1 text-balance text-sm leading-relaxed lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:gap-x-4 lg:text-center lg:text-base lg:leading-normal">
+        <div class="relative min-w-0 flex-1 text-balance text-sm leading-relaxed [overflow-wrap:anywhere] lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:gap-x-4 lg:gap-y-1.5 lg:text-wrap lg:text-center lg:text-base lg:leading-normal">
             {label && (
                 <span class="mr-2 inline-flex items-center rounded-chip bg-brand-secondary px-2 py-0.5 align-[0.1em] text-[0.6875rem] font-bold uppercase leading-4 tracking-wide text-brand-primary lg:mr-0 lg:px-2.5 lg:text-xs">
                     {label}
@@ -38,7 +38,7 @@ const external = link?.href.startsWith("https://");
             {link && (
                 <!-- The name joins the link text with the message, so "Read more" has
                      a subject in a screen reader's list of links. The ::before is the
-                     tap target: the whole text block below lg, and 44px tall around
+                     tap target: the whole text block below lg (never under 44px tall), and 44px tall around
                      the button from lg, without making the banner taller. -->
                 <a
                     id="site-banner-link"
@@ -46,7 +46,7 @@ const external = link?.href.startsWith("https://");
                     href={link.href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    class="ml-2 inline-flex items-center gap-1.5 whitespace-nowrap rounded-control align-baseline font-semibold text-white underline decoration-white/50 underline-offset-2 before:absolute before:inset-0 before:content-[''] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary lg:relative lg:ml-0 lg:gap-1.5 lg:bg-white lg:px-3 lg:py-1 lg:text-sm lg:text-brand-primary lg:no-underline lg:transition-colors lg:before:-inset-y-2 lg:hover:bg-white/85"
+                    class="ml-2 inline-flex items-center gap-1.5 whitespace-nowrap rounded-control align-baseline font-semibold text-white underline decoration-white/50 underline-offset-2 before:absolute before:inset-0 before:content-[''] max-lg:before:bottom-auto max-lg:before:top-1/2 max-lg:before:h-full max-lg:before:min-h-11 max-lg:before:-translate-y-1/2 max-sm:align-[-0.25em] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary lg:relative lg:ml-0 lg:gap-1.5 lg:bg-white lg:px-3 lg:py-1 lg:text-sm lg:text-brand-primary lg:no-underline lg:transition-colors lg:before:-inset-y-2 lg:hover:bg-white/85"
                 >
                     {/* On a phone the arrow alone marks the link, which keeps the banner to two lines. */}
                     <span class="max-sm:sr-only">{link.label}</span>

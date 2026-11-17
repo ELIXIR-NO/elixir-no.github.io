@@ -46,13 +46,7 @@ function formatDate(dateString: string): string {
     <!-- Upcoming events -->
     {upcoming.length > 0 && (
         <section class="mt-12">
-            <div class="flex items-center gap-3 mb-8">
-                <span class="inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold text-green-700 dark:text-green-400">
-                    <span class="h-2 w-2 rounded-marker bg-green-600 dark:bg-green-400" />
-                    Upcoming
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">Upcoming events</h2>
-            </div>
+            <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight text-ink mb-8">Upcoming events</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {upcoming.map((event) => {
                     const slug = idToSlug(event.id);

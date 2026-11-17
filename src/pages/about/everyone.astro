@@ -2,7 +2,8 @@
 import BaseLayout from "../../layouts/base.astro";
 import people from "../../data/people.json";
 import { organizations } from "../../data/organizations";
-import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import Button from "../../components/button.tsx";
 
 export const prerender = true;
 
@@ -201,13 +202,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             </p>
                         </div>
                         {orgMeta && (
-                            <a
-                                href={`${BASE}/about/${orgMeta.slug}`}
-                                class="ml-auto hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-muted hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
-                            >
-                                View node
-                                <ArrowRightIcon className="h-3 w-3" aria-hidden="true" />
-                            </a>
+                            <Button href={`${BASE}/about/${orgMeta.slug}`} variant="link" size="sm" className="ml-auto hidden shrink-0 whitespace-nowrap sm:inline-flex">View node</Button>
                         )}
                     </div>
 

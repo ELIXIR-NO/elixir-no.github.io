@@ -3,7 +3,7 @@ import BaseLayout from "./base.astro";
 import Breadcrumbs from "../components/breadcrumbs.astro";
 import ShareButtons from "../components/share-buttons.tsx";
 import Button from "../components/button.tsx";
-import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { ArrowLeftIcon, ArrowTopRightOnSquareIcon, BuildingLibraryIcon, CalendarIcon } from "@heroicons/react/24/outline";
 import { slugToTitleCase } from "../lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -336,7 +336,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                             <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
                                 {period && (
                                     <span class="inline-flex items-center gap-1.5" title={period}>
-                                        <ClockIcon className="h-4 w-4" aria-hidden="true" />
+                                        <CalendarIcon className="h-4 w-4" aria-hidden="true" />
                                         {periodToRelative(period)}
                                     </span>
                                 )}

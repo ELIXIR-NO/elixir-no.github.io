@@ -1,4 +1,10 @@
 {
-    "visible": false,
-    "message": ""
+    "visible": true,
+    "label": "Event",
+    "message": "Workshop on Federated EGA and sensitive data submission · Oslo, 9 December",
+    "link": {
+        "label": "Read more",
+        "href": "/events/2026/federated-ega-workshop-oslo"
+    },
+    "expires": "2026-12-09T10:00:00+01:00"
 }

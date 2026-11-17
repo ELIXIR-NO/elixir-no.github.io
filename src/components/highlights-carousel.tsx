@@ -149,7 +149,7 @@ export default function HighlightsCarousel({ slides }: { slides: Slide[] }) {
                                 role="tab"
                                 aria-selected={i === current}
                                 aria-label={`Slide ${i + 1} of ${slides.length}`}
-                                className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-control overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                                className={`relative w-14 h-10 sm:w-16 sm:h-11 rounded-control overflow-hidden border bg-paper transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface ${
                                     i === current
                                         ? 'border-ink'
                                         : 'border-rule opacity-60 hover:opacity-100'

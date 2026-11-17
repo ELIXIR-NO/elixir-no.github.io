@@ -39,7 +39,7 @@ export default function Universities() {
                         href={uni.href}
                         variants={item}
                         transition={{ duration: 0.5, ease: 'easeOut' }}
-                        className="group flex flex-col items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 rounded-control"
+                        className="group flex flex-col items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-paper rounded-control"
                     >
                         <img
                             src={uni.logo}

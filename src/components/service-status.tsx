@@ -57,7 +57,7 @@ const statusConfig: Record<Status, {
 };
 
 function StatusDot({ status }: { status: Status }) {
-    return <span className={`block h-2 w-2 rounded-marker ${statusConfig[status].dot}`} />;
+    return <span className={`block h-2 w-2 rounded-marker ${statusConfig[status].dot}`} aria-hidden="true" />;
 }
 
 function OverallSummary({ states }: { states: Map<string, ServiceState> }) {

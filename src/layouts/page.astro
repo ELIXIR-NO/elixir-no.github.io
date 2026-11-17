@@ -239,7 +239,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                         {contentType && (
                             <a
                                 href={`${BASE}/${contentType === 'projects' ? 'funding-and-projects' : contentType}`}
-                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6"
+                                class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors mb-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-control"
                             >
                                 <ArrowLeftIcon className="h-3.5 w-3.5" aria-hidden="true" />
                                 {contentType === 'news' ? 'All news' : contentType === 'events' ? 'All events' : contentType === 'services' ? 'All services' : 'All projects'}
@@ -263,7 +263,7 @@ const jsonLd = contentType === 'news' ? JSON.stringify({
                                     const sc = statusColors[status] ?? statusColors.completed;
                                     return (
                                         <span class={`inline-flex items-center gap-1.5 rounded-chip border border-rule px-2 py-0.5 text-xs font-semibold ${sc.text}`}>
-                                            <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} />
+                                            <span class={`h-1.5 w-1.5 rounded-marker ${sc.dot}`} aria-hidden="true" />
                                             {slugToTitleCase(status)}
                                         </span>
                                     );

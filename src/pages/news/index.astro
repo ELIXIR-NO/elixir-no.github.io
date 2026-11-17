@@ -137,6 +137,12 @@ const INITIAL_COUNT = 18;
         })}
     </div>
 
+    <!-- No results -->
+    <div id="no-results" class="hidden text-center py-16" role="status">
+        <NewspaperIcon className="mx-auto h-12 w-12 text-rule" aria-hidden="true" />
+        <p class="mt-4 text-body">No articles match the selected filters.</p>
+    </div>
+
     <!-- Show more button -->
     {news.length > INITIAL_COUNT && (
         <div class="mt-10 text-center" id="load-more-container">
@@ -183,6 +189,9 @@ const INITIAL_COUNT = 18;
                 for (var j = 0; j < Math.min(limit, filtered.length); j++) {
                     filtered[j].classList.remove('hidden');
                 }
+
+                var noResults = document.getElementById('no-results');
+                if (noResults) noResults.classList.toggle('hidden', filtered.length > 0);
 
                 if (loadMoreContainer) {
                     if (hasConstraints() || shown >= cards.length) {

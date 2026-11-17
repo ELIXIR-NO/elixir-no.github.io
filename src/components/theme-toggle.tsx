@@ -17,16 +17,21 @@ const iconVariants = {
 export default function ThemeToggle() {
     const [isDark, setIsDark] = useState(false);
 
+    // The icon follows the class on <html> rather than its own clicks, because the
+    // script in base.astro also sets that class when the back button restores a page.
     useEffect(() => {
-        setIsDark(document.documentElement.classList.contains('dark'));
+        const root = document.documentElement;
+        const sync = () => setIsDark(root.classList.contains('dark'));
+        sync();
+        const observer = new MutationObserver(sync);
+        observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
     }, []);
 
     const toggle = () => {
-        const el = document.documentElement;
-        el.classList.toggle('dark');
-        const dark = el.classList.contains('dark');
-        localStorage.setItem('theme', dark ? 'dark' : 'light');
-        setIsDark(dark);
+        const dark = document.documentElement.classList.toggle('dark');
+        // Storage can be blocked; the theme then lasts for this page only.
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
     };
 
     return (

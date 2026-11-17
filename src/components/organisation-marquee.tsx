@@ -7,7 +7,7 @@ export default function OrganisationMarquee() {
             <div className="max-w-7xl mx-auto px-6 sm:px-8">
                 <div className="mb-10">
                     <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-                        Five Organisations Across Norway
+                        Five organisations across Norway
                     </h2>
                     <p className="mt-3 text-lg text-body max-w-2xl">
                         A collaboration between five leading institutions, combining expertise to advance

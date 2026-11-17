@@ -118,7 +118,7 @@ const dateObj = finalDate
     : null;
 
 const formattedDate = dateObj
-    ? dateObj.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    ? dateObj.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
     : null;
 
 const relativeDate = dateObj ? dayjs(dateObj).fromNow() : null;

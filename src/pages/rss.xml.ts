@@ -28,7 +28,7 @@ export async function GET(context: any) {
 
     return rss({
         title: 'ELIXIR Norway',
-        description: 'News and events from ELIXIR Norway — the Norwegian node of the European infrastructure for life science data.',
+        description: 'News and events from ELIXIR Norway, the Norwegian node of the European infrastructure for life science data.',
         site: context.site,
         items,
         customData: '<language>en</language>',

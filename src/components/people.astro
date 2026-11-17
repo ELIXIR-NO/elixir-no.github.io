@@ -31,7 +31,7 @@ function composeTitle(person: Person) {
         person.title,
         ...person["elixir-groups"].map(g => g.role).filter(Boolean),
         ...person["affiliations"].map(a => {
-            if (a) return `${a?.role ? a.role + "—" : ''}${a.name}`;
+            if (a) return `${a?.role ? a.role + ", " : ''}${a.name}`;
         }),
     ]
         .filter(Boolean)

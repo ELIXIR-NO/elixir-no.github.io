@@ -28,7 +28,7 @@ function composeTitle(person: Person): string {
         person.title,
         ...person["elixir-groups"].map((g) => g.role).filter(Boolean),
         ...person.affiliations.map((a) =>
-            a ? `${a.role ? a.role + "—" : ""}${a.name}` : ""
+            a ? `${a.role ? a.role + ", " : ""}${a.name}` : ""
         ),
     ]
         .filter(Boolean)
@@ -70,7 +70,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
 
 <BaseLayout
     seo={{
-        title: "Our People — ELIXIR Norway",
+        title: "Our people",
         description: `Meet the ${totalPeople}+ researchers, engineers, and scientists powering Norway's bioinformatics infrastructure across five universities.`,
     }}
 >
@@ -90,7 +90,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                     class="everyone-fade text-3xl sm:text-4xl md:text-5xl font-semibold text-ink tracking-tight"
                     style="animation-delay: 0.1s"
                 >
-                    Our People
+                    Our people
                 </h1>
 
                 <p
@@ -132,7 +132,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                             {people.groups.length}
                         </span>
                         <span class="ml-2 text-sm text-muted"
-                            >Governance Groups</span
+                            >Governance groups</span
                         >
                     </div>
                 </div>
@@ -160,7 +160,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
                         href="#org-external"
                         class="inline-flex h-9 items-center gap-2 px-3 rounded-control border border-rule bg-surface text-sm font-medium text-muted hover:border-ink hover:text-ink transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                     >
-                        Advisory & External
+                        Advisory & external
                     </a>
                 </nav>
             </div>
@@ -252,7 +252,7 @@ const externalPeople: ExternalPerson[] = externalOrgKeys.flatMap((key) => {
             >
                 <div class="mb-8">
                     <h2 class="text-2xl sm:text-3xl font-semibold text-ink tracking-tight">
-                        Advisory & External Collaborators
+                        Advisory & external collaborators
                     </h2>
                     <p class="text-sm text-muted mt-1">
                         International experts serving on our Scientific Advisory Committee and Stakeholder Panel.

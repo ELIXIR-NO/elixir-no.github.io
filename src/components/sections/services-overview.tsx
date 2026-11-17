@@ -70,10 +70,10 @@ export default function ServicesOverview() {
                             transition={{ duration: 0.5 }}
                         >
                             <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-                                Unlock the Power of Your Data
+                                Unlock the power of your data
                             </h2>
                             <p className="mt-3 text-lg text-body leading-relaxed">
-                                From comprehensive data management and analysis to secure storage and specialised support — everything you need to propel your life science research forward.
+                                From comprehensive data management and analysis to secure storage and specialised support: everything you need to propel your life science research forward.
                             </p>
                             <Button href={`${BASE}/services`} variant="link" size="sm" className="mt-6">Explore all services</Button>
                         </motion.div>

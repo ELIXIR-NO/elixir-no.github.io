@@ -99,7 +99,7 @@ export default function ServicesOverview() {
                                         {svc.icon}
                                     </div>
                                     <h3 className="text-base font-semibold text-ink mb-2">
-                                        <a href={svc.href} className="after:absolute after:inset-0 after:rounded-card focus:outline-none">
+                                        <a href={svc.href} className="decoration-marker decoration-2 underline-offset-4 hover:underline after:absolute after:inset-0 after:rounded-card focus:outline-none">
                                             {svc.title}
                                         </a>
                                     </h3>

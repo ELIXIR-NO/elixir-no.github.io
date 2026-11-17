@@ -57,7 +57,7 @@ const unescapeHtml = (s: string) => s
     .replace(/&#39;/g, "'")
     .replace(/&amp;/g, '&');
 
-const linkClass = 'underline underline-offset-2 decoration-white/50 hover:decoration-white';
+const linkClass = 'relative z-10 underline underline-offset-2 decoration-white/50 hover:decoration-white';
 
 // Editors write the message, so it is escaped first, and a link whose target
 // would fail the href rules (javascript:, //host, plain http) stays as text.

@@ -25,34 +25,38 @@ const external = link?.href.startsWith("https://");
 >
     <!-- Brand colours rather than theme tokens: the banner keeps the ELIXIR navy
          in both themes, since a light bar in dark mode reads as part of the page. -->
-    <div class="flex w-full items-center gap-2 py-2 pl-4 pr-1.5 sm:py-2.5 sm:pl-6 sm:pr-3">
-        <div class="flex min-w-0 flex-1 flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-center text-sm sm:text-base">
+    <div class="flex w-full items-center gap-2 py-2 pl-4 pr-1.5 sm:pl-6 sm:pr-3 lg:py-2.5">
+        <!-- Below lg the label, message and link run on as one piece of text, so the
+             banner stays two lines on a phone; from lg they sit in a centred row. -->
+        <div class="relative min-w-0 flex-1 text-balance text-sm leading-snug lg:flex lg:flex-wrap lg:items-center lg:justify-center lg:gap-x-4 lg:text-center lg:text-base lg:leading-normal">
             {label && (
-                <span class="inline-flex items-center rounded-chip bg-brand-secondary px-2.5 py-0.5 text-xs font-bold uppercase tracking-wide text-brand-primary">
+                <span class="mr-1.5 inline-flex items-center rounded-chip bg-brand-secondary px-2 py-0.5 align-[0.1em] text-[0.6875rem] font-bold uppercase leading-4 tracking-wide text-brand-primary lg:mr-0 lg:px-2.5 lg:text-xs">
                     {label}
                 </span>
             )}
-            <p id="site-banner-message" class="m-0 font-medium text-white" set:html={renderInlineMarkdown(message)} />
+            <p id="site-banner-message" class="m-0 inline font-medium text-white lg:block" set:html={renderInlineMarkdown(message)} />
             {link && (
                 <!-- The name joins the link text with the message, so "Read more" has
-                     a subject in a screen reader's list of links. The ::before
-                     stretches the tap target to 44px without making the banner taller. -->
+                     a subject in a screen reader's list of links. The ::before is the
+                     tap target: the whole text block below lg, and 44px tall around
+                     the button from lg, without making the banner taller. -->
                 <a
                     id="site-banner-link"
                     aria-labelledby="site-banner-link site-banner-message"
                     href={link.href}
                     target={external ? "_blank" : undefined}
                     rel={external ? "noopener noreferrer" : undefined}
-                    class="relative before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] inline-flex items-center gap-1.5 rounded-control bg-white px-3 py-1 text-sm font-semibold text-brand-primary no-underline transition-colors hover:bg-white/85 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary"
+                    class="ml-1.5 inline-flex items-center gap-1 whitespace-nowrap rounded-control align-baseline font-semibold text-white underline decoration-white/50 underline-offset-2 before:absolute before:inset-0 before:content-[''] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-brand-primary lg:relative lg:ml-0 lg:gap-1.5 lg:bg-white lg:px-3 lg:py-1 lg:text-sm lg:text-brand-primary lg:no-underline lg:transition-colors lg:before:-inset-y-2 lg:hover:bg-white/85"
                 >
-                    {link.label}
-                    <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                    {/* On a phone the arrow alone marks the link, which keeps the banner to two lines. */}
+                    <span class="max-sm:sr-only">{link.label}</span>
+                    <ArrowRightIcon className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
                 </a>
             )}
         </div>
         <button
             type="button"
-            class="-my-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-white/75 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 sm:my-0 sm:h-9 sm:w-9"
+            class="-my-1.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-control text-white/75 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 lg:my-0 lg:h-9 lg:w-9"
             aria-label="Dismiss announcement"
         >
             <XMarkIcon className="h-5 w-5" aria-hidden="true" />

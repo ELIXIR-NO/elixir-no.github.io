@@ -35,13 +35,13 @@ const services: Service[] = [
         title: 'e-Infrastructure',
         description: <><a href="https://nels.elixir.no" target="_blank" rel="noopener noreferrer" className="link relative z-10">NeLS</a>, the Norwegian e-Infrastructure for Life Sciences, for analysis, sharing, management and storage of life science data.</>,
         icon: <ServerStackIcon className="w-5 h-5" aria-hidden="true" />,
-        href: `${BASE}/e-infrastructure`,
+        href: `${BASE}/services/nels`,
     },
     {
         title: 'Sensitive Data',
         description: <>Archiving solutions for potentially identifiable human data with support on <a href="https://www.uio.no/english/services/it/research/sensitive-data/" target="_blank" rel="noopener noreferrer" className="link relative z-10">TSD</a> and <a href="https://www.ntnu.edu/mh/huntcloud" target="_blank" rel="noopener noreferrer" className="link relative z-10">HUNT Cloud</a>.</>,
         icon: <ShieldCheckIcon className="w-5 h-5" aria-hidden="true" />,
-        href: `${BASE}/sensitive-data`,
+        href: `${BASE}/services/tsd`,
     },
 ];
 

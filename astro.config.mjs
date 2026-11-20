@@ -65,6 +65,16 @@ export default defineConfig({
         '/news/2025-10-20_ELIXIR_Industry_Engagement_Day':           { destination: '/news/2025/elixir-industry-engagement-day',                  status: 301 },
         '/news/2025-10-27_NeLS_scheduled_maintenance_November':      { destination: '/news/2025/nels-scheduled-maintenance-november',             status: 301 },
         '/news/2026-01-12_Jaspar_CDR':                               { destination: '/news/2026/jaspar-cdr',                                      status: 301 },
+        // ── News items that moved to events ─────────────────────────────────────
+        '/news/2024/the-data-steward-job-role-in-the-norwegian-public-sector':                              { destination: '/events/2024/the-data-steward-job-role-in-the-norwegian-public-sector', status: 301 },
+        '/news/2024/life-science-rdm-group-event-the-data-steward-job-role-in-the-norwegian-public-sector': { destination: '/events/2024/the-data-steward-job-role-in-the-norwegian-public-sector', status: 301 },
+        '/news/2025/ahm-europe':                                                                            { destination: '/events/2025/ahm-europe',                                               status: 301 },
+        '/news/2025/elitma':                                                                                { destination: '/events/2025/elitma',                                                   status: 301 },
+        '/news/2025/eosc-entrust-workshop':                                                                 { destination: '/events/2025/eosc-entrust-workshop',                                    status: 301 },
+        '/news/2026/elixir-norway-all-hands':                                                               { destination: '/events/2026/elixir-norway-all-hands',                                  status: 301 },
+        '/news/2026/elixir-norway-at-arendalsuka-2026':                                                     { destination: '/events/2026/elixir-norway-at-arendalsuka-2026',                        status: 301 },
+        '/news/2026/gdi-node-hackathon-finland':                                                            { destination: '/events/2026/gdi-node-hackathon-finland',                               status: 301 },
+        '/news/2026/nordic-ds-network-meeting':                                                             { destination: '/events/2026/nordic-ds-network-meeting',                                status: 301 },
         // ── Flat slug → year/slug (all news & events) ───────────────────────────
         '/events/arendalsuka':                                                                    { destination: '/events/2025/arendalsuka',                                                                    status: 301 },
         '/events/dln-hackathon':                                                                  { destination: '/events/2025/dln-hackathon',                                                                  status: 301 },

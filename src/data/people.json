@@ -111,7 +111,12 @@
           "photo": "/data/people/david-dolan.png",
           "profile-url": "https://www4.uib.no/en/find-employees/David.William.Peter.Dolan",
           "affiliations": [],
-          "elixir-groups": []
+          "elixir-groups": [
+		    {
+			"name": "coordinators",
+			"role": "Research Support Coordinator"
+		    }
+		]
         },
         {
           "username": "siri-kallhovd",
